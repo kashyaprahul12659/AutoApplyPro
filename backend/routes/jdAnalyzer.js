@@ -173,18 +173,17 @@ function extractSkillsFromJobDescription(jobDescription) {
     'Critical Thinking', 'Time Management', 'Project Management'
   ];
   
-  // Extract skills from job description
-  const skills = [];
-  const jobDescLower = jobDescription.toLowerCase();
-  
+  // Extract skills from job description using regex for word boundaries
+  const skills = new Set();
+
   for (const skill of commonSkills) {
-    const skillLower = skill.toLowerCase();
-    if (jobDescLower.includes(skillLower)) {
-      skills.push(skill);
+    const pattern = new RegExp(`\\b${skill.replace(/[.+]/g, '\\$&')}\\b`, 'i');
+    if (pattern.test(jobDescription)) {
+      skills.add(skill);
     }
   }
-  
-  return skills;
+
+  return Array.from(skills);
 }
 
 // Helper function to compare skills and calculate match score

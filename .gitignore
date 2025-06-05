@@ -33,3 +33,4 @@ yarn-error.log*
 .DS_Store
 .vscode/
 .idea/
+\n# Ignore Playwright output\nplaywright-report/\ntest-results/\n

@@ -29,12 +29,13 @@ exports.getAIStatus = async (req, res) => {
 // @access  Private
 exports.updateProfile = async (req, res) => {
   const { name, email } = req.body;
+  const normalizedEmail = email ? email.trim().toLowerCase() : undefined;
 
   try {
     // Build user object
     const userFields = {};
     if (name) userFields.name = name;
-    if (email) userFields.email = email;
+    if (normalizedEmail) userFields.email = normalizedEmail;
 
     // Update user
     let user = await User.findById(req.user.id);
@@ -44,8 +45,8 @@ exports.updateProfile = async (req, res) => {
     }
 
     // If user is updating email, check if it already exists
-    if (email && email !== user.email) {
-      const existingUser = await User.findOne({ email });
+    if (normalizedEmail && normalizedEmail !== user.email) {
+      const existingUser = await User.findOne({ email: normalizedEmail });
       if (existingUser) {
         return res.status(400).json({ msg: 'Email already in use' });
       }

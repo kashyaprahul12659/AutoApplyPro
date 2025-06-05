@@ -57,7 +57,7 @@ module.exports = defineConfig({
       reuseExistingServer: true,
       stdout: 'pipe',
       stderr: 'pipe',
-      timeout: 10000,
+      timeout: 60000,
     },
     {
       // Backend server
@@ -66,7 +66,7 @@ module.exports = defineConfig({
       reuseExistingServer: true,
       stdout: 'pipe',
       stderr: 'pipe',
-      timeout: 10000,
+      timeout: 60000,
     }
   ],
   // Output path for test results

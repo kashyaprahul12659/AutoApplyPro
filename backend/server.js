@@ -46,19 +46,28 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB with improved options
-mongoose.connect(process.env.MONGODB_URI, {
-  // These options help with connection stability
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => {
-  console.error('MongoDB connection error:', err);
-  // Don't crash the server on initial connection failure
-  // It will retry automatically
-});
+async function connectDB() {
+  try {
+    let mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      const { MongoMemoryServer } = require('mongodb-memory-server');
+      const memServer = await MongoMemoryServer.create();
+      mongoUri = memServer.getUri();
+      console.log('Using in-memory MongoDB');
+    }
+    await mongoose.connect(mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+  }
+}
+
+connectDB();
 
 // Handle MongoDB connection errors after initial connection
 mongoose.connection.on('error', (err) => {
