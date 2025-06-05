@@ -1,0 +1,52 @@
+{
+  "manifest_version": 3,
+  "name": "AutoApply Pro",
+  "version": "1.0.0",
+  "description": "Apply to jobs 10x faster - Auto-fill forms, create AI cover letters, and analyze job matches",
+  "short_name": "AutoApply",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "contextMenus",
+    "notifications"
+  ],
+  "host_permissions": [
+    "http://localhost:5000/*",
+    "http://localhost:3000/*",
+    "https://autoapplypro.com/*",
+    "https://api.autoapplypro.com/*"
+  ],
+  "web_accessible_resources": [{
+    "resources": ["icons/*"],
+    "matches": ["<all_urls>"]
+  }],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["utils.js", "utils/jobExtractor.js", "content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["http://localhost:3000/*", "https://autoapplypro.com/*"],
+      "js": ["utils.js", "listener.js"],
+      "run_at": "document_end"
+    }
+  ]
+}

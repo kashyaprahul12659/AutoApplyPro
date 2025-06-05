@@ -1,0 +1,39 @@
+{
+  "name": "autoapply-pro",
+  "version": "1.0.0",
+  "description": "A full-stack web application that helps users automate job application form filling",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm start",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "build": "cd frontend && npm run build",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "package-extension": "node autoapply-extension/package-extension.js",
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
+    "test:debug": "npx playwright test --debug",
+    "test:api": "npx playwright test api.spec.js",
+    "test:auth": "npx playwright test auth.spec.js",
+    "test:homepage": "npx playwright test homepage.spec.js"
+  },
+  "keywords": [
+    "job",
+    "application",
+    "automation",
+    "resume",
+    "autofill"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "archiver": "^5.3.1",
+    "concurrently": "^8.2.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0"
+  }
+}
