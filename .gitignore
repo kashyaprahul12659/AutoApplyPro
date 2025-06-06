@@ -2,7 +2,6 @@
 /node_modules
 /frontend/node_modules
 /backend/node_modules
-/.pnp
 .pnp.js
 
 # testing
@@ -33,3 +32,7 @@ yarn-error.log*
 .DS_Store
 .vscode/
 .idea/
+
+# Ignore Playwright output
+playwright-report/
+test-results/

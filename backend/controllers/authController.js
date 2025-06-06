@@ -6,10 +6,11 @@ const User = require('../models/User');
 // @access  Public
 exports.register = async (req, res) => {
   const { name, email, password } = req.body;
+  const normalizedEmail = email.trim().toLowerCase();
 
   try {
     // Check if user already exists
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email: normalizedEmail });
 
     if (user) {
       return res.status(400).json({ msg: 'User already exists' });
@@ -18,7 +19,7 @@ exports.register = async (req, res) => {
     // Create new user
     user = new User({
       name,
-      email,
+      email: normalizedEmail,
       password
     });
 
@@ -53,10 +54,11 @@ exports.register = async (req, res) => {
 // @access  Public
 exports.login = async (req, res) => {
   const { email, password } = req.body;
+  const normalizedEmail = email.trim().toLowerCase();
 
   try {
     // Check if user exists
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: normalizedEmail });
 
     if (!user) {
       return res.status(400).json({ msg: 'Invalid credentials' });

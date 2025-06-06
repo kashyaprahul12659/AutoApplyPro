@@ -29,7 +29,7 @@ test.describe('Resume Management', () => {
 
   test.beforeEach(async ({ page }) => {
     // Start by logging in
-    await page.goto('http://localhost:3000/login');
+    await page.goto('/login');
     
     // Fill login form
     await page.locator('input[type="email"]').fill(testUser.email);
@@ -173,12 +173,12 @@ test.describe('Resume Management', () => {
     console.log('✅ Found resume management UI elements');
   });
 
-  test.skip('should attempt to upload a resume file', async ({ page }) => {
+  test('should attempt to upload a resume file', async ({ page }) => {
     // Note: This test is skipped by default as it depends on UI structure
     // Enable this test after confirming the structure of your resume upload UI
     
     // Navigate to resume upload section (adjust based on your app structure)
-    await page.goto('http://localhost:3000/dashboard');
+    await page.goto('/dashboard');
     
     // Look for upload button or link
     const uploadButton = page.locator('button:has-text("Upload"), input[type="file"], [aria-label="Upload Resume"]');

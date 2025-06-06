@@ -172,19 +172,11 @@ function extractSkillsFromJobDescription(jobDescription) {
     'Communication', 'Leadership', 'Teamwork', 'Problem Solving',
     'Critical Thinking', 'Time Management', 'Project Management'
   ];
-  
-  // Extract skills from job description
-  const skills = [];
-  const jobDescLower = jobDescription.toLowerCase();
-  
-  for (const skill of commonSkills) {
-    const skillLower = skill.toLowerCase();
-    if (jobDescLower.includes(skillLower)) {
-      skills.push(skill);
-    }
-  }
-  
-  return skills;
+
+  const escaped = commonSkills.map(s => s.replace(/[.+]/g, '\\$&')).join('|');
+  const pattern = new RegExp(`\\b(${escaped})\\b`, 'gi');
+  const matches = Array.from(jobDescription.matchAll(pattern)).map(m => m[0]);
+  return Array.from(new Set(matches));
 }
 
 // Helper function to compare skills and calculate match score

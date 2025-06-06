@@ -44,7 +44,7 @@ test.describe('Profile Management', () => {
 
   test.beforeEach(async ({ page }) => {
     // Start by logging in
-    await page.goto('http://localhost:3000/login');
+    await page.goto('/login');
     
     // Fill login form
     await page.locator('input[type="email"]').fill(testUser.email);
@@ -97,7 +97,7 @@ test.describe('Profile Management', () => {
       
       for (const path of profilePaths) {
         try {
-          await page.goto(`http://localhost:3000${path}`);
+          await page.goto(path);
           console.log(`📌 Directly navigated to: ${path}`);
           await page.waitForTimeout(2000);
           navigatedToProfile = true;
@@ -221,7 +221,7 @@ test.describe('Profile Management', () => {
     console.log('✅ Profile page contains editable fields or edit functionality');
   });
 
-  test.skip('should attempt to update profile information', async ({ page }) => {
+  test('should attempt to update profile information', async ({ page }) => {
     // Note: This test is skipped by default as it will make actual changes to the profile
     // Enable this test only when you're ready to test profile updates
     

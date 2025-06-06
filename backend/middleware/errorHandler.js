@@ -4,8 +4,10 @@
  */
 
 const errorHandler = (err, req, res, next) => {
-  console.error(`Error: ${err.message}`);
-  console.error(err.stack);
+  console.error(`[${req.method}] ${req.originalUrl} - ${err.message}`);
+  if (err.stack) {
+    console.error(err.stack);
+  }
 
   // Network/server errors
   if (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND') {

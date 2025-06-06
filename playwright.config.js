@@ -7,6 +7,8 @@ const path = require('path');
  */
 module.exports = defineConfig({
   testDir: './tests',
+  globalSetup: require.resolve('./tests/helpers/global-setup'),
+  globalTeardown: require.resolve('./tests/helpers/global-teardown'),
   // Turn off parallel execution for API tests to avoid race conditions
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
@@ -57,7 +59,7 @@ module.exports = defineConfig({
       reuseExistingServer: true,
       stdout: 'pipe',
       stderr: 'pipe',
-      timeout: 10000,
+      timeout: 60000,
     },
     {
       // Backend server
@@ -66,7 +68,7 @@ module.exports = defineConfig({
       reuseExistingServer: true,
       stdout: 'pipe',
       stderr: 'pipe',
-      timeout: 10000,
+      timeout: 60000,
     }
   ],
   // Output path for test results
