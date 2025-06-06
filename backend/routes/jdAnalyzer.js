@@ -172,18 +172,11 @@ function extractSkillsFromJobDescription(jobDescription) {
     'Communication', 'Leadership', 'Teamwork', 'Problem Solving',
     'Critical Thinking', 'Time Management', 'Project Management'
   ];
-  
-  // Extract skills from job description using regex for word boundaries
-  const skills = new Set();
 
-  for (const skill of commonSkills) {
-    const pattern = new RegExp(`\\b${skill.replace(/[.+]/g, '\\$&')}\\b`, 'i');
-    if (pattern.test(jobDescription)) {
-      skills.add(skill);
-    }
-  }
-
-  return Array.from(skills);
+  const escaped = commonSkills.map(s => s.replace(/[.+]/g, '\\$&')).join('|');
+  const pattern = new RegExp(`\\b(${escaped})\\b`, 'gi');
+  const matches = Array.from(jobDescription.matchAll(pattern)).map(m => m[0]);
+  return Array.from(new Set(matches));
 }
 
 // Helper function to compare skills and calculate match score

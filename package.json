@@ -16,7 +16,8 @@
     "test:debug": "npx playwright test --debug",
     "test:api": "npx playwright test api.spec.js",
     "test:auth": "npx playwright test auth.spec.js",
-    "test:homepage": "npx playwright test homepage.spec.js"
+    "test:homepage": "npx playwright test homepage.spec.js",
+    "test:resume-profile": "npx playwright test tests/resume-management.spec.js tests/profile-management.spec.js"
   },
   "keywords": [
     "job",

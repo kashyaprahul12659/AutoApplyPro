@@ -64,10 +64,15 @@ async function connectDB() {
     console.log('Connected to MongoDB');
   } catch (err) {
     console.error('MongoDB connection error:', err);
+    process.exit(1);
   }
 }
 
 connectDB();
+
+if (['development', 'test'].includes(process.env.NODE_ENV)) {
+  mongoose.set('debug', true);
+}
 
 // Handle MongoDB connection errors after initial connection
 mongoose.connection.on('error', (err) => {
