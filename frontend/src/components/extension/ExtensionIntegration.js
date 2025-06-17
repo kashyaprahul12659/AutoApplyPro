@@ -1,14 +1,43 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '@clerk/clerk-react';
+import { useUser } from '../../hooks/useUniversalAuth';
+import { useDevAuth } from '../../context/DevAuthContext';
 
 const ExtensionIntegration = () => {
-  const { authToken } = useAuth();
+  const clerkAuth = useAuth();
+  const { user, isSignedIn } = useUser();
+  const devAuth = useDevAuth();
   const [extensionInstalled, setExtensionInstalled] = useState(false);
   const [integrationStatus, setIntegrationStatus] = useState('pending');
 
+  // Get authentication token based on current auth method
+  const getAuthToken = useCallback(async () => {
+    const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
+    const hasValidClerkKey = clerkPubKey && clerkPubKey.startsWith('pk_');
+    
+    if (hasValidClerkKey && clerkAuth.getToken) {
+      try {
+        return await clerkAuth.getToken();
+      } catch (error) {
+        console.error('Failed to get Clerk token:', error);
+        return null;
+      }
+    } else if (devAuth && user) {
+      // For development auth, create a simple token
+      return `dev_token_${user.id}`;
+    }
+    return null;
+  }, [clerkAuth, user, devAuth]);
+
   // Function to sync auth token with extension - use direct Chrome messaging
-  const syncAuthToken = useCallback(() => {
+  const syncAuthToken = useCallback(async () => {
     try {
+      const authToken = await getAuthToken();
+      if (!authToken) {
+        console.warn('No auth token available for extension sync');
+        return;
+      }
+
       // Check if chrome extension API is available
       if (typeof window !== 'undefined' && window.chrome && window.chrome.runtime) {
         // Send directly to the extension using its ID
@@ -35,12 +64,11 @@ const ExtensionIntegration = () => {
           window.location.origin
         );
         console.log('Auth token sent to extension via postMessage');
-      }
-    } catch (error) {
+      }    } catch (error) {
       console.error('Error sending token to extension:', error);
       setIntegrationStatus('error');
     }
-  }, [authToken]);
+  }, [getAuthToken]);
 
   // Check if extension is installed
   useEffect(() => {
@@ -88,13 +116,12 @@ const ExtensionIntegration = () => {
     
     checkExtension();
   }, []);
-
   // Sync auth token with extension when user logs in
   useEffect(() => {
-    if (authToken && extensionInstalled) {
+    if (isSignedIn && extensionInstalled) {
       syncAuthToken();
     }
-  }, [authToken, extensionInstalled, syncAuthToken]);
+  }, [isSignedIn, extensionInstalled, syncAuthToken]);
 
   // Component doesn't render anything visible
   return null;

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import CoverLetterGenerator from '../components/coverletter/CoverLetterGenerator';
 import CoverLetterHistory from '../components/coverletter/CoverLetterHistory';
 import CoverLetterEditor from '../components/coverletter/CoverLetterEditor';
-import { useAuth } from '../context/AuthContext';
+import { useUser } from '../hooks/useUniversalAuth';
+import { useApiWithAuth } from '../hooks/useApiWithAuth';
 
 const CoverLetter = () => {
+  const apiCall = useApiWithAuth();
   const [activeTab, setActiveTab] = useState('generate');
   const [coverLetters, setCoverLetters] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -16,13 +17,12 @@ const CoverLetter = () => {
   useEffect(() => {
     fetchCoverLetters();
   }, []);
-
   const fetchCoverLetters = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.get('/api/ai/cover-letters');
-      if (res.data.success) {
-        setCoverLetters(res.data.data);
+      const res = await apiCall.get('/api/ai/cover-letters');
+      if (res.success) {
+        setCoverLetters(res.data);
       }
     } catch (err) {
       console.error('Error fetching cover letters:', err);
@@ -31,20 +31,19 @@ const CoverLetter = () => {
       setIsLoading(false);
     }
   };
-
   const handleGenerateCoverLetter = async (formData) => {
     try {
       setIsGenerating(true);
-      const res = await axios.post('/api/ai/cover-letter', formData);
+      const res = await apiCall.post('/api/ai/cover-letter', formData);
       
-      if (res.data.success) {
+      if (res.success) {
         toast.success('Cover letter generated successfully!');
         
         // Add the new cover letter to the list
-        setCoverLetters([res.data.data, ...coverLetters]);
+        setCoverLetters([res.data, ...coverLetters]);
         
         // Set the active cover letter to the newly generated one
-        setActiveCoverLetter(res.data.data);
+        setActiveCoverLetter(res.data);
         
         // Switch to the editor tab
         setActiveTab('editor');
@@ -65,11 +64,10 @@ const CoverLetter = () => {
       setIsGenerating(false);
     }
   };
-  
-  const fetchAIStatus = async () => {
+    const fetchAIStatus = async () => {
     try {
-      const res = await axios.get('/api/users/ai-status');
-      if (res.data.success) {
+      const res = await apiCall.get('/api/users/ai-status');
+      if (res.success) {
         // This data is used in the CoverLetterGenerator component
         // but we call this to refresh the status after generation
       }
@@ -77,23 +75,22 @@ const CoverLetter = () => {
       console.error('Error fetching AI status:', error);
     }
   };
-
   const handleUpdateCoverLetter = async (id, updatedData) => {
     try {
       setIsLoading(true);
-      const res = await axios.put(`/api/ai/cover-letters/${id}`, updatedData);
+      const res = await apiCall.put(`/api/ai/cover-letters/${id}`, updatedData);
       
-      if (res.data.success) {
+      if (res.success) {
         toast.success('Cover letter updated successfully!');
         
         // Update the cover letter in the list
         setCoverLetters(coverLetters.map(letter => 
-          letter._id === id ? res.data.data : letter
+          letter._id === id ? res.data : letter
         ));
         
         // Update the active cover letter if it's the one being edited
         if (activeCoverLetter && activeCoverLetter._id === id) {
-          setActiveCoverLetter(res.data.data);
+          setActiveCoverLetter(res.data);
         }
       }
     } catch (err) {
@@ -103,13 +100,12 @@ const CoverLetter = () => {
       setIsLoading(false);
     }
   };
-
   const handleDeleteCoverLetter = async (id) => {
     try {
       setIsLoading(true);
-      const res = await axios.delete(`/api/ai/cover-letters/${id}`);
+      const res = await apiCall.delete(`/api/ai/cover-letters/${id}`);
       
-      if (res.data.success) {
+      if (res.success) {
         toast.success('Cover letter deleted successfully!');
         
         // Remove the cover letter from the list

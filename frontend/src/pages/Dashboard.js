@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useUser } from '../hooks/useUniversalAuth';
+import { useApiWithAuth } from '../hooks/useApiWithAuth';
 import ResumeUploader from '../components/resume/ResumeUploader';
 import ResumeList from '../components/resume/ResumeList';
 import ParsedResumeData from '../components/resume/ParsedResumeData';
@@ -11,7 +11,8 @@ import AICoverLetterCard from '../components/dashboard/AICoverLetterCard';
 import ResumeBuilderWidget from '../components/dashboard/ResumeBuilderWidget';
 
 const Dashboard = () => {
-  const { user, updateProfile } = useAuth();
+  const { user } = useUser();
+  const apiCall = useApiWithAuth();
   
   // Profile state
   const [profileData, setProfileData] = useState({
@@ -31,13 +32,12 @@ const Dashboard = () => {
   const [hasParsedData, setHasParsedData] = useState(false);
   const [parsedProfileData, setParsedProfileData] = useState(null);
   const [editingProfile, setEditingProfile] = useState(false);
-
   // Load user data into form when user state is available
   useEffect(() => {
     if (user) {
       setProfileData({
-        name: user.name || '',
-        email: user.email || ''
+        name: user.fullName || '',
+        email: user.primaryEmailAddress?.emailAddress || ''
       });
     }
   }, [user]);
@@ -47,7 +47,7 @@ const Dashboard = () => {
     const fetchResumes = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get('/api/resumes');
+        const res = await apiCall('/api/resumes');
         setResumes(res.data.data);
       } catch (err) {
         toast.error(err.response?.data?.error || 'Failed to fetch resumes');
@@ -57,16 +57,15 @@ const Dashboard = () => {
     };
 
     fetchResumes();
-  }, []);
-  
-  // Check if user has parsed resume data
+  }, [apiCall]);
+    // Check if user has parsed resume data
   useEffect(() => {
     const checkParsedData = async () => {
       try {
-        const res = await axios.get('/api/resumes/parsed-data');
-        if (res.data.success) {
+        const res = await apiCall.get('/api/resumes/parsed-data');
+        if (res.success) {
           setHasParsedData(true);
-          setParsedProfileData(res.data.data);
+          setParsedProfileData(res.data);
         }
       } catch (err) {
         // No parsed data yet
@@ -77,11 +76,10 @@ const Dashboard = () => {
     
     checkParsedData();
   }, []);
-  
-  // Function to refresh profile data
+    // Function to refresh profile data
   const refreshProfileData = async () => {
     try {
-      const res = await axios.get('/api/resumes/parsed-data');
+      const res = await apiCall('/api/resumes/parsed-data');
       if (res.data.success) {
         setParsedProfileData(res.data.data);
         setHasParsedData(true);
@@ -100,11 +98,14 @@ const Dashboard = () => {
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await updateProfile(profileData);
-      if (result.success) {
+      const result = await apiCall('/api/users/profile', {
+        method: 'PUT',
+        data: profileData
+      });
+      if (result.data.success !== false) {
         toast.success('Profile updated successfully');
       } else {
-        toast.error(result.error);
+        toast.error(result.data.error || 'Failed to update profile');
       }
     } catch (err) {
       toast.error('Failed to update profile');
@@ -119,8 +120,9 @@ const Dashboard = () => {
       
       const formData = new FormData();
       formData.append('resume', fileData);
-      
-      const res = await axios.post('/api/resumes', formData, {
+        const res = await apiCall('/api/resumes', {
+        method: 'POST',
+        data: formData,
         headers: {
           'Content-Type': 'multipart/form-data'
         },
@@ -156,11 +158,12 @@ const Dashboard = () => {
       }, 600); // Small delay to ensure progress animation completes smoothly
     }
   };
-
   // Handle setting a resume as primary
   const handleSetPrimary = async (id) => {
     try {
-      await axios.put(`/api/resumes/${id}/primary`);
+      await apiCall(`/api/resumes/${id}/primary`, {
+        method: 'PUT'
+      });
       
       // Update local state
       setResumes(resumes.map(resume => ({
@@ -178,7 +181,9 @@ const Dashboard = () => {
   const handleDeleteResume = async (id) => {
     if (window.confirm('Are you sure you want to delete this resume?')) {
       try {
-        await axios.delete(`/api/resumes/${id}`);
+        await apiCall(`/api/resumes/${id}`, {
+          method: 'DELETE'
+        });
         
         // Remove from state
         setResumes(resumes.filter(resume => resume._id !== id));

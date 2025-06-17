@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const { clerkMiddleware } = require('@clerk/express');
 const errorHandler = require('./middleware/errorHandler');
 
 // Route imports
@@ -34,6 +35,9 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Add Clerk middleware for authentication
+app.use(clerkMiddleware());
+
 // Request logging in development mode
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
@@ -48,8 +52,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Connect to MongoDB with improved options
 mongoose.connect(process.env.MONGODB_URI, {
   // These options help with connection stability
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
   socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
 })

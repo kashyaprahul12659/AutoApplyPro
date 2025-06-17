@@ -108,9 +108,8 @@ const JobTracker = () => {
       </div>
     );
   }
-
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="job-tracker container mx-auto px-4 py-8">
       <div className="flex flex-wrap justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Job Application Tracker</h1>
         

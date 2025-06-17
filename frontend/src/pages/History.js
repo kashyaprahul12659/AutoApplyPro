@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useApiWithAuth } from '../hooks/useApiWithAuth';
 import { toast } from 'react-toastify';
 
 const History = () => {
+  const apiCall = useApiWithAuth();
   const [historyItems, setHistoryItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-
   useEffect(() => {
     const fetchHistory = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get('/api/history');
-        setHistoryItems(res.data.data);
+        const res = await apiCall.get('/api/history');
+        setHistoryItems(res.data);
       } catch (err) {
         toast.error(err.response?.data?.error || 'Failed to fetch application history');
       } finally {
@@ -22,13 +22,12 @@ const History = () => {
     };
 
     fetchHistory();
-  }, []);
-
+  }, [apiCall]);
   // Handle history item deletion
   const handleDeleteHistoryItem = async (id) => {
     if (window.confirm('Are you sure you want to delete this history item?')) {
       try {
-        await axios.delete(`/api/history/${id}`);
+        await apiCall.delete(`/api/history/${id}`);
         
         // Remove from state
         setHistoryItems(historyItems.filter(item => item._id !== id));

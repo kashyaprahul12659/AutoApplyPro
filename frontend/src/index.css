@@ -1,14 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Base styles */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #fafafa;
+  color: #171717;
 }
 
 code {
@@ -16,28 +20,215 @@ code {
     monospace;
 }
 
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
 @layer components {
+  /* Modern Button System */
   .btn {
-    @apply px-4 py-2 rounded-md font-medium transition-colors duration-200;
+    @apply inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium rounded-xl 
+           transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 
+           disabled:opacity-60 disabled:cursor-not-allowed;
   }
   
   .btn-primary {
-    @apply bg-primary text-white hover:bg-blue-600;
+    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 
+           shadow-soft hover:shadow-medium transform hover:-translate-y-0.5;
   }
   
   .btn-secondary {
-    @apply bg-secondary text-white hover:bg-green-600;
+    @apply bg-secondary-600 text-white hover:bg-secondary-700 focus:ring-secondary-500 
+           shadow-soft hover:shadow-medium transform hover:-translate-y-0.5;
+  }
+  
+  .btn-accent {
+    @apply bg-accent-600 text-white hover:bg-accent-700 focus:ring-accent-500 
+           shadow-soft hover:shadow-medium transform hover:-translate-y-0.5;
   }
   
   .btn-outline {
-    @apply border border-gray-300 hover:bg-gray-100;
+    @apply border-2 border-neutral-300 text-neutral-700 hover:border-primary-500 
+           hover:text-primary-600 hover:bg-primary-50 focus:ring-primary-500;
   }
   
+  .btn-ghost {
+    @apply text-neutral-600 hover:text-primary-600 hover:bg-primary-50 focus:ring-primary-500;
+  }
+  
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 
+           shadow-soft hover:shadow-medium transform hover:-translate-y-0.5;
+  }
+  
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+  
+  .btn-lg {
+    @apply px-6 py-3 text-base font-semibold;
+  }
+  
+  .btn-xl {
+    @apply px-8 py-4 text-lg font-semibold;
+  }
+  
+  /* Modern Input System */
   .input {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+    @apply w-full px-4 py-3 border border-neutral-300 rounded-xl text-neutral-900 
+           placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 
+           focus:border-transparent transition-all duration-200 bg-white;
   }
   
+  .input-error {
+    @apply border-red-300 focus:ring-red-500 focus:border-red-500;
+  }
+  
+  .input-success {
+    @apply border-secondary-300 focus:ring-secondary-500 focus:border-secondary-500;
+  }
+  
+  /* Card System */
   .card {
-    @apply bg-white rounded-lg shadow-md p-6;
+    @apply bg-white rounded-2xl shadow-soft border border-neutral-200 overflow-hidden;
+  }
+  
+  .card-hover {
+    @apply hover:shadow-medium hover:-translate-y-1 transition-all duration-300;
+  }
+  
+  .card-interactive {
+    @apply cursor-pointer hover:shadow-medium hover:-translate-y-1 
+           hover:border-primary-300 transition-all duration-300;
+  }
+  
+  .card-gradient {
+    @apply bg-gradient-to-br from-primary-500 to-primary-700 text-white;
+  }
+  
+  .card-surface {
+    @apply bg-surface border-neutral-100;
+  }
+  
+  /* Badge System */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .badge-primary {
+    @apply bg-primary-100 text-primary-800;
+  }
+  
+  .badge-secondary {
+    @apply bg-secondary-100 text-secondary-800;
+  }
+  
+  .badge-accent {
+    @apply bg-accent-100 text-accent-800;
+  }
+  
+  .badge-success {
+    @apply bg-green-100 text-green-800;
+  }
+  
+  .badge-warning {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+  
+  .badge-error {
+    @apply bg-red-100 text-red-800;
+  }
+  
+  .badge-neutral {
+    @apply bg-neutral-100 text-neutral-800;
+  }
+  
+  /* Typography System */
+  .heading-1 {
+    @apply text-4xl md:text-5xl font-bold text-neutral-900 leading-tight;
+  }
+  
+  .heading-2 {
+    @apply text-3xl md:text-4xl font-bold text-neutral-900 leading-tight;
+  }
+  
+  .heading-3 {
+    @apply text-2xl md:text-3xl font-semibold text-neutral-900 leading-tight;
+  }
+  
+  .heading-4 {
+    @apply text-xl md:text-2xl font-semibold text-neutral-900 leading-tight;
+  }
+  
+  .text-muted {
+    @apply text-neutral-600;
+  }
+  
+  .text-subtle {
+    @apply text-neutral-500;
+  }
+  
+  /* Layout Components */
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .section-padding {
+    @apply py-16 lg:py-24;
+  }
+  
+  /* Loading States */
+  .skeleton {
+    @apply animate-pulse bg-neutral-200 rounded;
+  }
+  
+  /* Status Indicators */
+  .status-dot {
+    @apply inline-block w-2 h-2 rounded-full;
+  }
+  
+  .status-online {
+    @apply bg-secondary-500;
+  }
+  
+  .status-offline {
+    @apply bg-neutral-400;
+  }
+  
+  .status-busy {
+    @apply bg-yellow-500;
+  }
+  
+  .status-error {
+    @apply bg-red-500;
+  }
+  
+  /* Utility Classes */
+  .glass {
+    @apply backdrop-blur-sm bg-white/90 border border-white/20;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
+  }
+  
+  .shine {
+    @apply relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full 
+           before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r 
+           before:from-transparent before:via-white/20 before:to-transparent;
   }
 }

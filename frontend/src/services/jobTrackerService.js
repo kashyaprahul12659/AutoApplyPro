@@ -1,32 +1,11 @@
-import axios from 'axios';
-import { getAPIBaseUrl } from '../config';
-
-const API_URL = `${getAPIBaseUrl()}/job-tracker`;
+import { createApiCall } from '../utils/apiUtils';
 
 /**
  * Get all job applications for the current user
  * @returns {Promise} Promise object with job applications data
  */
 export const getAllJobApplications = async () => {
-  const token = localStorage.getItem('token');
-  
-  if (!token) {
-    throw new Error('Authentication required');
-  }
-  
-  try {
-    const response = await axios.get(`${API_URL}/all`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching job applications:', error);
-    throw error;
-  }
+  return await createApiCall('GET', '/job-tracker/all');
 };
 
 /**
@@ -35,25 +14,7 @@ export const getAllJobApplications = async () => {
  * @returns {Promise} Promise object with created job application
  */
 export const addJobApplication = async (jobData) => {
-  const token = localStorage.getItem('token');
-  
-  if (!token) {
-    throw new Error('Authentication required');
-  }
-  
-  try {
-    const response = await axios.post(`${API_URL}/add`, jobData, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    
-    return response.data;
-  } catch (error) {
-    console.error('Error adding job application:', error);
-    throw error;
-  }
+  return await createApiCall('POST', '/job-tracker/add', jobData);
 };
 
 /**
@@ -63,25 +24,7 @@ export const addJobApplication = async (jobData) => {
  * @returns {Promise} Promise object with updated job application
  */
 export const updateJobStatus = async (jobId, status) => {
-  const token = localStorage.getItem('token');
-  
-  if (!token) {
-    throw new Error('Authentication required');
-  }
-  
-  try {
-    const response = await axios.put(`${API_URL}/update-status/${jobId}`, { status }, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    
-    return response.data;
-  } catch (error) {
-    console.error('Error updating job status:', error);
-    throw error;
-  }
+  return await createApiCall('PUT', `/job-tracker/update-status/${jobId}`, { status });
 };
 
 /**
@@ -91,25 +34,7 @@ export const updateJobStatus = async (jobId, status) => {
  * @returns {Promise} Promise object with updated job application
  */
 export const updateJobApplication = async (jobId, jobData) => {
-  const token = localStorage.getItem('token');
-  
-  if (!token) {
-    throw new Error('Authentication required');
-  }
-  
-  try {
-    const response = await axios.put(`${API_URL}/${jobId}`, jobData, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    
-    return response.data;
-  } catch (error) {
-    console.error('Error updating job application:', error);
-    throw error;
-  }
+  return await createApiCall('PUT', `/job-tracker/${jobId}`, jobData);
 };
 
 /**
@@ -118,23 +43,5 @@ export const updateJobApplication = async (jobId, jobData) => {
  * @returns {Promise} Promise object with deletion status
  */
 export const deleteJobApplication = async (jobId) => {
-  const token = localStorage.getItem('token');
-  
-  if (!token) {
-    throw new Error('Authentication required');
-  }
-  
-  try {
-    const response = await axios.delete(`${API_URL}/${jobId}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    
-    return response.data;
-  } catch (error) {
-    console.error('Error deleting job application:', error);
-    throw error;
-  }
+  return await createApiCall('DELETE', `/job-tracker/${jobId}`);
 };

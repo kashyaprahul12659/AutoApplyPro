@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
+const clerkAuth = require('../middleware/clerkAuth');
 const JDAnalysisResult = require('../models/JDAnalysisResult');
 const User = require('../models/User');
 const Resume = require('../models/Resume');
@@ -8,7 +8,7 @@ const Resume = require('../models/Resume');
 // @route   POST /api/jd-analyzer/analyze
 // @desc    Analyze job description against user's resume
 // @access  Private
-router.post('/analyze', auth, async (req, res) => {
+router.post('/analyze', clerkAuth, async (req, res) => {
   try {
     const { jobDescription } = req.body;
     
@@ -82,7 +82,7 @@ router.post('/analyze', auth, async (req, res) => {
 // @route   POST /api/jd-analyzer/save
 // @desc    Save job description analysis results
 // @access  Private
-router.post('/save', auth, async (req, res) => {
+router.post('/save', clerkAuth, async (req, res) => {
   try {
     const { 
       jobTitle, 
@@ -134,7 +134,7 @@ router.post('/save', auth, async (req, res) => {
 // @route   GET /api/jd-analyzer/history
 // @desc    Get user's JD analysis history
 // @access  Private
-router.get('/history', auth, async (req, res) => {
+router.get('/history', clerkAuth, async (req, res) => {
   try {
     const analysisResults = await JDAnalysisResult.find({ user: req.user.id })
       .sort({ createdAt: -1 });

@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from './Tooltip';
-import { useAuth } from '../../context/AuthContext';
+import { useUser } from '../../hooks/useUniversalAuth';
 
 /**
  * Plan Badge component - displays current plan status in header
  * Shows "Pro" for pro users or "Free - X credits left" for free users
  */
 const PlanBadge = () => {
-  const { user } = useAuth();
+  const { user } = useUser();
   const isPro = user?.subscription?.isPro || false;
   const creditsLeft = user?.credits || 0;
 

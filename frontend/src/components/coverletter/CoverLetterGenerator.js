@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import axios from 'axios';
+import { useUser } from '../../hooks/useUniversalAuth';
+import { useApiWithAuth } from '../../hooks/useApiWithAuth';
 import ProUpgradeModal from './ProUpgradeModal';
 import AlertMessage from '../common/AlertMessage';
 
 const CoverLetterGenerator = ({ onGenerate, isGenerating }) => {
-  const { user } = useAuth();
+  const { user } = useUser();
+  const apiCall = useApiWithAuth();
   const [formData, setFormData] = useState({
     jobDescription: '',
     jobRole: ''
@@ -35,13 +36,12 @@ const CoverLetterGenerator = ({ onGenerate, isGenerating }) => {
   useEffect(() => {
     // Check if user has profile data
     setHasProfile(user && user.profileData && user.profileData.extractedFromResume);
-    
-    // Fetch AI credits and Pro status
+      // Fetch AI credits and Pro status
     const fetchAIStatus = async () => {
       try {
-        const res = await axios.get('/api/users/ai-status');
-        if (res.data.success) {
-          setAiStatus(res.data.data);
+        const res = await apiCall.get('/api/users/ai-status');
+        if (res.success) {
+          setAiStatus(res.data);
         }
       } catch (error) {
         console.error('Error fetching AI status:', error);

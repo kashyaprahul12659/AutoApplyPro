@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import { useApiWithAuth } from '../hooks/useApiWithAuth';
 import JDAnalyzer from '../components/analyzer/JDAnalyzer';
 import AnalyzerHistory from '../components/analyzer/AnalyzerHistory';
 import Spinner from '../components/common/Spinner';
 
 const JDAnalyzerPage = () => {
+  const apiCall = useApiWithAuth();
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,46 +22,24 @@ const JDAnalyzerPage = () => {
   const analysisId = queryParams.get('id');
   
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        
-        if (!token) {
-          navigate('/login');
-          return;
-        }
-        
+    const fetchUserProfile = async () => {      try {
         // Fetch user profile
-        const profileResponse = await axios.get('/api/users/profile', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        setUserProfile(profileResponse.data.data);
+        const profileResponse = await apiCall.get('/api/users/profile');
+        setUserProfile(profileResponse.data);
         
         // Fetch AI status (credits and Pro status)
-        const aiStatusResponse = await axios.get('/api/users/ai-status', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        const aiStatusResponse = await apiCall.get('/api/users/ai-status');
         
         setAiStatus({
-          isPro: aiStatusResponse.data.isPro,
+          isPro: aiStatusResponse.isPro,
           aiCredits: aiStatusResponse.data.aiCredits
         });
-        
-        // If we have an analysis ID, fetch the specific analysis
+          // If we have an analysis ID, fetch the specific analysis
         if (analysisId) {
           try {
-            const analysisResponse = await axios.get(`/api/ai/analyzer-history/${analysisId}`, {
-              headers: {
-                'Authorization': `Bearer ${token}`
-              }
-            });
+            const analysisResponse = await apiCall.get(`/api/ai/analyzer-history/${analysisId}`);
             
-            setSpecificAnalysis(analysisResponse.data.data);
+            setSpecificAnalysis(analysisResponse.data);
             setActiveTab('analyzer'); // Show the analyzer tab with the loaded analysis
           } catch (analysisErr) {
             console.error('Error fetching specific analysis:', analysisErr);
@@ -107,9 +86,8 @@ const JDAnalyzerPage = () => {
       </div>
     );
   }
-  
-  return (
-    <div className="container mx-auto px-4 py-8">
+    return (
+    <div className="jd-analyzer container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">JD Skill Analyzer</h1>
         <div className="flex items-center space-x-4">
