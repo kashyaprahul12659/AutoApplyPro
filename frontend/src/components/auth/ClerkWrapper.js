@@ -24,9 +24,7 @@ export function ClerkWrapper({ children }) {
   if (!hasValidClerkKey && isDevelopment) {
     console.warn('⚠️ Clerk not configured. Using development authentication mode.');
     return content;
-  }
-
-  // When Clerk is available, wrap DevAuthProvider with ClerkProvider
+  }  // When Clerk is available, wrap DevAuthProvider with ClerkProvider
   return (
     <ClerkProvider 
       publishableKey={clerkPubKey}

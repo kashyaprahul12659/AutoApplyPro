@@ -3,8 +3,13 @@
   publish = "build"
 
 [build.environment]
-  REACT_APP_API_URL = "https://autoapply-pro-backend.onrender.com"
-  REACT_APP_DOMAIN = "autoapplypro.tech"
+  NODE_VERSION = "18"
+  REACT_APP_API_URL = "https://autoapplypro-backend-d14947a17c9b.herokuapp.com"
+  REACT_APP_BASE_URL = "https://autoapplypro.tech"
+  REACT_APP_CLERK_PUBLISHABLE_KEY = "pk_live_Y2xlcmsuYXV0b2FwcGx5cHJvLnRlY2gk"
+  REACT_APP_RAZORPAY_KEY_ID = "rzp_live_SPfrt4L73jxLbf"
+  NODE_ENV = "production"
+  GENERATE_SOURCEMAP = "false"
 
 # Handle SPA routing
 [[redirects]]

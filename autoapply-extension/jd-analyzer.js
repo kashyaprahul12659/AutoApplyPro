@@ -64,7 +64,7 @@ async function analyzeJobDescription(jobDescription, authToken) {
       chrome.runtime.sendMessage({ type: 'getApiUrl' }, resolve);
     });
     
-    const API_BASE_URL = apiUrl || 'http://localhost:5000/api'; // Fallback
+    const API_BASE_URL = apiUrl || 'https://autoapplypro-backend-d14947a17c9b.herokuapp.com/api'; // Fallback
     
     const response = await fetch(`${API_BASE_URL}/jd-analyzer/analyze`, {
       method: 'POST',
@@ -171,8 +171,7 @@ function showAnalysisResults(results) {
       });
       
       if (!token) {
-        alert('Please log in to save this analysis');
-        return;
+        alert('Please log in to save this analysis');        return;
       }
         // Save analysis
       // Get API URL from background script
@@ -180,7 +179,7 @@ function showAnalysisResults(results) {
         chrome.runtime.sendMessage({ type: 'getApiUrl' }, resolve);
       });
       
-      const API_BASE_URL = apiUrl || 'http://localhost:5000/api'; // Fallback
+      const API_BASE_URL = apiUrl || 'https://autoapplypro-backend-d14947a17c9b.herokuapp.com/api'; // Fallback
       
       const response = await fetch(`${API_BASE_URL}/jd-analyzer/save`, {
         method: 'POST',

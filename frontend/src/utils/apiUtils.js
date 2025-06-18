@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://autoapplypro-backend-d14947a17c9b.herokuapp.com';
 const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
 const hasValidClerkKey = clerkPubKey && clerkPubKey.startsWith('pk_');
 

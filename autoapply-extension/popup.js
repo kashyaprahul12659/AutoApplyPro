@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {  // Use utility funct
                          window.location.hostname === '127.0.0.1' || 
                          window.location.hostname.includes('192.168.');
       
-      API_BASE_URL = isLocalhost ? 'http://localhost:5000/api' : 'https://api.autoapplypro.com/api';
+      API_BASE_URL = isLocalhost ? 'http://localhost:5000/api' : 'https://autoapplypro-backend-d14947a17c9b.herokuapp.com/api';
       console.log(`Fallback API: ${API_BASE_URL}`);
     }
   });

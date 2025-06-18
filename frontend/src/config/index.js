@@ -10,8 +10,8 @@ export const getAPIBaseUrl = () => {
     return 'http://localhost:5000/api';
   }
   
-  // For production environment
-  return process.env.REACT_APP_API_URL || 'https://autoapplypro-api.example.com/api';
+  // For production environment - Heroku backend
+  return process.env.REACT_APP_API_URL || 'https://autoapplypro-backend-d14947a17c9b.herokuapp.com/api';
 };
 
 // App configuration

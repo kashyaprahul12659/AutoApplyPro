@@ -6,7 +6,7 @@ console.log('AutoApply Pro: Background service worker initialized');
 // Configure API Base URL for development and production environments
 const API_BASE_URL = {
   development: 'http://localhost:5000/api',
-  production: 'https://api.autoapplypro.tech/api'
+  production: 'https://autoapplypro-backend-d14947a17c9b.herokuapp.com/api'
 };
 
 // Determine the environment based on extension installation type
