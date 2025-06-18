@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: autoapplypro-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: FRONTEND_URL
+        value: https://autoapplypro.netlify.app
+      - key: CORS_ORIGIN
+        value: https://autoapplypro.netlify.app
+    # Environment variables that need to be set manually in Render dashboard:
+    # MONGODB_URI - Your MongoDB connection string
+    # CLERK_SECRET_KEY - Your Clerk secret key
+    # CLERK_WEBHOOK_SECRET - Your Clerk webhook secret
+    # OPENAI_API_KEY - Your OpenAI API key
+    # ANTHROPIC_API_KEY - Your Anthropic API key (optional)
+    # RAZORPAY_KEY_ID - Your Razorpay key ID
+    # RAZORPAY_KEY_SECRET - Your Razorpay key secret
+    # SMTP_HOST - Your SMTP host
+    # SMTP_PORT - Your SMTP port (usually 587)
+    # SMTP_USER - Your SMTP username
+    # SMTP_PASS - Your SMTP password
+    # JWT_SECRET - A random string for JWT signing
+    # SESSION_SECRET - A random string for session signing
+    # ENCRYPTION_KEY - A random string for encryption
