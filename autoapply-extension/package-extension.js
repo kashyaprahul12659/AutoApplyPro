@@ -40,15 +40,35 @@ const filesToInclude = [
   'background.js',
   'utils.js',
   'listener.js',
+  'jd-analyzer.js',
   'README.md'
 ];
 
 filesToInclude.forEach(file => {
-  archive.file(path.join(__dirname, file), { name: file });
+  const filePath = path.join(__dirname, file);
+  if (fs.existsSync(filePath)) {
+    archive.file(filePath, { name: file });
+    console.log(`Added ${file} to extension package`);
+  } else {
+    console.warn(`Warning: ${file} not found, skipping...`);
+  }
 });
 
+// Add utils directory
+const utilsDir = path.join(__dirname, 'utils');
+if (fs.existsSync(utilsDir)) {
+  archive.directory(utilsDir, 'utils');
+  console.log('Added utils directory to extension package');
+}
+
 // Add icons directory
-archive.directory(path.join(__dirname, 'icons'), 'icons');
+const iconsDir = path.join(__dirname, 'icons');
+if (fs.existsSync(iconsDir)) {
+  archive.directory(iconsDir, 'icons');
+  console.log('Added icons directory to extension package');
+} else {
+  console.warn('Warning: icons directory not found');
+}
 
 // Finalize the archive
 archive.finalize();

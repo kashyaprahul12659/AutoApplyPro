@@ -9,9 +9,8 @@ const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
 const hasValidClerkKey = clerkPubKey && clerkPubKey.startsWith('pk_');
 
 // Development login form
-function DevLoginForm() {
-  const [formData, setFormData] = useState({
-    email: 'dev@autoapplypro.com',
+function DevLoginForm() {  const [formData, setFormData] = useState({
+    email: 'dev@autoapplypro.tech',
     password: 'dev123'
   });
   const [isLoading, setIsLoading] = useState(false);

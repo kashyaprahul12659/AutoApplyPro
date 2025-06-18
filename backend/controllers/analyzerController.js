@@ -1,6 +1,7 @@
 const AIService = require('../services/AIService');
 const AnalyzerHistory = require('../models/AnalyzerHistory');
 const User = require('../models/User');
+const logger = require('../utils/logger'); // Added: Import proper logger
 
 /**
  * Analyze job description based on user profile and job description
@@ -62,9 +63,12 @@ exports.analyzeJobDescription = async (req, res) => {
     res.status(201).json({
       success: true,
       data: analyzerHistory
+    });  } catch (error) {
+    // Fixed: Replace console.error with proper logger
+    logger.error('Job description analysis error', { 
+      error: error.message, 
+      userId: req.user?.id 
     });
-  } catch (error) {
-    console.error('Error in job description analysis:', error);
     
     // Check for OpenAI-specific errors
     if (error.response && error.response.data) {
@@ -95,9 +99,12 @@ exports.getAnalyzerHistory = async (req, res) => {
       success: true,
       count: analyzerHistory.length,
       data: analyzerHistory
+    });  } catch (error) {
+    // Fixed: Replace console.error with proper logger
+    logger.error('Get analyzer history error', { 
+      error: error.message, 
+      userId: req.user?.id 
     });
-  } catch (error) {
-    console.error('Error fetching analyzer history:', error);
     res.status(500).json({
       success: false,
       error: 'Server error'
@@ -132,9 +139,13 @@ exports.getAnalyzerHistoryItem = async (req, res) => {
     res.status(200).json({
       success: true,
       data: analyzerHistoryItem
+    });  } catch (error) {
+    // Fixed: Replace console.error with proper logger
+    logger.error('Get analyzer history item error', { 
+      error: error.message, 
+      userId: req.user?.id,
+      itemId: req.params?.id
     });
-  } catch (error) {
-    console.error('Error fetching analysis:', error);
     res.status(500).json({
       success: false,
       error: 'Server error'
@@ -171,9 +182,13 @@ exports.deleteAnalyzerHistoryItem = async (req, res) => {
     res.status(200).json({
       success: true,
       data: {}
+    });  } catch (error) {
+    // Fixed: Replace console.error with proper logger
+    logger.error('Delete analyzer history item error', { 
+      error: error.message, 
+      userId: req.user?.id,
+      itemId: req.params?.id
     });
-  } catch (error) {
-    console.error('Error deleting analysis:', error);
     res.status(500).json({
       success: false,
       error: 'Server error'

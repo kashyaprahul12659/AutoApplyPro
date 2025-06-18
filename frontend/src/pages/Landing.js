@@ -201,441 +201,644 @@ const Landing = () => {
   const prevTestimonial = () => {
     setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <Navbar />
       
-      {/* Hero Section */}
+      {/* Enhanced Hero Section */}
       <section className="relative overflow-hidden pt-20 pb-32">
-        {/* Background Elements */}
+        {/* Animated Background Elements */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary-100 via-transparent to-transparent"></div>
-        <div className="absolute top-0 left-1/4 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute top-0 right-1/4 w-72 h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-1/3 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300 to-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-float"></div>
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-gradient-to-r from-yellow-300 to-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-float" style={{animationDelay: '2s'}}></div>
+        <div className="absolute -bottom-8 left-1/3 w-96 h-96 bg-gradient-to-r from-cyan-300 to-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-float" style={{animationDelay: '4s'}}></div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative container-custom">
           <div className="text-center">
-            {/* Social Proof Badge */}
-            <div className="inline-flex items-center px-6 py-3 rounded-full bg-white/80 backdrop-blur-sm border border-primary-200/50 text-primary-700 text-sm font-semibold mb-8 hover:bg-white/90 hover:scale-105 transition-all duration-300 shadow-lg">
-              <UserGroupIcon className="h-5 w-5 mr-2" />
-              <span className="bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
-                {animatedCounts.users.toLocaleString()}+ job seekers
+            {/* Enhanced Social Proof Badge */}
+            <div className="inline-flex items-center px-8 py-4 rounded-full bg-white/90 backdrop-blur-md border border-primary-200/50 text-primary-700 text-sm font-semibold mb-8 hover:bg-white hover:scale-105 hover:shadow-glow transition-all duration-500 shadow-xl group">
+              <UserGroupIcon className="h-5 w-5 mr-3 text-primary-600 group-hover:text-primary-700 transition-colors duration-300" />
+              <span className="gradient-text font-bold">
+                {animatedCounts.users.toLocaleString()}+ professionals
               </span>
-              <span className="ml-2">landed their dream jobs</span>
+              <span className="ml-2 text-neutral-600">landed their dream jobs with us</span>
+              <div className="ml-3 flex">
+                {[...Array(5)].map((_, i) => (
+                  <StarIcon key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                ))}
+              </div>
             </div>
 
-            {/* Main Headline */}
-            <h1 className="text-6xl md:text-8xl font-black text-gray-900 mb-8 tracking-tight leading-[0.9]">
-              Land Your
-              <span className="block bg-gradient-to-r from-primary-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent animate-gradient">
+            {/* Revolutionary Main Headline */}
+            <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-neutral-900 mb-8 tracking-tight leading-[0.85]">
+              <span className="block animate-fade-in-up">Land Your</span>
+              <span className="block gradient-text animate-fade-in-up" style={{animationDelay: '0.2s'}}>
                 Dream Job
               </span>
-              <span className="block text-5xl md:text-6xl font-bold text-gray-700">
+              <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-neutral-700 animate-fade-in-up" style={{animationDelay: '0.4s'}}>
                 10x Faster
               </span>
             </h1>
 
-            {/* Subheadline */}
-            <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed font-medium">
-              The world's most advanced AI-powered job application platform. 
-              <span className="text-primary-600 font-semibold"> Automate applications</span>,
-              <span className="text-purple-600 font-semibold"> generate perfect cover letters</span>, and
-              <span className="text-cyan-600 font-semibold"> analyze job matches</span> with superhuman precision.
+            {/* Enhanced Subheadline with Psychological Triggers */}
+            <p className="text-xl md:text-2xl lg:text-3xl text-neutral-600 mb-12 max-w-5xl mx-auto leading-relaxed font-medium animate-fade-in-up" style={{animationDelay: '0.6s'}}>
+              Join thousands of professionals who've <span className="text-primary-600 font-bold">transformed their careers</span> with AI.
+              <br className="hidden md:block" />
+              <span className="text-secondary-600 font-semibold">Automate applications</span>, 
+              <span className="text-accent-600 font-semibold"> craft perfect cover letters</span>, and 
+              <span className="text-primary-600 font-semibold"> land interviews faster</span> than ever before.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-20">
+            {/* Enhanced CTA Buttons with Urgency */}
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-20 animate-fade-in-up" style={{animationDelay: '0.8s'}}>
               <Link
                 to={user ? "/dashboard" : "/register"}
-                className="group relative px-10 py-5 bg-gradient-to-r from-primary-600 via-primary-700 to-purple-600 text-white font-bold rounded-2xl hover:from-primary-700 hover:via-primary-800 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-primary-500/25 min-w-[240px] text-lg"
+                className="group relative px-12 py-6 bg-gradient-to-r from-primary-600 via-primary-700 to-accent-600 text-white font-bold rounded-2xl hover:from-primary-700 hover:via-primary-800 hover:to-accent-700 transform hover:scale-110 hover:-translate-y-2 transition-all duration-500 shadow-2xl hover:shadow-glow min-w-[280px] text-lg overflow-hidden"
               >
                 <span className="relative z-10 flex items-center justify-center">
-                  <BoltIcon className="h-6 w-6 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                  {user ? "Go to Dashboard" : "Start Free Trial"}
+                  <BoltIcon className="h-6 w-6 mr-3 group-hover:rotate-12 transition-transform duration-300" />
+                  {user ? "Go to Dashboard" : "Start Free Today"}
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-primary-800 to-purple-800 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-primary-800 to-accent-800 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute -top-2 -right-2 bg-secondary-500 text-white text-xs font-bold px-2 py-1 rounded-full">FREE</div>
               </Link>
               
-              <button className="group flex items-center px-10 py-5 bg-white/80 backdrop-blur-sm text-gray-700 font-bold rounded-2xl border-2 border-gray-300 hover:bg-white hover:border-primary-300 hover:text-primary-600 transition-all duration-300 min-w-[240px] text-lg shadow-xl hover:shadow-2xl">
-                <PlayIcon className="h-6 w-6 mr-3 group-hover:scale-110 group-hover:text-primary-500 transition-all duration-300" />
-                Watch Demo (2 min)
+              <button className="group flex items-center px-12 py-6 bg-white/90 backdrop-blur-md text-neutral-700 font-bold rounded-2xl border-2 border-neutral-300 hover:bg-white hover:border-primary-300 hover:text-primary-600 hover:scale-105 hover:-translate-y-1 transition-all duration-500 min-w-[280px] text-lg shadow-xl hover:shadow-2xl">
+                <PlayIcon className="h-6 w-6 mr-3 group-hover:scale-125 group-hover:text-primary-500 transition-all duration-300" />
+                Watch 2-Min Demo
+                <span className="ml-2 text-sm text-neutral-500 group-hover:text-primary-400">(See the magic)</span>
               </button>
             </div>
 
-            {/* Enhanced Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-              <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-3xl border border-white/30 hover:bg-white/90 hover:scale-105 transition-all duration-300 shadow-xl">
-                <div className="text-4xl md:text-5xl font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-2">
+            {/* Enhanced Animated Stats Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto animate-fade-in-up" style={{animationDelay: '1s'}}>
+              <div className="text-center p-8 bg-white/80 backdrop-blur-md rounded-3xl border border-white/40 hover:bg-white/95 hover:scale-110 hover:-translate-y-2 transition-all duration-500 shadow-xl hover:shadow-2xl group">
+                <div className="text-4xl md:text-5xl lg:text-6xl font-black gradient-text mb-3 group-hover:scale-110 transition-transform duration-300">
                   {animatedCounts.applications.toLocaleString()}+
                 </div>
-                <div className="text-gray-600 font-semibold text-sm">Applications Sent</div>
-                <div className="text-emerald-600 text-xs font-bold mt-1">This Month</div>
+                <div className="text-neutral-600 font-bold text-sm mb-1">Applications Sent</div>
+                <div className="inline-flex items-center px-3 py-1 bg-secondary-100 text-secondary-700 text-xs font-bold rounded-full">
+                  <div className="w-2 h-2 bg-secondary-500 rounded-full mr-2 animate-pulse-soft"></div>
+                  This Month
+                </div>
               </div>
-              <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-3xl border border-white/30 hover:bg-white/90 hover:scale-105 transition-all duration-300 shadow-xl">
-                <div className="text-4xl md:text-5xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+              
+              <div className="text-center p-8 bg-white/80 backdrop-blur-md rounded-3xl border border-white/40 hover:bg-white/95 hover:scale-110 hover:-translate-y-2 transition-all duration-500 shadow-xl hover:shadow-2xl group">
+                <div className="text-4xl md:text-5xl lg:text-6xl font-black gradient-text mb-3 group-hover:scale-110 transition-transform duration-300">
                   {animatedCounts.timeSaved.toLocaleString()}+
                 </div>
-                <div className="text-gray-600 font-semibold text-sm">Hours Saved</div>
-                <div className="text-purple-600 text-xs font-bold mt-1">Per User</div>
+                <div className="text-neutral-600 font-bold text-sm mb-1">Hours Saved</div>
+                <div className="inline-flex items-center px-3 py-1 bg-accent-100 text-accent-700 text-xs font-bold rounded-full">
+                  <ClockIcon className="w-3 h-3 mr-1" />
+                  Per User
+                </div>
               </div>
-              <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-3xl border border-white/30 hover:bg-white/90 hover:scale-105 transition-all duration-300 shadow-xl">
-                <div className="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2">
+              
+              <div className="text-center p-8 bg-white/80 backdrop-blur-md rounded-3xl border border-white/40 hover:bg-white/95 hover:scale-110 hover:-translate-y-2 transition-all duration-500 shadow-xl hover:shadow-2xl group">
+                <div className="text-4xl md:text-5xl lg:text-6xl font-black gradient-text mb-3 group-hover:scale-110 transition-transform duration-300">
                   {animatedCounts.successRate}%
                 </div>
-                <div className="text-gray-600 font-semibold text-sm">Success Rate</div>
-                <div className="text-blue-600 text-xs font-bold mt-1">Interview Rate</div>
+                <div className="text-neutral-600 font-bold text-sm mb-1">Interview Rate</div>
+                <div className="inline-flex items-center px-3 py-1 bg-primary-100 text-primary-700 text-xs font-bold rounded-full">
+                  <ChartBarIcon className="w-3 h-3 mr-1" />
+                  Success Rate
+                </div>
               </div>
-              <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-3xl border border-white/30 hover:bg-white/90 hover:scale-105 transition-all duration-300 shadow-xl">
-                <div className="text-4xl md:text-5xl font-black bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-2">
+              
+              <div className="text-center p-8 bg-white/80 backdrop-blur-md rounded-3xl border border-white/40 hover:bg-white/95 hover:scale-110 hover:-translate-y-2 transition-all duration-500 shadow-xl hover:shadow-2xl group">
+                <div className="text-4xl md:text-5xl lg:text-6xl font-black gradient-text mb-3 group-hover:scale-110 transition-transform duration-300">
                   4.9
                 </div>
-                <div className="text-gray-600 font-semibold text-sm">User Rating</div>
-                <div className="flex justify-center mt-1">
+                <div className="text-neutral-600 font-bold text-sm mb-1">User Rating</div>
+                <div className="flex justify-center">
                   {[...Array(5)].map((_, i) => (
-                    <StarIcon key={i} className="h-3 w-3 text-yellow-400 fill-current" />
+                    <StarIcon key={i} className="h-4 w-4 text-yellow-400 fill-current hover:scale-125 transition-transform duration-200" style={{animationDelay: `${i * 0.1}s`}} />
                   ))}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-32 bg-gradient-to-b from-white to-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-24">
-            <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-8 leading-tight">
+      </section>      {/* Revolutionary Features Section */}
+      <section className="section-padding bg-gradient-to-b from-white via-surface to-surface-2 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-50/30 via-transparent to-transparent"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-accent-200 to-primary-200 rounded-full opacity-20 blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-secondary-200 to-accent-200 rounded-full opacity-20 blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
+        
+        <div className="relative container-custom">
+          <div className="text-center mb-24 animate-fade-in-up">
+            <div className="inline-flex items-center px-6 py-3 bg-primary-100 text-primary-700 rounded-full font-semibold text-sm mb-6">
+              <ShieldCheckIcon className="h-5 w-5 mr-2" />
+              Trusted by 15,000+ professionals
+            </div>
+            <h2 className="heading-1 mb-8">
               Everything You Need to
-              <span className="block bg-gradient-to-r from-primary-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
+              <span className="block gradient-text">
                 Dominate Your Job Search
               </span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto font-medium leading-relaxed">
+            <p className="text-xl md:text-2xl text-muted max-w-4xl mx-auto leading-relaxed">
               Our AI-powered platform combines cutting-edge technology with proven job search strategies 
-              to give you an unfair advantage in today's competitive market.
+              to give you an <span className="text-primary-600 font-semibold">unfair advantage</span> in today's competitive market.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {/* Interactive Features Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="group relative p-10 bg-white rounded-3xl border border-gray-200 hover:border-transparent hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 overflow-hidden"
+                className="group card card-hover p-10 bg-white/80 backdrop-blur-sm border-2 border-transparent hover:border-primary-200 hover:bg-white transition-all duration-500 overflow-hidden"
+                style={{
+                  animationDelay: `${index * 0.1}s`
+                }}
               >
-                {/* Background gradient */}
+                {/* Background Gradient Effect */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
                 
-                {/* Icon */}
-                <div className={`relative inline-flex p-4 rounded-2xl bg-gradient-to-br ${feature.gradient} text-white mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                {/* Floating Icon */}
+                <div className={`relative inline-flex p-6 rounded-3xl bg-gradient-to-br ${feature.gradient} text-white mb-8 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 shadow-xl hover:shadow-2xl`}>
                   {feature.icon}
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                    <div className="w-3 h-3 bg-secondary-500 rounded-full animate-pulse-soft"></div>
+                  </div>
                 </div>
                 
-                {/* Stats badge */}
-                <div className="relative inline-block px-4 py-2 bg-gray-100 rounded-full text-sm font-bold text-gray-700 mb-4 group-hover:bg-primary-50 group-hover:text-primary-700 transition-colors duration-300">
+                {/* Performance Badge */}
+                <div className="relative inline-block px-4 py-2 bg-gradient-to-r from-secondary-100 to-accent-100 rounded-full text-sm font-bold text-secondary-700 mb-6 group-hover:scale-105 transition-transform duration-300">
+                  <BoltIcon className="inline h-4 w-4 mr-1" />
                   {feature.stats}
                 </div>
                 
-                <h3 className="relative text-2xl font-black text-gray-900 mb-4 group-hover:text-primary-700 transition-colors duration-300">
+                <h3 className="relative heading-4 mb-6 group-hover:text-primary-700 transition-colors duration-300">
                   {feature.title}
                 </h3>
                 
-                <p className="relative text-gray-600 leading-relaxed text-lg">
+                <p className="relative text-muted leading-relaxed text-lg mb-8">
                   {feature.description}
                 </p>
 
-                {/* Learn more link */}
-                <div className="relative mt-6">
-                  <button className="text-primary-600 font-semibold hover:text-primary-700 transition-colors duration-300 group-hover:translate-x-2 transform flex items-center">
-                    Learn more 
-                    <ChevronRightIcon className="h-4 w-4 ml-1" />
+                {/* Interactive CTA */}
+                <div className="relative">
+                  <button className="group/btn flex items-center text-primary-600 font-semibold hover:text-primary-700 transition-all duration-300 transform group-hover:translate-x-2">
+                    <span>Learn more</span>
+                    <div className="ml-2 p-1 rounded-full bg-primary-100 group-hover/btn:bg-primary-200 transition-colors duration-300">
+                      <ChevronRightIcon className="h-4 w-4 group-hover/btn:translate-x-0.5 transition-transform duration-300" />
+                    </div>
                   </button>
                 </div>
+
+                {/* Hover Effect Indicator */}
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 to-accent-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Enhanced Testimonials Section */}
-      <section className="py-32 bg-gradient-to-br from-primary-50 via-purple-50 to-cyan-50 relative overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-100/30 via-transparent to-transparent"></div>
+          {/* Additional Features Showcase */}
+          <div className="mt-24 text-center">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+              <div className="group text-center p-6 hover:bg-white/80 rounded-2xl transition-all duration-300 hover:shadow-soft">
+                <div className="text-3xl font-black gradient-text mb-2 group-hover:scale-110 transition-transform duration-300">99.9%</div>
+                <div className="text-sm text-muted font-semibold">Accuracy Rate</div>
+              </div>
+              <div className="group text-center p-6 hover:bg-white/80 rounded-2xl transition-all duration-300 hover:shadow-soft">
+                <div className="text-3xl font-black gradient-text mb-2 group-hover:scale-110 transition-transform duration-300">500+</div>
+                <div className="text-sm text-muted font-semibold">Job Platforms</div>
+              </div>
+              <div className="group text-center p-6 hover:bg-white/80 rounded-2xl transition-all duration-300 hover:shadow-soft">
+                <div className="text-3xl font-black gradient-text mb-2 group-hover:scale-110 transition-transform duration-300">24/7</div>
+                <div className="text-sm text-muted font-semibold">Support</div>
+              </div>
+              <div className="group text-center p-6 hover:bg-white/80 rounded-2xl transition-all duration-300 hover:shadow-soft">
+                <div className="text-3xl font-black gradient-text mb-2 group-hover:scale-110 transition-transform duration-300">SOC2</div>
+                <div className="text-sm text-muted font-semibold">Certified</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>      {/* Revolutionary Testimonials Section */}
+      <section className="section-padding bg-gradient-to-br from-primary-50 via-accent-50 to-secondary-50 relative overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-100/20 via-transparent to-transparent"></div>
+        <div className="absolute top-1/4 left-0 w-72 h-72 bg-gradient-to-br from-primary-300 to-accent-300 rounded-full opacity-10 blur-3xl animate-float"></div>
+        <div className="absolute bottom-1/4 right-0 w-72 h-72 bg-gradient-to-bl from-secondary-300 to-primary-300 rounded-full opacity-10 blur-3xl animate-float" style={{animationDelay: '3s'}}></div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-8">
+        <div className="relative container-custom">
+          <div className="text-center mb-20 animate-fade-in-up">
+            <div className="inline-flex items-center px-6 py-3 bg-secondary-100 text-secondary-700 rounded-full font-semibold text-sm mb-6">
+              <StarIcon className="h-5 w-5 mr-2 text-yellow-500 fill-current" />
+              4.9/5 from 15,000+ reviews
+            </div>
+            <h2 className="heading-1 mb-8">
               Success Stories That
-              <span className="block bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-secondary-600 via-primary-600 to-accent-600 bg-clip-text text-transparent">
                 Speak for Themselves
               </span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto font-medium">
-              Real results from real users. Join thousands of professionals who've transformed their careers with AutoApply Pro.
+            <p className="text-xl md:text-2xl text-muted max-w-4xl mx-auto leading-relaxed">
+              Real results from real users. Join thousands of professionals who've 
+              <span className="text-secondary-600 font-semibold"> transformed their careers</span> with AutoApply Pro.
             </p>
           </div>
 
-          {/* Testimonial Carousel */}
-          <div className="relative max-w-4xl mx-auto">
-            <div className="bg-white rounded-3xl shadow-2xl p-12 relative overflow-hidden">
-              {/* Background pattern */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary-100 to-purple-100 rounded-full opacity-30 transform translate-x-32 -translate-y-32"></div>
+          {/* Featured Testimonial Carousel */}
+          <div className="relative max-w-5xl mx-auto mb-20">
+            <div className="card p-12 md:p-16 bg-white/90 backdrop-blur-md shadow-2xl border border-white/50 relative overflow-hidden group">
+              {/* Animated Background Pattern */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary-100/30 to-accent-100/30 rounded-full transform translate-x-1/3 -translate-y-1/3 group-hover:scale-110 transition-transform duration-700"></div>
+              <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-secondary-100/30 to-primary-100/30 rounded-full transform -translate-x-1/3 translate-y-1/3 group-hover:scale-110 transition-transform duration-700"></div>
               
               <div className="relative">
-                {/* Rating stars */}
-                <div className="flex justify-center mb-6">
-                  {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
-                    <StarIcon key={i} className="h-8 w-8 text-yellow-400 fill-current mx-1" />
-                  ))}
+                {/* Enhanced Rating Display */}
+                <div className="flex justify-center mb-8">
+                  <div className="flex items-center px-6 py-3 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl">
+                    {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
+                      <StarIcon 
+                        key={i} 
+                        className="h-8 w-8 text-yellow-500 fill-current mx-1 hover:scale-125 transition-transform duration-200" 
+                        style={{animationDelay: `${i * 0.1}s`}}
+                      />
+                    ))}
+                    <span className="ml-3 text-yellow-700 font-bold text-lg">5.0</span>
+                  </div>
                 </div>
 
-                {/* Testimonial content */}
-                <blockquote className="text-2xl md:text-3xl font-medium text-gray-900 text-center leading-relaxed mb-10 italic">
-                  "{testimonials[currentTestimonial].content}"
+                {/* Enhanced Testimonial Content */}
+                <blockquote className="text-2xl md:text-3xl lg:text-4xl font-medium text-neutral-900 text-center leading-relaxed mb-12 italic">
+                  <span className="text-primary-600">"</span>
+                  {testimonials[currentTestimonial].content}
+                  <span className="text-primary-600">"</span>
                 </blockquote>
 
-                {/* Success outcome */}
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-center px-6 py-3 bg-green-100 rounded-full text-green-800 font-bold text-lg">
-                    <CheckIcon className="h-5 w-5 mr-2" />
+                {/* Success Outcome Badge */}
+                <div className="text-center mb-10">
+                  <div className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-secondary-500 to-primary-500 rounded-2xl text-white font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                    <CheckIcon className="h-6 w-6 mr-3" />
                     {testimonials[currentTestimonial].outcome}
                   </div>
                 </div>
 
-                {/* Author */}
+                {/* Enhanced Author Section */}
                 <div className="flex items-center justify-center">
-                  <img
-                    src={testimonials[currentTestimonial].image}
-                    alt={testimonials[currentTestimonial].name}
-                    className="h-16 w-16 rounded-full object-cover mr-4 shadow-lg"
-                  />
-                  <div className="text-center">
-                    <h4 className="text-xl font-bold text-gray-900">{testimonials[currentTestimonial].name}</h4>
-                    <p className="text-gray-600 font-medium">{testimonials[currentTestimonial].role}</p>
+                  <div className="relative">
+                    <img
+                      src={testimonials[currentTestimonial].image}
+                      alt={testimonials[currentTestimonial].name}
+                      className="h-20 w-20 rounded-2xl object-cover shadow-xl border-4 border-white"
+                    />
+                    <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-secondary-500 rounded-full flex items-center justify-center border-2 border-white">
+                      <CheckIcon className="h-4 w-4 text-white" />
+                    </div>
+                  </div>
+                  <div className="ml-6 text-center">
+                    <h4 className="text-2xl font-bold text-neutral-900 mb-1">{testimonials[currentTestimonial].name}</h4>
+                    <p className="text-muted font-medium text-lg">{testimonials[currentTestimonial].role}</p>
                   </div>
                 </div>
               </div>
 
-              {/* Navigation */}
-              <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+              {/* Enhanced Navigation */}
+              <div className="absolute left-6 top-1/2 transform -translate-y-1/2">
                 <button
                   onClick={prevTestimonial}
-                  className="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border border-gray-200"
+                  className="p-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 border border-white/50 group/nav"
                 >
-                  <ChevronLeftIcon className="h-6 w-6 text-gray-600" />
+                  <ChevronLeftIcon className="h-6 w-6 text-neutral-600 group-hover/nav:text-primary-600 transition-colors duration-300" />
                 </button>
               </div>
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+              <div className="absolute right-6 top-1/2 transform -translate-y-1/2">
                 <button
                   onClick={nextTestimonial}
-                  className="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border border-gray-200"
+                  className="p-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 border border-white/50 group/nav"
                 >
-                  <ChevronRightIcon className="h-6 w-6 text-gray-600" />
+                  <ChevronRightIcon className="h-6 w-6 text-neutral-600 group-hover/nav:text-primary-600 transition-colors duration-300" />
                 </button>
               </div>
             </div>
 
-            {/* Dots indicator */}
-            <div className="flex justify-center mt-8 space-x-2">
+            {/* Enhanced Dots Indicator */}
+            <div className="flex justify-center mt-10 space-x-3">
               {testimonials.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  className={`transition-all duration-300 rounded-full ${
                     index === currentTestimonial
-                      ? 'bg-primary-600 w-8'
-                      : 'bg-gray-300 hover:bg-gray-400'
+                      ? 'w-12 h-4 bg-gradient-to-r from-primary-600 to-accent-600'
+                      : 'w-4 h-4 bg-neutral-300 hover:bg-neutral-400 hover:scale-125'
                   }`}
                 />
               ))}
             </div>
           </div>
 
-          {/* Additional testimonials grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
+          {/* Enhanced Testimonials Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.slice(0, 3).map((testimonial, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100"
+                className="card p-8 bg-white/80 backdrop-blur-sm border border-white/50 hover:bg-white/95 hover:scale-105 hover:-translate-y-2 transition-all duration-500 group"
+                style={{animationDelay: `${index * 0.1}s`}}
               >
+                {/* Mini Rating */}
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <StarIcon key={i} className="h-5 w-5 text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <p className="text-gray-700 mb-6 italic">"{testimonial.content.substring(0, 120)}..."</p>
+                
+                {/* Testimonial Preview */}
+                <p className="text-muted mb-6 italic leading-relaxed">
+                  "{testimonial.content.substring(0, 120)}..."
+                </p>
+                
+                {/* Success Badge */}
+                <div className="inline-flex items-center px-3 py-1 bg-secondary-100 text-secondary-700 rounded-full text-sm font-semibold mb-6">
+                  <CheckIcon className="h-4 w-4 mr-1" />
+                  {testimonial.outcome}
+                </div>
+                
+                {/* Author Info */}
                 <div className="flex items-center">
                   <img
                     src={testimonial.image}
                     alt={testimonial.name}
-                    className="h-12 w-12 rounded-full object-cover mr-4"
+                    className="h-12 w-12 rounded-xl object-cover mr-4 border-2 border-white shadow-md"
                   />
                   <div>
-                    <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
-                    <p className="text-gray-600 text-sm">{testimonial.role}</p>
+                    <h4 className="font-bold text-neutral-900 group-hover:text-primary-700 transition-colors duration-300">{testimonial.name}</h4>
+                    <p className="text-muted text-sm">{testimonial.role}</p>
                   </div>
                 </div>
               </div>
             ))}
+          </div>        </div>
+      </section>
+
+      {/* Enhanced Social Proof Section */}
+      <section className="py-20 bg-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-50/20 via-transparent to-transparent"></div>
+        
+        <div className="relative container-custom">
+          <div className="text-center mb-16">
+            <h3 className="text-2xl md:text-3xl font-bold text-neutral-700 mb-4">
+              Trusted by professionals at leading companies
+            </h3>
+            <p className="text-muted">Join thousands who've landed roles at these top companies</p>
+          </div>
+          
+          {/* Company Logos Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-8 items-center opacity-60 hover:opacity-80 transition-opacity duration-300">
+            <div className="flex justify-center">
+              <div className="text-4xl font-black text-neutral-400 hover:text-primary-500 transition-colors duration-300">Google</div>
+            </div>
+            <div className="flex justify-center">
+              <div className="text-4xl font-black text-neutral-400 hover:text-primary-500 transition-colors duration-300">Microsoft</div>
+            </div>
+            <div className="flex justify-center">
+              <div className="text-4xl font-black text-neutral-400 hover:text-primary-500 transition-colors duration-300">Tesla</div>
+            </div>
+            <div className="flex justify-center">
+              <div className="text-4xl font-black text-neutral-400 hover:text-primary-500 transition-colors duration-300">Netflix</div>
+            </div>
+            <div className="flex justify-center">
+              <div className="text-4xl font-black text-neutral-400 hover:text-primary-500 transition-colors duration-300">Meta</div>
+            </div>
+            <div className="flex justify-center">
+              <div className="text-4xl font-black text-neutral-400 hover:text-primary-500 transition-colors duration-300">Apple</div>
+            </div>
+          </div>
+          
+          {/* Enhanced Stats Bar */}
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            <div className="text-center p-6 bg-gradient-to-br from-white to-primary-50 rounded-2xl border border-primary-100 hover:scale-105 transition-transform duration-300">
+              <div className="text-3xl font-black gradient-text mb-2">85%</div>
+              <div className="text-sm text-muted font-semibold">Higher Response Rate</div>
+            </div>
+            <div className="text-center p-6 bg-gradient-to-br from-white to-secondary-50 rounded-2xl border border-secondary-100 hover:scale-105 transition-transform duration-300">
+              <div className="text-3xl font-black gradient-text mb-2">10x</div>
+              <div className="text-sm text-muted font-semibold">Faster Applications</div>
+            </div>
+            <div className="text-center p-6 bg-gradient-to-br from-white to-accent-50 rounded-2xl border border-accent-100 hover:scale-105 transition-transform duration-300">
+              <div className="text-3xl font-black gradient-text mb-2">2,500+</div>
+              <div className="text-sm text-muted font-semibold">Hours Saved Daily</div>
+            </div>
+            <div className="text-center p-6 bg-gradient-to-br from-white to-primary-50 rounded-2xl border border-primary-100 hover:scale-105 transition-transform duration-300">
+              <div className="text-3xl font-black gradient-text mb-2">15,000+</div>
+              <div className="text-sm text-muted font-semibold">Success Stories</div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Enhanced Pricing Section */}
-      <section className="py-32 bg-gradient-to-b from-white to-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="section-padding bg-gradient-to-b from-surface to-surface-2 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-primary-200 to-accent-200 rounded-full opacity-10 blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-tl from-secondary-200 to-primary-200 rounded-full opacity-10 blur-3xl"></div>
+        
+        <div className="relative container-custom">
           <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-8">
+            <div className="inline-flex items-center px-6 py-3 bg-secondary-100 text-secondary-700 rounded-full font-semibold text-sm mb-6">
+              <BoltIcon className="h-5 w-5 mr-2" />
+              Limited Time Offer
+            </div>
+            <h2 className="heading-1 mb-8">
               Choose Your
-              <span className="block bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-secondary-600 via-primary-600 to-accent-600 bg-clip-text text-transparent">
                 Success Plan
               </span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto font-medium">
+            <p className="text-xl md:text-2xl text-muted max-w-4xl mx-auto leading-relaxed mb-8">
               Start free and scale up as you land more interviews. All plans include our core AI features 
               with advanced options for power users.
             </p>
             
-            {/* Limited time offer */}
-            <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-full font-bold text-lg mt-8 animate-pulse">
-              <SparklesIcon className="h-5 w-5 mr-2" />
+            {/* Enhanced Limited Time Offer Badge */}
+            <div className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-red-500 via-pink-500 to-red-600 text-white rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 animate-pulse-soft">
+              <SparklesIcon className="h-6 w-6 mr-3" />
               Limited Time: 40% OFF All Plans!
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+              <div className="ml-3 px-3 py-1 bg-white/20 rounded-full text-sm">
+                Ends Soon
+              </div>            </div>
+          </div>          {/* Revolutionary Pricing Cards */}
+          <div className="pricing-grid max-w-7xl mx-auto">
             {pricingPlans.map((plan, index) => (
               <div
                 key={index}
-                className={`relative p-8 rounded-3xl border-2 transition-all duration-500 transform hover:-translate-y-3 ${
+                className={`relative card p-10 transition-all duration-500 overflow-hidden group ${
                   plan.popular
-                    ? 'border-primary-500 shadow-2xl scale-105 bg-gradient-to-b from-primary-50 to-white'
-                    : 'border-gray-200 hover:border-primary-300 hover:shadow-xl bg-white'
-                }`}
+                    ? 'border-4 border-primary-500 shadow-2xl scale-105 bg-white hover:scale-110'
+                    : 'border-2 border-neutral-200 hover:border-primary-300 bg-white/80 hover:bg-white hover:scale-105'
+                } hover:-translate-y-4`}
+                style={{animationDelay: `${index * 0.1}s`}}
               >
+                {/* Enhanced Popular Badge */}
                 {plan.popular && (
-                  <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
-                    <div className="bg-gradient-to-r from-primary-600 via-purple-600 to-cyan-600 text-white px-8 py-3 rounded-full text-sm font-black shadow-lg">
+                  <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 z-10">
+                    <div className="bg-gradient-to-r from-primary-600 via-accent-600 to-secondary-600 text-white px-8 py-4 rounded-2xl text-sm font-black shadow-xl animate-bounce-subtle">
+                      <SparklesIcon className="inline h-5 w-5 mr-2" />
                       🔥 MOST POPULAR
                     </div>
                   </div>
                 )}
 
+                {/* Enhanced Savings Badge */}
                 {plan.savings && (
-                  <div className="absolute -top-3 -right-3 bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold transform rotate-12 shadow-lg">
+                  <div className="absolute -top-4 -right-4 bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-xl text-sm font-bold transform rotate-12 shadow-xl z-10">
                     {plan.savings}
                   </div>
                 )}
 
+                {/* Background Pattern */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${plan.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
+                
                 <div className="relative">
-                  <h3 className="text-3xl font-black text-gray-900 mb-3">{plan.name}</h3>
-                  <p className="text-gray-600 mb-8 text-lg">{plan.description}</p>
+                  {/* Plan Header */}
+                  <div className="text-center mb-8">
+                    <h3 className="text-3xl font-black text-neutral-900 mb-3 group-hover:text-primary-700 transition-colors duration-300">{plan.name}</h3>
+                    <p className="text-muted text-lg leading-relaxed">{plan.description}</p>
+                  </div>
                   
-                  <div className="mb-8">
-                    <div className="flex items-baseline justify-center">
+                  {/* Enhanced Pricing Display */}
+                  <div className="text-center mb-10">
+                    <div className="flex items-baseline justify-center mb-2">
                       {plan.originalPrice && (
-                        <span className="text-2xl text-gray-400 line-through mr-3">{plan.originalPrice}</span>
+                        <span className="text-2xl text-neutral-400 line-through mr-3 font-bold">{plan.originalPrice}</span>
                       )}
-                      <span className="text-6xl font-black text-gray-900">{plan.price}</span>
-                      <span className="text-gray-600 ml-2 text-xl">/{plan.period}</span>
+                      <span className="text-6xl md:text-7xl font-black gradient-text group-hover:scale-110 transition-transform duration-300">{plan.price}</span>
+                      <span className="text-muted ml-3 text-xl font-semibold">/{plan.period}</span>
                     </div>
                     {plan.period === 'month' && plan.price !== '$0' && (
-                      <p className="text-center text-green-600 font-bold mt-2">14-day free trial</p>
+                      <div className="inline-flex items-center px-4 py-2 bg-secondary-100 text-secondary-700 rounded-full text-sm font-bold">
+                        <CheckIcon className="h-4 w-4 mr-2" />
+                        14-day free trial
+                      </div>
                     )}
                   </div>
 
+                  {/* Enhanced Features List */}
                   <ul className="space-y-4 mb-10">
                     {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center">
-                        <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                          <CheckIcon className="h-4 w-4 text-green-600" />
+                      <li key={featureIndex} className="flex items-start group/feature">
+                        <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-r from-secondary-500 to-primary-500 rounded-full flex items-center justify-center mr-4 mt-0.5 group-hover/feature:scale-110 transition-transform duration-300">
+                          <CheckIcon className="h-4 w-4 text-white" />
                         </div>
-                        <span className="text-gray-700 font-medium">{feature}</span>
+                        <span className="text-neutral-700 font-medium leading-relaxed group-hover/feature:text-neutral-900 transition-colors duration-300">{feature}</span>
                       </li>
                     ))}
                   </ul>
 
+                  {/* Enhanced CTA Button */}
                   <Link
                     to={user ? "/dashboard" : "/register"}
-                    className={`block w-full text-center py-4 rounded-2xl font-black text-lg transition-all duration-300 transform hover:scale-105 ${
+                    className={`block w-full text-center py-5 rounded-2xl font-black text-lg transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 shadow-xl hover:shadow-2xl ${
                       plan.popular
-                        ? 'bg-gradient-to-r from-primary-600 via-purple-600 to-cyan-600 text-white hover:from-primary-700 hover:via-purple-700 hover:to-cyan-700 shadow-lg hover:shadow-xl'
-                        : 'bg-gray-900 text-white hover:bg-gray-800 shadow-lg'
+                        ? 'bg-gradient-to-r from-primary-600 via-accent-600 to-secondary-600 text-white hover:from-primary-700 hover:via-accent-700 hover:to-secondary-700'
+                        : 'bg-gradient-to-r from-neutral-800 to-neutral-900 text-white hover:from-neutral-700 hover:to-neutral-800'
                     }`}
                   >
-                    {plan.cta}
+                    <span className="flex items-center justify-center">
+                      {plan.popular && <BoltIcon className="h-5 w-5 mr-2" />}
+                      {plan.cta}
+                      {plan.popular && <SparklesIcon className="h-5 w-5 ml-2" />}
+                    </span>
                   </Link>
 
+                  {/* Trust Indicators */}
                   {plan.popular && (
-                    <div className="text-center mt-4">
-                      <div className="flex items-center justify-center text-sm text-gray-600">
-                        <ShieldCheckIcon className="h-4 w-4 mr-1" />
+                    <div className="text-center mt-6">
+                      <div className="flex items-center justify-center text-sm text-muted">
+                        <ShieldCheckIcon className="h-4 w-4 mr-2 text-secondary-600" />
                         30-day money-back guarantee
                       </div>
                     </div>
                   )}
                 </div>
+
+                {/* Hover Effect Glow */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-primary-500/20 to-accent-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
               </div>
             ))}
           </div>
 
-          {/* Money back guarantee */}
-          <div className="text-center mt-16">
-            <div className="inline-flex items-center px-8 py-4 bg-green-50 border-2 border-green-200 rounded-2xl">
-              <ShieldCheckIcon className="h-8 w-8 text-green-600 mr-3" />
+          {/* Enhanced Money Back Guarantee */}
+          <div className="text-center mt-20">
+            <div className="inline-flex items-center px-10 py-6 bg-gradient-to-r from-secondary-50 to-primary-50 border-2 border-secondary-200 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+              <ShieldCheckIcon className="h-10 w-10 text-secondary-600 mr-4" />
               <div className="text-left">
-                <div className="text-lg font-bold text-green-800">30-Day Money-Back Guarantee</div>
-                <div className="text-green-600">Not satisfied? Get a full refund, no questions asked.</div>
+                <div className="text-xl font-black text-secondary-800">30-Day Money-Back Guarantee</div>
+                <div className="text-secondary-600 font-medium">Not satisfied? Get a full refund, no questions asked.</div>
               </div>
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Final CTA Section */}
-      <section className="py-32 bg-gradient-to-r from-primary-600 via-purple-600 to-cyan-600 relative overflow-hidden">
-        {/* Background decoration */}
+      </section>      {/* Revolutionary Final CTA Section */}
+      <section className="section-padding bg-gradient-to-br from-primary-600 via-accent-600 to-secondary-600 relative overflow-hidden">
+        {/* Enhanced Background Effects */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent"></div>
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl"></div>
         </div>
         
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-5xl md:text-6xl font-black text-white mb-8 leading-tight">
-            Ready to Transform
-            <span className="block text-yellow-300">Your Career?</span>
-          </h2>
-          <p className="text-2xl text-primary-100 mb-16 max-w-3xl mx-auto font-medium leading-relaxed">
-            Join <span className="text-yellow-300 font-bold">15,000+</span> professionals who've already 
-            accelerated their job search with AutoApply Pro. Your dream job is just clicks away.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
-            <Link
-              to={user ? "/dashboard" : "/register"}
-              className="group relative px-12 py-6 bg-white text-primary-600 font-black rounded-2xl hover:bg-gray-50 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-white/25 text-xl min-w-[280px]"
-            >
-              <span className="flex items-center justify-center">
-                <BoltIcon className="h-6 w-6 mr-3 group-hover:rotate-12 transition-transform duration-300" />
-                Start Your Free Trial
-              </span>
-            </Link>
-            <Link
-              to="/home"
-              className="px-12 py-6 bg-transparent border-3 border-white text-white font-black rounded-2xl hover:bg-white hover:text-primary-600 transition-all duration-300 text-xl min-w-[280px] transform hover:scale-105"
-            >
-              Learn More
-            </Link>
-          </div>
+        <div className="relative container-custom text-center">
+          <div className="max-w-5xl mx-auto">
+            {/* Enhanced Headline */}
+            <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-8 leading-tight animate-fade-in-up">
+              Ready to Transform
+              <span className="block text-yellow-300 animate-fade-in-up" style={{animationDelay: '0.2s'}}>Your Career?</span>
+            </h2>
+            
+            {/* Enhanced Subtext */}
+            <p className="text-xl md:text-2xl lg:text-3xl text-primary-100 mb-16 max-w-4xl mx-auto font-medium leading-relaxed animate-fade-in-up" style={{animationDelay: '0.4s'}}>
+              Join <span className="text-yellow-300 font-black text-3xl md:text-4xl">15,000+</span> professionals who've already 
+              accelerated their job search with AutoApply Pro. 
+              <br className="hidden md:block" />
+              Your <span className="text-yellow-300 font-bold">dream job</span> is just clicks away.
+            </p>
+            
+            {/* Enhanced CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-8 justify-center mb-16 animate-fade-in-up" style={{animationDelay: '0.6s'}}>
+              <Link
+                to={user ? "/dashboard" : "/register"}
+                className="group relative px-12 py-6 bg-white text-primary-600 font-black rounded-2xl hover:bg-yellow-50 transform hover:scale-110 hover:-translate-y-2 transition-all duration-500 shadow-2xl hover:shadow-white/30 text-xl min-w-[300px] overflow-hidden"
+              >
+                <span className="relative z-10 flex items-center justify-center">
+                  <BoltIcon className="h-6 w-6 mr-3 group-hover:rotate-12 transition-transform duration-300" />
+                  {user ? "Go to Dashboard" : "Start Free Today"}
+                  <SparklesIcon className="h-6 w-6 ml-3 group-hover:scale-125 transition-transform duration-300" />
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-100 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              </Link>
+              
+              <button className="group flex items-center justify-center px-12 py-6 bg-white/10 backdrop-blur-md text-white font-black rounded-2xl border-2 border-white/30 hover:bg-white/20 hover:border-white/50 hover:scale-105 hover:-translate-y-1 transition-all duration-500 text-xl min-w-[300px]">
+                <PlayIcon className="h-6 w-6 mr-3 group-hover:scale-125 transition-transform duration-300" />
+                Watch Success Stories
+                <div className="ml-3 px-2 py-1 bg-white/20 rounded-full text-sm">2 min</div>
+              </button>
+            </div>
 
-          {/* Trust indicators */}
-          <div className="flex flex-wrap justify-center items-center gap-8 opacity-80">
-            <div className="text-white/90 text-sm font-semibold">✓ No Credit Card Required</div>
-            <div className="text-white/90 text-sm font-semibold">✓ 14-Day Free Trial</div>
-            <div className="text-white/90 text-sm font-semibold">✓ Cancel Anytime</div>
-            <div className="text-white/90 text-sm font-semibold">✓ Money-Back Guarantee</div>
+            {/* Enhanced Trust Indicators */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-white/90 animate-fade-in-up" style={{animationDelay: '0.8s'}}>
+              <div className="text-center group">
+                <div className="text-3xl font-black text-yellow-300 mb-2 group-hover:scale-110 transition-transform duration-300">15,000+</div>
+                <div className="text-sm font-semibold">Happy Users</div>
+              </div>
+              <div className="text-center group">
+                <div className="text-3xl font-black text-yellow-300 mb-2 group-hover:scale-110 transition-transform duration-300">4.9★</div>
+                <div className="text-sm font-semibold">User Rating</div>
+              </div>
+              <div className="text-center group">
+                <div className="text-3xl font-black text-yellow-300 mb-2 group-hover:scale-110 transition-transform duration-300">99.9%</div>
+                <div className="text-sm font-semibold">Uptime</div>
+              </div>
+              <div className="text-center group">
+                <div className="text-3xl font-black text-yellow-300 mb-2 group-hover:scale-110 transition-transform duration-300">30d</div>
+                <div className="text-sm font-semibold">Money Back</div>
+              </div>            </div>
           </div>
         </div>
       </section>

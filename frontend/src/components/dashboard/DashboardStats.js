@@ -1,0 +1,196 @@
+import React from 'react';
+import { 
+  ChartBarIcon, 
+  ClockIcon, 
+  DocumentDuplicateIcon,
+  ArrowTrendingUpIcon,
+  UserGroupIcon,
+  CheckCircleIcon,
+  EyeIcon,
+  BoltIcon
+} from '@heroicons/react/24/outline';
+import { CardSkeleton } from '../LoadingSkeletons';
+import withErrorBoundary from '../withErrorBoundary';
+
+/**
+ * Enhanced Dashboard Stats Component with modern design and animations
+ */
+const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
+  // Show loading skeleton if data is being fetched
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[1,2,3,4,5,6].map(i => <CardSkeleton key={i} />)}
+      </div>
+    );
+  }
+
+  // Show error state if there's an error
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+        <div className="flex items-center">
+          <div className="flex-shrink-0">
+            <svg className="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div className="ml-3">
+            <h3 className="text-sm font-medium text-red-800">
+              Unable to load statistics
+            </h3>
+            <div className="mt-2 text-sm text-red-700">
+              <p>There was an error loading your dashboard statistics. Please try refreshing the page.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const defaultStats = {
+    totalApplications: 0,
+    thisMonth: 0,
+    responseRate: 0,
+    interviews: 0,
+    timesSaved: 0,
+    profileViews: 0,
+    ...stats
+  };
+
+  const statCards = [
+    {
+      title: 'Total Applications',
+      value: defaultStats.totalApplications,
+      change: '+12%',
+      trend: 'up',
+      icon: DocumentDuplicateIcon,
+      color: 'primary',
+      gradient: 'from-primary-500 to-primary-600'
+    },
+    {
+      title: 'This Month',
+      value: defaultStats.thisMonth,
+      change: '+8%',
+      trend: 'up',
+      icon: BoltIcon,
+      color: 'secondary',
+      gradient: 'from-secondary-500 to-secondary-600'
+    },
+    {
+      title: 'Response Rate',
+      value: `${defaultStats.responseRate}%`,
+      change: '+5%',
+      trend: 'up',
+      icon: ArrowTrendingUpIcon,
+      color: 'accent',
+      gradient: 'from-accent-500 to-accent-600'
+    },
+    {
+      title: 'Interviews',
+      value: defaultStats.interviews,
+      change: '+3',
+      trend: 'up',
+      icon: UserGroupIcon,
+      color: 'success',
+      gradient: 'from-green-500 to-green-600'
+    },
+    {
+      title: 'Hours Saved',
+      value: defaultStats.timesSaved,
+      change: '+15h',
+      trend: 'up',
+      icon: ClockIcon,
+      color: 'warning',
+      gradient: 'from-yellow-500 to-orange-500'
+    },
+    {
+      title: 'Profile Views',
+      value: defaultStats.profileViews,
+      change: '+24%',
+      trend: 'up',
+      icon: EyeIcon,
+      color: 'info',
+      gradient: 'from-blue-500 to-cyan-500'
+    }
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      {statCards.map((stat, index) => (
+        <div
+          key={stat.title}
+          className="card card-hover p-6 bg-white border border-neutral-200 hover:border-primary-300 hover:shadow-large transition-all duration-500 group overflow-hidden"
+          style={{ animationDelay: `${index * 0.1}s` }}
+        >
+          {/* Background Gradient Effect */}
+          <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
+          
+          <div className="relative">
+            {/* Header with Icon */}
+            <div className="flex items-center justify-between mb-4">
+              <div className={`p-3 rounded-2xl bg-gradient-to-br ${stat.gradient} text-white group-hover:scale-110 transition-transform duration-300 shadow-soft`}>
+                <stat.icon className="h-6 w-6" />
+              </div>
+              
+              {/* Trend Indicator */}
+              <div className={`flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
+                stat.trend === 'up' 
+                  ? 'bg-secondary-100 text-secondary-700' 
+                  : 'bg-red-100 text-red-700'
+              }`}>
+                <ArrowTrendingUpIcon className={`h-4 w-4 mr-1 ${stat.trend === 'down' ? 'rotate-180' : ''}`} />
+                {stat.change}
+              </div>
+            </div>
+            
+            {/* Value */}
+            <div className="mb-2">
+              <div className="text-3xl font-black text-neutral-900 group-hover:text-primary-700 transition-colors duration-300">
+                {stat.value}
+              </div>
+            </div>
+            
+            {/* Title */}
+            <div className="text-sm font-semibold text-muted group-hover:text-neutral-700 transition-colors duration-300">
+              {stat.title}
+            </div>
+          </div>
+          
+          {/* Hover Effect Bar */}
+          <div className={`absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r ${stat.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`}></div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default withErrorBoundary(DashboardStats, {
+  fallback: ({ error, retry }) => (
+    <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+      <div className="flex items-center">
+        <div className="flex-shrink-0">
+          <svg className="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div className="ml-3">
+          <h3 className="text-sm font-medium text-red-800">
+            Dashboard Stats Error
+          </h3>
+          <div className="mt-2 text-sm text-red-700">
+            <p>There was an error loading the dashboard statistics component.</p>
+            {retry && (
+              <button
+                onClick={retry}
+                className="mt-2 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                Try Again
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+});

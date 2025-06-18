@@ -63,6 +63,25 @@ function cleanup() {
 }
 
 // Listen for messages from the popup or background script
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  debugLog('Received message:', message.action);
+  
+  if (message.action === 'autofill' && message.profileData) {
+    debugLog('Starting autofill with profile data');
+    const filledCount = autofillFields(message.profileData);
+    sendResponse({ success: true, filledCount: filledCount });
+  } else if (message.action === 'instantAutofill') {
+    debugLog('Starting instant autofill');
+    instantAutofill();
+    sendResponse({ success: true });
+  } else {
+    debugLog('Unknown message action:', message.action);
+    sendResponse({ success: false, error: 'Unknown action' });
+  }
+  
+  return true; // Required for async response
+});
+
 // Centralized field mapping configuration for instant autofill
 const instantFieldMap = {
   fullName: ['name', 'full_name', 'fullname', 'applicant', 'candidate'],

@@ -18,13 +18,19 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
   const handleLogout = () => {
     if (devAuth) {
       devAuth.signOut();
     }
     setIsMenuOpen(false);
   };
+
+  // Check if user is admin (simple email check - in production, this should be more secure)
+  const isAdmin = user?.primaryEmailAddress?.emailAddress?.endsWith('@autoapplypro.com') || 
+                  user?.email?.endsWith('@autoapplypro.com') ||
+                  ['admin@autoapplypro.com', 'dev@autoapplypro.com'].includes(
+                    user?.primaryEmailAddress?.emailAddress || user?.email
+                  );
   return (
     <nav className="bg-white/95 backdrop-blur-md text-neutral-900 shadow-soft border-b border-neutral-200 sticky top-0 z-50">
       <div className="container-custom">
@@ -108,11 +114,25 @@ const Navbar = () => {
                           <div className="text-sm font-medium">JD Skill Analyzer</div>
                           <div className="text-xs text-neutral-500">Match skills to jobs</div>
                         </div>
-                      </div>
-                    </Link>
+                      </div>                    </Link>
                   </div>
                 </div>
-                <div className="flex items-center space-x-3 ml-4 pl-4 border-l border-neutral-200">
+                {isAdmin && (
+                  <Tooltip text="Access developer dashboard">
+                    <Link to="/admin" className="px-3 py-2 rounded-xl text-orange-600 hover:text-orange-700 hover:bg-orange-50 transition-all duration-200 font-medium flex items-center">
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      Admin
+                    </Link>
+                  </Tooltip>
+                )}                <div className="flex items-center space-x-3 ml-4 pl-4 border-l border-neutral-200">
+                  <Tooltip text="View your feedback requests">
+                    <Link to="/my-requests" className="px-3 py-2 rounded-xl text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium">
+                      My Requests
+                    </Link>
+                  </Tooltip>
                   <PlanBadge />
                   <WhatsNewButton />
                 </div>
@@ -226,13 +246,45 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Job Tracker
-                </Link>
-                <Link 
+                </Link>                <Link 
                   to="/resumes" 
                   className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2" 
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Resume Builder
+                </Link>
+                
+                {isAdmin && (
+                  <Link 
+                    to="/admin" 
+                    className="block px-4 py-3 text-orange-600 hover:text-orange-700 hover:bg-orange-50 transition-all duration-200 font-medium rounded-xl mx-2" 
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="flex items-center">
+                      <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center mr-3">
+                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                      </div>
+                      Admin Dashboard
+                    </div>
+                  </Link>
+                )}
+                
+                <Link 
+                  to="/my-requests" 
+                  className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2" 
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <div className="flex items-center">
+                    <div className="w-6 h-6 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                    </div>
+                    My Requests
+                  </div>
                 </Link>
                 
                 <div className="py-2 border-t border-neutral-200 mt-2">

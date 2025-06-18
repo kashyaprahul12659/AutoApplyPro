@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "AutoApply Pro",
+  "name": "AutoApply Pro - AI Job Application Assistant",
   "version": "1.0.0",
-  "description": "Apply to jobs 10x faster - Auto-fill forms, create AI cover letters, and analyze job matches",
+  "description": "Apply to jobs 10x faster with AI-powered auto-fill, custom resume generation, job tracking, and match analysis. Works on LinkedIn, Indeed, Glassdoor & more.",
   "short_name": "AutoApply",
+  "author": "AutoApply Pro Team",  "homepage_url": "https://autoapplypro.tech",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -11,6 +12,7 @@
   },
   "action": {
     "default_popup": "popup.html",
+    "default_title": "AutoApply Pro - Smart Job Applications",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
@@ -25,10 +27,13 @@
     "notifications"
   ],
   "host_permissions": [
-    "http://localhost:5000/*",
-    "http://localhost:3000/*",
-    "https://autoapplypro.com/*",
-    "https://api.autoapplypro.com/*"
+    "https://autoapplypro.tech/*",
+    "https://api.autoapplypro.tech/*",
+    "https://*.linkedin.com/*",
+    "https://*.indeed.com/*",
+    "https://*.glassdoor.com/*",
+    "https://*.angel.co/*",
+    "https://*.wellfound.com/*"
   ],
   "web_accessible_resources": [{
     "resources": ["icons/*"],
@@ -39,14 +44,24 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": [
+        "https://*.linkedin.com/*",
+        "https://*.indeed.com/*",
+        "https://*.glassdoor.com/*",
+        "https://*.angel.co/*",
+        "https://*.wellfound.com/*",
+        "https://*/*"
+      ],
       "js": ["utils.js", "utils/jobExtractor.js", "content.js"],
       "run_at": "document_idle"
-    },
-    {
-      "matches": ["http://localhost:3000/*", "https://autoapplypro.com/*"],
+    },    {
+      "matches": ["https://autoapplypro.tech/*"],
       "js": ["utils.js", "listener.js"],
       "run_at": "document_end"
     }
-  ]
+  ],
+  "optional_permissions": [
+    "tabs"
+  ],
+  "minimum_chrome_version": "88"
 }

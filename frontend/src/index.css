@@ -42,37 +42,47 @@ code {
   /* Modern Button System */
   .btn {
     @apply inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium rounded-xl 
-           transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 
-           disabled:opacity-60 disabled:cursor-not-allowed;
+           transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 
+           disabled:opacity-60 disabled:cursor-not-allowed active:scale-95;
   }
   
   .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 
-           shadow-soft hover:shadow-medium transform hover:-translate-y-0.5;
+    @apply bg-gradient-to-r from-primary-600 to-primary-700 text-white 
+           hover:from-primary-700 hover:to-primary-800 focus:ring-primary-500 
+           shadow-medium hover:shadow-large transform hover:-translate-y-1 
+           active:translate-y-0 active:shadow-medium;
   }
   
   .btn-secondary {
-    @apply bg-secondary-600 text-white hover:bg-secondary-700 focus:ring-secondary-500 
-           shadow-soft hover:shadow-medium transform hover:-translate-y-0.5;
+    @apply bg-gradient-to-r from-secondary-600 to-secondary-700 text-white 
+           hover:from-secondary-700 hover:to-secondary-800 focus:ring-secondary-500 
+           shadow-medium hover:shadow-large transform hover:-translate-y-1 
+           active:translate-y-0 active:shadow-medium;
   }
   
   .btn-accent {
-    @apply bg-accent-600 text-white hover:bg-accent-700 focus:ring-accent-500 
-           shadow-soft hover:shadow-medium transform hover:-translate-y-0.5;
+    @apply bg-gradient-to-r from-accent-600 to-accent-700 text-white 
+           hover:from-accent-700 hover:to-accent-800 focus:ring-accent-500 
+           shadow-medium hover:shadow-large transform hover:-translate-y-1 
+           active:translate-y-0 active:shadow-medium;
   }
   
   .btn-outline {
     @apply border-2 border-neutral-300 text-neutral-700 hover:border-primary-500 
-           hover:text-primary-600 hover:bg-primary-50 focus:ring-primary-500;
+           hover:text-primary-600 hover:bg-primary-50 focus:ring-primary-500
+           backdrop-blur-sm hover:shadow-soft transform hover:-translate-y-0.5;
   }
   
   .btn-ghost {
-    @apply text-neutral-600 hover:text-primary-600 hover:bg-primary-50 focus:ring-primary-500;
+    @apply text-neutral-600 hover:text-primary-600 hover:bg-primary-50 
+           focus:ring-primary-500 rounded-xl transform hover:scale-105;
   }
   
   .btn-danger {
-    @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 
-           shadow-soft hover:shadow-medium transform hover:-translate-y-0.5;
+    @apply bg-gradient-to-r from-red-600 to-red-700 text-white 
+           hover:from-red-700 hover:to-red-800 focus:ring-red-500 
+           shadow-medium hover:shadow-large transform hover:-translate-y-1 
+           active:translate-y-0 active:shadow-medium;
   }
   
   .btn-sm {
@@ -80,22 +90,27 @@ code {
   }
   
   .btn-lg {
-    @apply px-6 py-3 text-base font-semibold;
+    @apply px-6 py-3.5 text-base font-semibold;
   }
   
   .btn-xl {
-    @apply px-8 py-4 text-lg font-semibold;
+    @apply px-8 py-4 text-lg font-semibold rounded-2xl;
   }
   
   /* Modern Input System */
   .input {
-    @apply w-full px-4 py-3 border border-neutral-300 rounded-xl text-neutral-900 
-           placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 
-           focus:border-transparent transition-all duration-200 bg-white;
+    @apply w-full px-4 py-3 border-2 border-neutral-200 rounded-xl text-neutral-900 
+           placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 
+           focus:border-primary-500 transition-all duration-300 bg-white shadow-soft
+           hover:border-neutral-300 hover:shadow-medium;
   }
   
   .input-error {
-    @apply border-red-300 focus:ring-red-500 focus:border-red-500;
+    @apply border-red-300 focus:ring-red-500 focus:border-red-500 bg-red-50;
+  }
+  
+  .input-success {
+    @apply border-green-300 focus:ring-green-500 focus:border-green-500 bg-green-50;
   }
   
   .input-success {
@@ -218,17 +233,110 @@ code {
   }
   
   /* Utility Classes */
-  .glass {
-    @apply backdrop-blur-sm bg-white/90 border border-white/20;
-  }
-  
   .gradient-text {
     @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
   }
   
-  .shine {
-    @apply relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full 
-           before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r 
-           before:from-transparent before:via-white/20 before:to-transparent;
+  .glass-morphism {
+    @apply bg-white/80 backdrop-blur-lg border border-white/20;
+  }
+  
+  .glass-morphism-dark {
+    @apply bg-neutral-900/80 backdrop-blur-lg border border-neutral-700/30;
+  }
+  
+  .feature-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+  }
+  
+  .testimonial-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+  
+  .pricing-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+  }
+  
+  /* Interactive Elements */
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-2;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+  
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-glow;
+  }
+  
+  /* Focus Styles */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+  
+  .focus-ring-inset {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-inset;
+  }
+  
+  /* Responsive Utilities */
+  .mobile-only {
+    @apply block md:hidden;
+  }
+  
+  .desktop-only {
+    @apply hidden md:block;
+  }
+  
+  .tablet-up {
+    @apply hidden md:block;
+  }
+  
+  /* Modern Scrollbars */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+  
+  /* Animations */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease-out;
+  }
+  
+  .animate-on-scroll.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Loading Shimmer */
+  .shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
 }

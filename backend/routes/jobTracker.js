@@ -50,4 +50,14 @@ router.put(
 // @access  Private
 router.delete('/:id', clerkAuth, jobTrackerController.deleteJobApplication);
 
+// @route   POST api/job-tracker/:id/generate-resume
+// @desc    Generate custom resume based on job requirements
+// @access  Private
+router.post('/:id/generate-resume', clerkAuth, jobTrackerController.generateCustomResume);
+
+// @route   GET api/job-tracker/:id/custom-resume
+// @desc    Get custom resume for job application
+// @access  Private
+router.get('/:id/custom-resume', clerkAuth, jobTrackerController.getCustomResume);
+
 module.exports = router;

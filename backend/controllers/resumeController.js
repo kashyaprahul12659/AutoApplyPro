@@ -4,6 +4,7 @@ const multer = require('multer');
 const Resume = require('../models/Resume');
 const User = require('../models/User');
 const ResumeParserService = require('../services/ResumeParserService');
+const logger = require('../utils/logger'); // Added: Import proper logger
 
 // Set up multer storage configuration
 const storage = multer.diskStorage({
@@ -85,17 +86,28 @@ exports.uploadResume = async (req, res) => {
     });
     
     // Process resume in the background to extract data
-    try {
-      // We don't await this to allow the response to return quickly
+    try {      // We don't await this to allow the response to return quickly
       ResumeParserService.processResume(resume._id)
         .then(extractedData => {
-          console.log('Resume parsed successfully:', resume.originalName);
+          // Fixed: Replace console.log with proper logger
+          logger.info('Resume parsed successfully', { 
+            resumeName: resume.originalName,
+            resumeId: resume._id 
+          });
         })
         .catch(err => {
-          console.error('Error parsing resume:', err);
+          // Fixed: Replace console.error with proper logger
+          logger.error('Error parsing resume', { 
+            error: err.message,
+            resumeId: resume._id 
+          });
         });
     } catch (err) {
-      console.error('Error initiating resume parsing:', err);
+      // Fixed: Replace console.error with proper logger
+      logger.error('Error initiating resume parsing', { 
+        error: err.message,
+        resumeId: resume._id 
+      });
       // We don't throw here since this is background processing
     }
 
@@ -103,9 +115,13 @@ exports.uploadResume = async (req, res) => {
       success: true,
       data: resume,
       message: `Resume '${req.file.originalname}' uploaded successfully`
+    });  } catch (err) {
+    // Fixed: Replace console.error with proper logger
+    logger.error('Resume upload error', { 
+      error: err.message, 
+      userId: req.user?.id,
+      filename: req.file?.originalname
     });
-  } catch (err) {
-    console.error('Resume upload error:', err);
     
     // Check if the error is related to file size
     if (err.code === 'LIMIT_FILE_SIZE') {
@@ -135,15 +151,17 @@ exports.uploadResume = async (req, res) => {
 // @access  Private
 exports.getResumes = async (req, res) => {
   try {
-    const resumes = await Resume.find({ user: req.user.id }).sort({ uploadedAt: -1 });
-
-    res.status(200).json({
+    const resumes = await Resume.find({ user: req.user.id }).sort({ uploadedAt: -1 });    res.status(200).json({
       success: true,
       count: resumes.length,
       data: resumes
     });
   } catch (err) {
-    console.error(err);
+    // Fixed: Replace console.error with proper logger
+    logger.error('Get resumes error', { 
+      error: err.message, 
+      userId: req.user?.id 
+    });
     res.status(500).json({
       success: false,
       error: 'Server Error'
@@ -179,9 +197,13 @@ exports.parseResume = async (req, res) => {
     res.status(200).json({
       success: true,
       data: extractedData
+    });  } catch (err) {
+    // Fixed: Replace console.error with proper logger
+    logger.error('Resume parsing error', { 
+      error: err.message, 
+      userId: req.user?.id,
+      resumeId: req.params?.id
     });
-  } catch (err) {
-    console.error('Resume parsing error:', err);
     res.status(500).json({
       success: false,
       error: 'Error parsing resume. Please try again.'
@@ -206,9 +228,12 @@ exports.getParsedData = async (req, res) => {
     res.status(200).json({
       success: true,
       data: user.profileData
+    });  } catch (err) {
+    // Fixed: Replace console.error with proper logger
+    logger.error('Error fetching parsed data', { 
+      error: err.message, 
+      userId: req.user?.id 
     });
-  } catch (err) {
-    console.error('Error fetching parsed data:', err);
     res.status(500).json({
       success: false,
       error: 'Server Error'
@@ -244,9 +269,12 @@ exports.updateParsedData = async (req, res) => {
     res.status(200).json({
       success: true,
       data: user.profileData
+    });  } catch (err) {
+    // Fixed: Replace console.error with proper logger
+    logger.error('Error updating parsed data', { 
+      error: err.message, 
+      userId: req.user?.id 
     });
-  } catch (err) {
-    console.error('Error updating parsed data:', err);
     res.status(500).json({
       success: false,
       error: 'Server Error'

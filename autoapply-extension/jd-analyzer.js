@@ -59,7 +59,14 @@ function extractJobDescription() {
  */
 async function analyzeJobDescription(jobDescription, authToken) {
   try {
-    const response = await fetch('http://localhost:5000/api/jd-analyzer/analyze', {
+    // Get API URL from background script
+    const { apiUrl } = await new Promise(resolve => {
+      chrome.runtime.sendMessage({ type: 'getApiUrl' }, resolve);
+    });
+    
+    const API_BASE_URL = apiUrl || 'http://localhost:5000/api'; // Fallback
+    
+    const response = await fetch(`${API_BASE_URL}/jd-analyzer/analyze`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -167,9 +174,15 @@ function showAnalysisResults(results) {
         alert('Please log in to save this analysis');
         return;
       }
+        // Save analysis
+      // Get API URL from background script
+      const { apiUrl } = await new Promise(resolve => {
+        chrome.runtime.sendMessage({ type: 'getApiUrl' }, resolve);
+      });
       
-      // Save analysis
-      const response = await fetch('http://localhost:5000/api/jd-analyzer/save', {
+      const API_BASE_URL = apiUrl || 'http://localhost:5000/api'; // Fallback
+      
+      const response = await fetch(`${API_BASE_URL}/jd-analyzer/save`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

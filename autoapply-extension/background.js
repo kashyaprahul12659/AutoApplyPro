@@ -6,7 +6,7 @@ console.log('AutoApply Pro: Background service worker initialized');
 // Configure API Base URL for development and production environments
 const API_BASE_URL = {
   development: 'http://localhost:5000/api',
-  production: 'https://api.autoapplypro.com/api'
+  production: 'https://api.autoapplypro.tech/api'
 };
 
 // Determine the environment based on extension installation type
@@ -75,15 +75,13 @@ if (chrome.contextMenus) {
               message: 'Please log in to use the autofill feature'
             });
           }
-          
-          // Open dashboard for login
-          chrome.tabs.create({ url: 'http://localhost:3000/login' });
+            // Open dashboard for login
+          chrome.tabs.create({ url: `${currentEnvironment === 'development' ? 'http://localhost:3000' : 'https://autoapplypro.tech'}/login` });
           return;
         }
-        
-        // Fetch active profile data
+          // Fetch active profile data
         try {
-          const response = await fetch('http://localhost:5000/api/resumes/profile/active', {
+          const response = await fetch(`${getApiUrl()}/resumes/profile/active`, {
             headers: {
               'Authorization': `Bearer ${result.authToken}`,
               'Content-Type': 'application/json'
@@ -102,12 +100,11 @@ if (chrome.contextMenus) {
                   message: 'Your session has expired. Please log in again.'
                 });
               }
-              
-              // Clear invalid token
+                // Clear invalid token
               chrome.storage.local.remove(['authToken']);
               
               // Open dashboard for login
-              chrome.tabs.create({ url: 'http://localhost:3000/login' });
+              chrome.tabs.create({ url: `${currentEnvironment === 'development' ? 'http://localhost:3000' : 'https://autoapplypro.tech'}/login` });
             } else {
               // Other error
               if (chrome.notifications) {
@@ -188,7 +185,8 @@ function debugLog(...args) {
 function fetchUserData(token) {
   debugLog('Fetching user data from API');
   
-  return fetch(`${getApiUrl()}/users/me`, {
+  // Fixed: Use correct API endpoint - /api/auth/me instead of /api/users/me
+  return fetch(`${getApiUrl()}/auth/me`, {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
@@ -418,9 +416,8 @@ chrome.runtime.onInstalled.addListener(details => {
         message: 'Thank you for installing AutoApply Pro! Click to set up your profile.'
       });
     }
-    
-    // Open dashboard on install
-    chrome.tabs.create({ url: 'http://localhost:3000/dashboard' });
+      // Open dashboard on install
+    chrome.tabs.create({ url: `${currentEnvironment === 'development' ? 'http://localhost:3000' : 'https://autoapplypro.tech'}/dashboard` });
   } else if (details.reason === 'update') {
     // Show update notification if notifications API is available
     if (chrome.notifications) {

@@ -1,0 +1,97 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "react-app",
+    "react-app/jest"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "react-hooks"
+  ],  "rules": {
+    // Temporarily disable strict rules for build
+    "curly": "off",
+    "import/first": "off",
+    
+    // React specific rules
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "react/prop-types": "off",
+    "react/display-name": "off",
+    "react/jsx-key": "warn",
+    "react/no-array-index-key": "warn",
+    "react/no-unused-state": "warn",
+    "react/jsx-no-target-blank": ["error", { "allowReferrer": true }],
+    
+    // React Hooks rules
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    
+    // General JavaScript rules
+    "no-unused-vars": ["warn", { 
+      "vars": "all", 
+      "args": "after-used", 
+      "ignoreRestSiblings": true,
+      "argsIgnorePattern": "^_",
+      "varsIgnorePattern": "^_"
+    }],
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-debugger": "warn",
+    "no-alert": "warn",
+    "prefer-const": "warn",
+    "no-var": "error",
+    "no-undef": "error",
+    "no-duplicate-imports": "error",
+    "no-useless-escape": "warn",
+    
+    // Code style rules
+    "indent": ["warn", 2, { "SwitchCase": 1 }],
+    "quotes": ["warn", "single", { "avoidEscape": true }],
+    "semi": ["warn", "always"],
+    "comma-dangle": ["warn", "never"],
+    "object-curly-spacing": ["warn", "always"],
+    "array-bracket-spacing": ["warn", "never"],
+    "space-before-blocks": "warn",
+    "keyword-spacing": "warn",
+    "space-infix-ops": "warn",
+    "eol-last": "warn",
+    "no-trailing-spaces": "warn",
+    "no-multiple-empty-lines": ["warn", { "max": 2, "maxEOF": 1 }],
+    
+    // Best practices
+    "eqeqeq": ["error", "always"],
+    "curly": "off",
+    "no-eval": "error",
+    "no-implied-eval": "error",
+    "no-new-func": "error",
+    "no-script-url": "error",
+    "no-self-compare": "error",    "no-sequences": "error",
+    "no-throw-literal": "error",
+    "no-with": "error",
+    "radix": "error",
+    "wrap-iife": ["error", "any"],
+    "yoda": "error"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "ignorePatterns": [
+    "build/**",
+    "dist/**",
+    "node_modules/**",
+    "*.min.js"
+  ]
+}

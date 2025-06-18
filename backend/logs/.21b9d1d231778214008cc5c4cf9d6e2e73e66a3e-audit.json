@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "C:\\Users\\POOJA\\OneDrive\\Documents\\AutoApplyPro\\backend\\logs\\.21b9d1d231778214008cc5c4cf9d6e2e73e66a3e-audit.json",
+    "files": [
+        {
+            "date": 1750155497094,
+            "name": "C:\\Users\\POOJA\\OneDrive\\Documents\\AutoApplyPro\\backend\\logs\\error-2025-06-17.log",
+            "hash": "606d0f75b53d4192eb82b7507fdadebba09420095759b9e2f5c8af28e60944ba"
+        }
+    ],
+    "hashType": "sha256"
+}

@@ -8,10 +8,11 @@ const FinalProfileCard = ({ profileData, onEditClick, refreshData }) => {
 
   const handleSetAsActive = async () => {
     try {
-      const response = await axios.post('/api/resumes/profile/set-active', { active: true });
-      if (response.data.success) {
+      const response = await axios.post('/api/resumes/profile/set-active', { active: true });      if (response.data.success) {
         toast.success('Profile set as active for autofill');
-        if (refreshData) refreshData();
+        if (refreshData) {
+          refreshData();
+        }
       }
     } catch (error) {
       toast.error('Failed to set profile as active');
@@ -140,10 +141,9 @@ const FinalProfileCard = ({ profileData, onEditClick, refreshData }) => {
             <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">Education</h4>
             <div className="space-y-3">
               {/* Sort education by year in descending order */}
-              {[...profileData.education]
-                .sort((a, b) => {
-                  const yearA = parseInt(a.year) || 0;
-                  const yearB = parseInt(b.year) || 0;
+              {[...profileData.education]                .sort((a, b) => {
+                  const yearA = parseInt(a.year, 10) || 0;
+                  const yearB = parseInt(b.year, 10) || 0;
                   return yearB - yearA;
                 })
                 .map((edu, index) => (

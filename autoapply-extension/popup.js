@@ -1,7 +1,12 @@
-document.addEventListener('DOMContentLoaded', function() {
-  // Use utility functions if available
+document.addEventListener('DOMContentLoaded', function() {  // Use utility functions if available
   const utils = window.AutoApplyUtils || {};
-  const debounce = utils.debounce || ((fn) => fn); // Fallback if utils not loaded
+  const debounce = utils.debounce || ((fn, delay) => {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => fn.apply(null, args), delay || 300);
+    };
+  }); // Better fallback debounce implementation
   
   // Determine environment (development or production)
   let currentEnvironment = 'production';
@@ -70,23 +75,24 @@ document.addEventListener('DOMContentLoaded', function() {
     new bootstrap.Tooltip(tooltipTriggerEl);
   });
   
-  let profileData = null;
-  // Determine API base URL based on environment
+  let profileData = null;  // Get API URL from background script
   let API_BASE_URL = '';
-  // Check if we're in development or production
-  const isLocalhost = window.location.hostname === 'localhost' || 
-                     window.location.hostname === '127.0.0.1' || 
-                     window.location.hostname.includes('192.168.');
   
-  if (isLocalhost) {
-    API_BASE_URL = 'http://localhost:5000/api';
-  } else {
-    API_BASE_URL = 'https://api.autoapplypro.com/api';
-  }
-  
-  // Log the environment for debugging
-  console.log(`AutoApply Pro running in ${isLocalhost ? 'development' : 'production'} mode`);
-  console.log(`Using API: ${API_BASE_URL}`);
+  // Request API URL from background script
+  chrome.runtime.sendMessage({ type: 'getApiUrl' }, (response) => {
+    if (response && response.apiUrl) {
+      API_BASE_URL = response.apiUrl;
+      console.log(`Using API: ${API_BASE_URL}`);
+    } else {
+      // Fallback to environment detection
+      const isLocalhost = window.location.hostname === 'localhost' || 
+                         window.location.hostname === '127.0.0.1' || 
+                         window.location.hostname.includes('192.168.');
+      
+      API_BASE_URL = isLocalhost ? 'http://localhost:5000/api' : 'https://api.autoapplypro.com/api';
+      console.log(`Fallback API: ${API_BASE_URL}`);
+    }
+  });
   
   // Enable debug mode toggling
   const debugModeToggle = document.getElementById('debug-mode-toggle');
@@ -684,28 +690,34 @@ document.addEventListener('DOMContentLoaded', function() {
       toast.className = toast.className.replace('show', '');
     }, 3000);
   }
-  
-  // Open dashboard
+    // Open dashboard
   function openDashboard() {
-    chrome.tabs.create({ url: 'http://localhost:3000/dashboard' });
+    const dashboardUrl = currentEnvironment === 'development' 
+      ? 'http://localhost:3000/dashboard' 
+      : 'https://autoapplypro.com/dashboard';
+    chrome.tabs.create({ url: dashboardUrl });
   }
   
   // Open settings
   function openSettings() {
-    chrome.tabs.create({ url: 'http://localhost:3000/settings' });
+    const settingsUrl = currentEnvironment === 'development' 
+      ? 'http://localhost:3000/settings' 
+      : 'https://autoapplypro.com/settings';
+    chrome.tabs.create({ url: settingsUrl });
   }
-  
-  // Function to open help
+    // Function to open help
   function openHelp() {
-    chrome.tabs.create({ url: 'https://autoapplypro.com/help' });
+    const helpUrl = currentEnvironment === 'development' 
+      ? 'http://localhost:3000/help' 
+      : 'https://autoapplypro.com/help';
+    chrome.tabs.create({ url: helpUrl });
   }
   
   // Function to open feedback form
   function openFeedback() {
     chrome.tabs.create({ url: 'https://forms.gle/5XpbLZGY5kHnqH7g6' });
   }
-
-  // Handle tracking the current job
+  // Handle tracking the current job with enhanced data extraction
   const handleTrackJob = async function() {
     // Set button to loading state
     setButtonLoading(trackJobBtn, true, trackJobSpinner);
@@ -727,12 +739,14 @@ document.addEventListener('DOMContentLoaded', function() {
       // Get the current tab info
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       
-      // Extract job details from the page
+      // Extract comprehensive job details from the page using enhanced extractor
       const results = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: () => {
-          // Use the job extractor if available
-          if (window.AutoApplyJobExtractor) {
+          // Use enhanced job extraction if available
+          if (window.AutoApplyJobExtractor && window.AutoApplyJobExtractor.extractEnhancedJobDetails) {
+            return window.AutoApplyJobExtractor.extractEnhancedJobDetails();
+          } else if (window.AutoApplyJobExtractor && window.AutoApplyJobExtractor.extractJobDetails) {
             return window.AutoApplyJobExtractor.extractJobDetails();
           }
           return null;
@@ -742,7 +756,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const jobDetails = results[0]?.result;
       
       if (!jobDetails) {
-        showToast('Could not extract job details from this page', 'error');
+        showToast('Could not extract job details from this page. Please make sure you are on a job posting page.', 'error');
         setButtonLoading(trackJobBtn, false, trackJobSpinner);
         return;
       }
@@ -754,20 +768,39 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       });
       
-      // Send job details to backend
+      // Prepare enhanced job data for backend
+      const jobApplicationData = {
+        // Basic information
+        jobTitle: jobDetails.jobTitle,
+        company: jobDetails.company,
+        location: jobDetails.location || '',
+        jdUrl: jobDetails.jdUrl,
+        status: 'interested',
+        
+        // Enhanced information if available
+        jobDescription: jobDetails.jobDescription || '',
+        salaryRange: jobDetails.salaryRange || { min: null, max: null, currency: 'USD' },
+        employmentType: jobDetails.employmentType || 'full-time',
+        workMode: jobDetails.workMode || 'onsite',
+        experienceLevel: jobDetails.experienceLevel || 'mid',
+        requiredSkills: jobDetails.requiredSkills || [],
+        preferredSkills: jobDetails.preferredSkills || [],
+        jobSource: jobDetails.jobSource || 'other',
+        jobId: jobDetails.jobId || '',
+        
+        // Additional metadata if available
+        applicationDeadline: jobDetails.applicationDeadline || null,
+        recruiterInfo: jobDetails.contactInfo || { name: '', email: '', linkedin: '' }
+      };
+      
+      // Send comprehensive job details to backend
       const response = await fetch(`${apiUrl}/job-tracker/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-          jobTitle: jobDetails.jobTitle,
-          company: jobDetails.company,
-          location: jobDetails.location || '',
-          jdUrl: jobDetails.jdUrl,
-          status: 'interested'
-        })
+        body: JSON.stringify(jobApplicationData)
       });
       
       if (!response.ok) {
@@ -777,27 +810,135 @@ document.addEventListener('DOMContentLoaded', function() {
       
       const data = await response.json();
       
-      // Show success message
-      showToast('Job added to tracker successfully!', 'success');
+      // Show enhanced success message with extracted details
+      const skillsText = jobDetails.requiredSkills && jobDetails.requiredSkills.length > 0 
+        ? ` (${jobDetails.requiredSkills.length} skills detected)` 
+        : '';
+      
+      showToast(`✅ Job tracked successfully!${skillsText}`, 'success');
       
       // Reset button state
       setButtonLoading(trackJobBtn, false, trackJobSpinner);
       
-      // Offer to open job tracker
+      // Offer enhanced options after tracking
       setTimeout(() => {
-        if (confirm('Job added to tracker. Would you like to view your job tracker?')) {
-          // Get the appropriate web app URL based on environment
+        const message = `Job "${jobDetails.jobTitle}" at ${jobDetails.company} added to tracker!\n\nWhat would you like to do next?\n\n1. View Job Tracker\n2. Generate Custom Resume\n3. Analyze Job Match\n\nEnter 1, 2, or 3 (or cancel):`;
+        
+        const choice = prompt(message);
+        
+        if (choice === '1') {
+          // Open job tracker
           const webAppUrl = currentEnvironment === 'development' ? 
             'http://localhost:3000/job-tracker' : 
             'https://autoapplypro.com/job-tracker';
           chrome.tabs.create({ url: webAppUrl });
+        } else if (choice === '2') {
+          // Generate custom resume
+          generateCustomResumeForJob(data.data._id, token);
+        } else if (choice === '3') {
+          // Analyze job match
+          if (jobDetails.jobDescription) {
+            analyzeJobMatch(jobDetails.jobDescription, token);
+          } else {
+            showToast('No job description available for analysis', 'warning');
+          }
         }
-      }, 500);
+      }, 1000);
       
     } catch (error) {
       console.error('Error tracking job:', error);
       showToast(error.message || 'Failed to track job', 'error');
       setButtonLoading(trackJobBtn, false, trackJobSpinner);
+    }
+  };
+
+  // Function to generate custom resume for a tracked job
+  const generateCustomResumeForJob = async (jobApplicationId, token) => {
+    try {
+      showToast('🔄 Generating custom resume...', 'info');
+      
+      const apiUrl = await new Promise((resolve) => {
+        chrome.runtime.sendMessage({ type: 'getApiUrl' }, (response) => {
+          resolve(response.apiUrl);
+        });
+      });
+      
+      const response = await fetch(`${apiUrl}/job-tracker/${jobApplicationId}/generate-resume`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate custom resume');
+      }
+      
+      const data = await response.json();
+      showToast('✅ Custom resume generated successfully!', 'success');
+      
+      // Ask if user wants to view the resume
+      setTimeout(() => {
+        if (confirm('Custom resume generated! Would you like to view it in your dashboard?')) {
+          const webAppUrl = currentEnvironment === 'development' ? 
+            'http://localhost:3000/dashboard/resumes' : 
+            'https://autoapplypro.com/dashboard/resumes';
+          chrome.tabs.create({ url: webAppUrl });
+        }
+      }, 500);
+      
+    } catch (error) {
+      console.error('Error generating custom resume:', error);
+      showToast(error.message || 'Failed to generate custom resume', 'error');
+    }
+  };
+
+  // Function to analyze job match using existing analyzer
+  const analyzeJobMatch = async (jobDescription, token) => {
+    try {
+      showToast('🔍 Analyzing job match...', 'info');
+      
+      const apiUrl = await new Promise((resolve) => {
+        chrome.runtime.sendMessage({ type: 'getApiUrl' }, (response) => {
+          resolve(response.apiUrl);
+        });
+      });
+      
+      const response = await fetch(`${apiUrl}/jd-analyzer/analyze`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          jobDescription: jobDescription
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to analyze job match');
+      }
+      
+      const data = await response.json();
+      const matchScore = data.data?.matchScore || 'N/A';
+      
+      showToast(`📊 Job Match Score: ${matchScore}%`, 'success');
+      
+      // Optionally show detailed analysis
+      setTimeout(() => {
+        if (confirm(`Your job match score is ${matchScore}%\n\nWould you like to see detailed analysis in the dashboard?`)) {
+          const webAppUrl = currentEnvironment === 'development' ? 
+            'http://localhost:3000/dashboard/analyzer' : 
+            'https://autoapplypro.com/dashboard/analyzer';
+          chrome.tabs.create({ url: webAppUrl });
+        }
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Error analyzing job match:', error);
+      showToast('Failed to analyze job match', 'error');
     }
   };
 

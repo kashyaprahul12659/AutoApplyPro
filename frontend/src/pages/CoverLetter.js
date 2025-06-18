@@ -5,6 +5,15 @@ import CoverLetterHistory from '../components/coverletter/CoverLetterHistory';
 import CoverLetterEditor from '../components/coverletter/CoverLetterEditor';
 import { useUser } from '../hooks/useUniversalAuth';
 import { useApiWithAuth } from '../hooks/useApiWithAuth';
+import { 
+  DocumentTextIcon,
+  SparklesIcon,
+  ClockIcon,
+  PencilSquareIcon,
+  RocketLaunchIcon,
+  CpuChipIcon,
+  DocumentDuplicateIcon
+} from '@heroicons/react/24/outline';
 
 const CoverLetter = () => {
   const apiCall = useApiWithAuth();
@@ -134,70 +143,136 @@ const CoverLetter = () => {
     setActiveCoverLetter(null);
     setActiveTab('generate');
   };
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">AI Cover Letter Generator</h1>
-        <p className="mt-2 text-gray-600">
-          Create personalized cover letters tailored to your profile and specific job descriptions.
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/20 to-teal-50/30">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header Section */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 p-6 mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl flex items-center justify-center">
+                <DocumentTextIcon className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                  AI Cover Letter Generator
+                </h1>
+                <p className="text-gray-600 mt-1">Create personalized cover letters tailored to your profile and job descriptions</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 px-4 py-2 rounded-xl">
+                <CpuChipIcon className="w-4 h-4" />
+                <span className="text-sm font-medium">AI Powered</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Features Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-emerald-200/50 p-6">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                <SparklesIcon className="w-5 h-5 text-emerald-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900">AI-Generated</h3>
+            </div>
+            <p className="text-sm text-gray-600">Intelligent cover letters tailored to your experience and the job requirements</p>
+          </div>
+          
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-teal-200/50 p-6">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
+                <DocumentDuplicateIcon className="w-5 h-5 text-teal-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900">Personalized</h3>
+            </div>
+            <p className="text-sm text-gray-600">Each letter is customized based on your profile and the specific job posting</p>
+          </div>
+          
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-blue-200/50 p-6">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                <PencilSquareIcon className="w-5 h-5 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900">Editable</h3>
+            </div>
+            <p className="text-sm text-gray-600">Fine-tune and customize your cover letters with our built-in editor</p>
+          </div>
+        </div>
+
+        {/* Enhanced Tabs */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 overflow-hidden">
+          <div className="border-b border-gray-200/50 bg-gray-50/50">
+            <div className="flex space-x-1 p-2">
+              <button
+                onClick={() => setActiveTab('generate')}
+                className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  activeTab === 'generate' 
+                    ? 'bg-white text-emerald-600 shadow-sm border border-emerald-200/50' 
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                }`}
+              >
+                <RocketLaunchIcon className="w-4 h-4" />
+                <span>Generate</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('history')}
+                className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  activeTab === 'history' 
+                    ? 'bg-white text-emerald-600 shadow-sm border border-emerald-200/50' 
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                }`}
+              >
+                <ClockIcon className="w-4 h-4" />
+                <span>History</span>
+              </button>
+              {activeCoverLetter && (
+                <button
+                  onClick={() => setActiveTab('editor')}
+                  className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    activeTab === 'editor' 
+                      ? 'bg-white text-emerald-600 shadow-sm border border-emerald-200/50' 
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                  }`}
+                >
+                  <PencilSquareIcon className="w-4 h-4" />
+                  <span>Editor</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Tab Content */}
+          <div className="p-6">
+            {activeTab === 'generate' && (
+              <CoverLetterGenerator 
+                onGenerate={handleGenerateCoverLetter} 
+                isGenerating={isGenerating} 
+              />
+            )}
+
+            {activeTab === 'history' && (
+              <CoverLetterHistory 
+                coverLetters={coverLetters}
+                isLoading={isLoading}
+                onView={handleViewCoverLetter}
+                onDelete={handleDeleteCoverLetter}
+              />
+            )}
+
+            {activeTab === 'editor' && activeCoverLetter && (
+              <CoverLetterEditor 
+                coverLetter={activeCoverLetter}
+                onUpdate={handleUpdateCoverLetter}
+                onNew={handleNewCoverLetter}
+              />
+            )}
+          </div>
+        </div>
       </div>
-
-      {/* Tabs */}
-      <div className="flex border-b mb-6">
-        <button
-          onClick={() => setActiveTab('generate')}
-          className={`py-2 px-4 font-medium ${
-            activeTab === 'generate' ? 'border-b-2 border-primary text-primary' : 'text-gray-500'
-          }`}
-        >
-          Generate
-        </button>
-        <button
-          onClick={() => setActiveTab('history')}
-          className={`py-2 px-4 font-medium ${
-            activeTab === 'history' ? 'border-b-2 border-primary text-primary' : 'text-gray-500'
-          }`}
-        >
-          History
-        </button>
-        {activeCoverLetter && (
-          <button
-            onClick={() => setActiveTab('editor')}
-            className={`py-2 px-4 font-medium ${
-              activeTab === 'editor' ? 'border-b-2 border-primary text-primary' : 'text-gray-500'
-            }`}
-          >
-            Editor
-          </button>
-        )}
-      </div>
-
-      {/* Tab Content */}
-      {activeTab === 'generate' && (
-        <CoverLetterGenerator 
-          onGenerate={handleGenerateCoverLetter} 
-          isGenerating={isGenerating} 
-        />
-      )}
-
-      {activeTab === 'history' && (
-        <CoverLetterHistory 
-          coverLetters={coverLetters}
-          isLoading={isLoading}
-          onView={handleViewCoverLetter}
-          onDelete={handleDeleteCoverLetter}
-        />
-      )}
-
-      {activeTab === 'editor' && activeCoverLetter && (
-        <CoverLetterEditor 
-          coverLetter={activeCoverLetter}
-          onUpdate={handleUpdateCoverLetter}
-          onNew={handleNewCoverLetter}
-        />
-      )}
     </div>
   );
 };

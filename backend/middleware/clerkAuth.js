@@ -19,7 +19,7 @@ function developmentAuth(req, res, next) {
   req.user = {
     id: devUserId,
     clerkId: devUserId,
-    email: 'dev@autoapplypro.com',
+    email: 'dev@autoapplypro.tech',
     firstName: 'Dev',
     lastName: 'User'
   };

@@ -16,18 +16,30 @@ async function generateIcons() {
       // Create a canvas with the desired size
       const canvas = createCanvas(size, size);
       const ctx = canvas.getContext('2d');
+        // Helper function for rounded rectangle
+      function roundRect(x, y, width, height, radius) {
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + width - radius, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        ctx.lineTo(x + radius, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+      }
       
       // Background
       ctx.fillStyle = '#2563EB';
-      ctx.beginPath();
-      ctx.roundRect(0, 0, size, size, size * 0.2);
+      roundRect(0, 0, size, size, size * 0.2);
       ctx.fill();
       
       // Document background
       const padding = size * 0.15;
       ctx.fillStyle = '#FFFFFF';
-      ctx.beginPath();
-      ctx.roundRect(padding, padding, size - padding * 2, size - padding * 2, size * 0.07);
+      roundRect(padding, padding, size - padding * 2, size - padding * 2, size * 0.07);
       ctx.fill();
       
       // Document lines

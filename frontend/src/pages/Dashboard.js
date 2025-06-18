@@ -1,37 +1,67 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useUser } from '../hooks/useUniversalAuth';
-import { useApiWithAuth } from '../hooks/useApiWithAuth';
+import withErrorBoundary from '../components/withErrorBoundary';
+import { 
+  DashboardSkeleton, 
+  CardSkeleton, 
+  ProfileSkeleton, 
+  ListSkeleton,
+  Skeleton
+} from '../components/LoadingSkeletons';
+import performanceMonitor from '../utils/performance';
+import { useApi } from '../hooks/useApi';
+import { toast } from 'react-toastify';
+
+// Import icons
+import {
+  ChartBarIcon,
+  BellIcon,
+  MagnifyingGlassIcon,
+  CogIcon,
+  UserIcon,
+  DocumentTextIcon
+} from '@heroicons/react/24/outline';
+
+// Import components
+import DashboardStats from '../components/dashboard/DashboardStats';
+import ExtensionDetector from '../components/extension/ExtensionDetector';
+import AICoverLetterCard from '../components/dashboard/AICoverLetterCard';
+import ResumeBuilderWidget from '../components/dashboard/ResumeBuilderWidget';
+import ProgressTracker from '../components/dashboard/ProgressTracker';
+import QuickActions from '../components/dashboard/QuickActions';
+import ActivityFeed from '../components/dashboard/ActivityFeed';
 import ResumeUploader from '../components/resume/ResumeUploader';
 import ResumeList from '../components/resume/ResumeList';
 import ParsedResumeData from '../components/resume/ParsedResumeData';
 import FinalProfileCard from '../components/profile/FinalProfileCard';
-import ExtensionDetector from '../components/extension/ExtensionDetector';
-import AICoverLetterCard from '../components/dashboard/AICoverLetterCard';
-import ResumeBuilderWidget from '../components/dashboard/ResumeBuilderWidget';
 
+/**
+ * Dashboard Page Component
+ * Main entry point for the user dashboard
+ */
 const Dashboard = () => {
   const { user } = useUser();
-  const apiCall = useApiWithAuth();
+  const { apiCall } = useApi();
   
-  // Profile state
-  const [profileData, setProfileData] = useState({
-    name: '',
-    email: ''
-  });
-  
-  // Resume state
+  // State management
+  const [activeTab, setActiveTab] = useState('profile');
+  const [profileData, setProfileData] = useState({ name: '', email: '' });
   const [resumes, setResumes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [activeTab, setActiveTab] = useState('profile');
-  
-  // Resume parsing state
-  const [showParseModal, setShowParseModal] = useState(false);
-  const [lastUploadedResumeId, setLastUploadedResumeId] = useState(null);
   const [hasParsedData, setHasParsedData] = useState(false);
   const [parsedProfileData, setParsedProfileData] = useState(null);
+  const [showParseModal, setShowParseModal] = useState(false);
+  const [lastUploadedResumeId, setLastUploadedResumeId] = useState(null);
   const [editingProfile, setEditingProfile] = useState(false);
+  // Performance monitoring
+  useEffect(() => {
+    const measurement = performanceMonitor.startMeasurement('dashboard-page-load');
+    return () => {
+      measurement.end();
+    };
+  }, []);
+
   // Load user data into form when user state is available
   useEffect(() => {
     if (user) {
@@ -44,6 +74,8 @@ const Dashboard = () => {
 
   // Fetch user's resumes
   useEffect(() => {
+    if (!user) return;
+    
     const fetchResumes = async () => {
       try {
         setIsLoading(true);
@@ -57,9 +89,12 @@ const Dashboard = () => {
     };
 
     fetchResumes();
-  }, [apiCall]);
-    // Check if user has parsed resume data
+  }, [apiCall, user]);
+
+  // Check if user has parsed resume data
   useEffect(() => {
+    if (!user) return;
+    
     const checkParsedData = async () => {
       try {
         const res = await apiCall.get('/api/resumes/parsed-data');
@@ -75,8 +110,34 @@ const Dashboard = () => {
     };
     
     checkParsedData();
-  }, []);
-    // Function to refresh profile data
+  }, [apiCall, user]);
+
+  // Show loading if user data is still being fetched
+  if (!user) {
+    return (      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Skeleton height="h-8" width="w-48" className="mb-4" />
+          <div className="mt-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1,2,3,4,5,6].map(i => <CardSkeleton key={i} />)}
+            </div>
+          </div>
+          <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-8">
+              <CardSkeleton />
+              <ListSkeleton />
+            </div>
+            <div className="space-y-8">
+              <CardSkeleton />
+              <CardSkeleton />
+              <CardSkeleton />
+            </div>
+          </div>
+        </div>
+      </div>
+    );  }
+
+  // Function to refresh profile data
   const refreshProfileData = async () => {
     try {
       const res = await apiCall('/api/resumes/parsed-data');
@@ -194,305 +255,410 @@ const Dashboard = () => {
       }
     }
   };
-
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-      
-      {/* Tabs */}
-      <div className="flex border-b mb-6">
-        <button
-          onClick={() => setActiveTab('profile')}
-          className={`py-2 px-4 font-medium ${activeTab === 'profile' ? 'border-b-2 border-primary text-primary' : 'text-gray-500'}`}
-        >
-          Profile
-        </button>
-        <button
-          onClick={() => setActiveTab('resumes')}
-          className={`py-2 px-4 font-medium ${activeTab === 'resumes' ? 'border-b-2 border-primary text-primary' : 'text-gray-500'}`}
-        >
-          Resumes
-        </button>
-        {hasParsedData && (
-          <button
-            onClick={() => setActiveTab('parsedData')}
-            className={`py-2 px-4 font-medium ${activeTab === 'parsedData' ? 'border-b-2 border-primary text-primary' : 'text-gray-500'}`}
-          >
-            Resume Data
-          </button>
-        )}
-        {hasParsedData && (
-          <button
-            onClick={() => setActiveTab('finalProfile')}
-            className={`py-2 px-4 font-medium ${activeTab === 'finalProfile' ? 'border-b-2 border-primary text-primary' : 'text-gray-500'}`}
-          >
-            Autofill Profile
-          </button>
-        )}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-indigo-50/30">
+      {/* Header Section */}
+      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+                  <ChartBarIcon className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                    Dashboard
+                  </h1>
+                  <p className="text-sm text-gray-600">Welcome back, {user?.fullName || 'User'}!</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              <button className="relative p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200">
+                <BellIcon className="w-5 h-5" />
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+              </button>
+              <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200">
+                <MagnifyingGlassIcon className="w-5 h-5" />
+              </button>
+              <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200">
+                <CogIcon className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Extension Status */}
-      <div className="mb-6">
-        <ExtensionDetector />
-      </div>
-      
-      {/* AI Cover Letter Feature */}
-      {hasParsedData && (
-        <div className="mb-6">
-          <AICoverLetterCard />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Stats Section */}
+        <div className="mb-8">
+          <DashboardStats resumes={resumes} hasParsedData={hasParsedData} />
         </div>
-      )}
-      
-      {/* Resume Builder Widget */}
-      <div className="mb-6">
-        <ResumeBuilderWidget />
-      </div>
-      
-      {/* Parse Resume Modal */}
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          {/* Left Column - Main Actions */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Extension Status */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 hover:shadow-md transition-all duration-300">
+              <ExtensionDetector />
+            </div>
+            
+            {/* AI Cover Letter Feature */}
+            {hasParsedData && (
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 hover:shadow-md transition-all duration-300">
+                <AICoverLetterCard />
+              </div>
+            )}
+            
+            {/* Resume Builder Widget */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 hover:shadow-md transition-all duration-300">
+              <ResumeBuilderWidget />
+            </div>
+
+            {/* Progress Tracker */}
+            <ProgressTracker 
+              hasProfile={!!profileData.name && !!profileData.email}
+              hasResume={resumes.length > 0}
+              hasParsedData={hasParsedData}
+              hasExtension={false} // You can add extension detection logic
+            />
+          </div>
+
+          {/* Right Column - Quick Actions & Activity */}
+          <div className="space-y-6">
+            <QuickActions 
+              onProfileClick={() => setActiveTab('profile')}
+              onResumeClick={() => setActiveTab('resumes')}
+              onDataClick={() => setActiveTab('parsedData')}
+              onAutofillClick={() => setActiveTab('finalProfile')}
+              hasParsedData={hasParsedData}
+            />
+            
+            <ActivityFeed 
+              resumes={resumes}
+              hasParsedData={hasParsedData}
+            />
+          </div>
+        </div>
+
+        {/* Tabbed Content Section */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 overflow-hidden">
+          {/* Modern Tab Navigation */}
+          <div className="border-b border-gray-200/50 bg-gray-50/50">
+            <div className="flex space-x-1 p-2">
+              <button
+                onClick={() => setActiveTab('profile')}
+                className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  activeTab === 'profile' 
+                    ? 'bg-white text-blue-600 shadow-sm border border-blue-200/50' 
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                }`}
+              >
+                <UserIcon className="w-4 h-4" />
+                <span>Profile</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('resumes')}
+                className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  activeTab === 'resumes' 
+                    ? 'bg-white text-blue-600 shadow-sm border border-blue-200/50' 
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                }`}
+              >
+                <DocumentTextIcon className="w-4 h-4" />
+                <span>Resumes</span>
+              </button>
+              {hasParsedData && (
+                <button
+                  onClick={() => setActiveTab('parsedData')}
+                  className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    activeTab === 'parsedData' 
+                      ? 'bg-white text-blue-600 shadow-sm border border-blue-200/50' 
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                  }`}
+                >
+                  <ChartBarIcon className="w-4 h-4" />
+                  <span>Resume Data</span>
+                </button>
+              )}
+              {hasParsedData && (
+                <button
+                  onClick={() => setActiveTab('finalProfile')}
+                  className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    activeTab === 'finalProfile' 
+                      ? 'bg-white text-blue-600 shadow-sm border border-blue-200/50' 
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                  }`}
+                >
+                  <CogIcon className="w-4 h-4" />
+                  <span>Autofill Profile</span>
+                </button>
+              )}
+            </div>
+          </div>          {/* Tab Content */}
+          <div className="p-6">
+            {/* Profile Tab */}
+            {activeTab === 'profile' && (
+              <div className="space-y-6">
+                {/* Resume summary in profile section */}
+                {resumes.some(resume => resume.isPrimary) && (
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl p-4">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0 pt-1">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <DocumentTextIcon className="w-5 h-5 text-blue-600" />
+                        </div>
+                      </div>
+                      <div className="ml-3 flex-1">
+                        <h3 className="text-sm font-semibold text-blue-900">Current Resume</h3>
+                        <div className="mt-1 text-sm text-blue-700 flex justify-between items-center">
+                          {(() => {
+                            const primaryResume = resumes.find(r => r.isPrimary);
+                            return primaryResume ? (
+                              <>
+                                <span className="truncate">
+                                  {primaryResume.originalName} - {new Date(primaryResume.uploadedAt).toLocaleDateString()}
+                                </span>
+                                <button 
+                                  onClick={() => setActiveTab('resumes')} 
+                                  className="text-blue-600 hover:text-blue-700 text-sm font-medium ml-2 px-3 py-1 bg-white rounded-lg hover:bg-blue-50 transition-all duration-200"
+                                >
+                                  Manage
+                                </button>
+                              </>
+                            ) : null;
+                          })()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Profile form */}
+                <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl border border-gray-200/50 p-6">
+                  <h2 className="text-xl font-bold text-gray-900 mb-6">Your Profile</h2>
+                  
+                  <form onSubmit={handleProfileSubmit} className="space-y-6">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        className="input"
+                        value={profileData.name}
+                        onChange={handleProfileChange}
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        className="input"
+                        value={profileData.email}
+                        onChange={handleProfileChange}
+                        required
+                      />
+                    </div>
+                    
+                    <button type="submit" className="btn btn-primary">
+                      Update Profile
+                    </button>
+                  </form>
+                  
+                  {!resumes.some(resume => resume.isPrimary) && (
+                    <div className="mt-6 pt-6 border-t border-gray-200">
+                      <div className="flex items-start p-4 bg-yellow-50 rounded-xl border border-yellow-200">
+                        <div className="flex-shrink-0">
+                          <svg className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="ml-3 flex-1">
+                          <h3 className="text-sm font-semibold text-yellow-800">No resume uploaded</h3>
+                          <div className="mt-2 text-sm text-yellow-700">
+                            <p>You haven't uploaded a resume yet. Upload your resume to use the auto-fill feature.</p>
+                            <button 
+                              onClick={() => setActiveTab('resumes')} 
+                              className="mt-2 inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition-all duration-200 font-medium text-sm"
+                            >
+                              Upload Resume
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            {/* Resumes Tab */}
+            {activeTab === 'resumes' && (
+              <div className="space-y-6">
+                {/* Resume Summary */}
+                {resumes.some(resume => resume.isPrimary) && (
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200/50 rounded-xl p-4">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0">
+                        <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                          <DocumentTextIcon className="w-5 h-5 text-green-600" />
+                        </div>
+                      </div>
+                      <div className="ml-3">
+                        <h3 className="text-sm font-semibold text-green-900">Primary Resume</h3>
+                        <div className="mt-1 text-sm text-green-700">
+                          {(() => {
+                            const primaryResume = resumes.find(r => r.isPrimary);
+                            return primaryResume ? (
+                              <span>
+                                <strong>{primaryResume.originalName}</strong> - Last updated {new Date(primaryResume.uploadedAt).toLocaleDateString()}
+                              </span>
+                            ) : null;
+                          })()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Upload area */}
+                <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl border border-gray-200/50 p-6">
+                  <h2 className="text-xl font-bold text-gray-900 mb-4">Upload Resume</h2>
+                  <p className="text-gray-600 mb-6">
+                    Upload your resume in PDF or DOCX format. Max file size: 5MB.
+                  </p>
+                  
+                  <ResumeUploader 
+                    onUpload={handleResumeUpload}
+                    isUploading={isLoading}
+                    uploadProgress={uploadProgress}
+                    hasExistingResume={resumes.length > 0}
+                  />
+                </div>
+                
+                {/* Resumes list */}
+                <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl border border-gray-200/50 p-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-bold text-gray-900">Your Resumes</h2>
+                    <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
+                      {resumes.length} {resumes.length === 1 ? 'resume' : 'resumes'}
+                    </span>
+                  </div>
+                  
+                  <ResumeList 
+                    resumes={resumes}
+                    isLoading={isLoading && resumes.length === 0}
+                    onSetPrimary={handleSetPrimary}
+                    onDelete={handleDeleteResume}
+                  />
+                </div>
+              </div>
+            )}
+            
+            {/* Parsed Resume Data Tab */}
+            {activeTab === 'parsedData' && (
+              <div className="space-y-6">
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl p-4">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <ChartBarIcon className="w-5 h-5 text-blue-600" />
+                      </div>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-semibold text-blue-900">Resume Data</h3>
+                      <div className="mt-1 text-sm text-blue-700">
+                        Edit your parsed resume data to ensure accurate autofill when applying for jobs.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl border border-gray-200/50 p-6">
+                  <ParsedResumeData onClose={refreshProfileData} />
+                </div>
+              </div>
+            )}
+            
+            {/* Final Autofill Profile Tab */}
+            {activeTab === 'finalProfile' && (
+              <div className="space-y-6">
+                {editingProfile ? (
+                  <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl border border-gray-200/50 p-6">
+                    <div className="flex justify-between items-center mb-6">
+                      <h2 className="text-xl font-bold text-gray-900">Edit Autofill Profile</h2>
+                      <button 
+                        onClick={() => setEditingProfile(false)}
+                        className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1 hover:bg-gray-100 rounded-lg transition-all duration-200"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                    <ParsedResumeData 
+                      onClose={() => {
+                        refreshProfileData();
+                        setEditingProfile(false);
+                      }} 
+                    />
+                  </div>
+                ) : (
+                  <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl border border-gray-200/50 p-6">
+                    <FinalProfileCard 
+                      profileData={parsedProfileData} 
+                      onEditClick={() => setEditingProfile(true)}
+                      refreshData={refreshProfileData}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>      {/* Parse Resume Modal */}
       {showParseModal && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center">
             {/* Background overlay */}
             <div className="fixed inset-0 transition-opacity" onClick={() => setShowParseModal(false)}>
-              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+              <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm"></div>
             </div>
             
             {/* Modal content */}
-            <div className="w-full max-w-3xl bg-white rounded-lg shadow-xl overflow-hidden z-50 transform transition-all">
-              <div className="px-6 py-4 bg-primary text-white flex justify-between items-center">
-                <h3 className="text-lg font-medium">Resume Data Extracted</h3>
+            <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden z-50 transform transition-all">
+              <div className="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex justify-between items-center">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                    <ChartBarIcon className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-lg font-semibold">Resume Data Extracted</h3>
+                </div>
                 <button 
                   onClick={() => setShowParseModal(false)}
-                  className="text-white hover:text-gray-200"
+                  className="text-white/80 hover:text-white hover:bg-white/20 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
                 >
-                  &times;
+                  ✕
                 </button>
               </div>
               
-              <ParsedResumeData 
-                resumeId={lastUploadedResumeId} 
-                onClose={() => {
-                  setShowParseModal(false);
-                  setHasParsedData(true);
-                }} 
-              />
-            </div>
-          </div>
-        </div>
-      )}
-      
-      {/* Profile Tab */}
-      {activeTab === 'profile' && (
-        <div>
-          {/* Resume summary in profile section */}
-          {resumes.some(resume => resume.isPrimary) && (
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
-              <div className="flex items-start">
-                <div className="flex-shrink-0 pt-1">
-                  <svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <div className="ml-3 flex-1">
-                  <h3 className="text-sm font-medium text-gray-700">Current Resume</h3>
-                  <div className="mt-1 text-sm text-gray-600 flex justify-between items-center">
-                    {(() => {
-                      const primaryResume = resumes.find(r => r.isPrimary);
-                      return primaryResume ? (
-                        <>
-                          <span className="truncate">
-                            {primaryResume.originalName} - {new Date(primaryResume.uploadedAt).toLocaleDateString()}
-                          </span>
-                          <button 
-                            onClick={() => setActiveTab('resumes')} 
-                            className="text-primary hover:text-blue-700 text-sm font-medium ml-2"
-                          >
-                            Manage
-                          </button>
-                        </>
-                      ) : null;
-                    })()}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {/* Profile form */}
-          <div className="card">
-            <h2 className="text-xl font-semibold mb-4">Your Profile</h2>
-            
-            <form onSubmit={handleProfileSubmit}>
-              <div className="mb-4">
-                <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Full Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  className="input"
-                  value={profileData.name}
-                  onChange={handleProfileChange}
-                  required
+              <div className="max-h-[80vh] overflow-y-auto">
+                <ParsedResumeData 
+                  resumeId={lastUploadedResumeId} 
+                  onClose={() => {
+                    setShowParseModal(false);
+                    setHasParsedData(true);
+                  }} 
                 />
               </div>
-              
-              <div className="mb-6">
-                <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email Address</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="input"
-                  value={profileData.email}
-                  onChange={handleProfileChange}
-                  required
-                />
-              </div>
-              
-              <button type="submit" className="btn btn-primary">
-                Update Profile
-              </button>
-            </form>
-            
-            {!resumes.some(resume => resume.isPrimary) && (
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="ml-3 flex-1">
-                    <h3 className="text-sm font-medium text-yellow-800">No resume uploaded</h3>
-                    <div className="mt-2 text-sm text-yellow-700">
-                      <p>You haven't uploaded a resume yet. Upload your resume to use the auto-fill feature.</p>
-                      <button 
-                        onClick={() => setActiveTab('resumes')} 
-                        className="mt-2 text-primary hover:text-blue-700 font-medium"
-                      >
-                        Upload Resume
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-      
-      {/* Resumes Tab */}
-      {activeTab === 'resumes' && (
-        <div>
-          {/* Resume Summary */}
-          {resumes.some(resume => resume.isPrimary) && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <svg className="h-6 w-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-blue-800">Primary Resume</h3>
-                  <div className="mt-1 text-sm text-blue-700">
-                    {(() => {
-                      const primaryResume = resumes.find(r => r.isPrimary);
-                      return primaryResume ? (
-                        <span>
-                          <strong>{primaryResume.originalName}</strong> - Last updated {new Date(primaryResume.uploadedAt).toLocaleDateString()}
-                        </span>
-                      ) : null;
-                    })()}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {/* Upload area */}
-          <div className="card mb-6">
-            <h2 className="text-xl font-semibold mb-4">Upload Resume</h2>
-            <p className="text-gray-600 mb-4">
-              Upload your resume in PDF or DOCX format. Max file size: 5MB.
-            </p>
-            
-            <ResumeUploader 
-              onUpload={handleResumeUpload}
-              isUploading={isLoading}
-              uploadProgress={uploadProgress}
-              hasExistingResume={resumes.length > 0}
-            />
-          </div>
-          
-          {/* Resumes list */}
-          <div className="card">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Your Resumes</h2>
-              <span className="text-sm text-gray-500">{resumes.length} {resumes.length === 1 ? 'resume' : 'resumes'}</span>
-            </div>
-            
-            <ResumeList 
-              resumes={resumes}
-              isLoading={isLoading && resumes.length === 0}
-              onSetPrimary={handleSetPrimary}
-              onDelete={handleDeleteResume}
-            />
-          </div>
-        </div>
-      )}
-      
-      {/* Parsed Resume Data Tab */}
-      {activeTab === 'parsedData' && (
-        <div>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <svg className="h-6 w-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-blue-800">Resume Data</h3>
-                <div className="mt-1 text-sm text-blue-700">
-                  Edit your parsed resume data to ensure accurate autofill when applying for jobs.
-                </div>
-              </div>
             </div>
           </div>
-          
-          <ParsedResumeData onClose={refreshProfileData} />
-        </div>
-      )}
-      
-      {/* Final Autofill Profile Tab */}
-      {activeTab === 'finalProfile' && (
-        <div>
-          {editingProfile ? (
-            <div>
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">Edit Autofill Profile</h2>
-                <button 
-                  onClick={() => setEditingProfile(false)}
-                  className="text-sm text-gray-500 hover:text-gray-700"
-                >
-                  Cancel
-                </button>
-              </div>
-              <ParsedResumeData 
-                onClose={() => {
-                  refreshProfileData();
-                  setEditingProfile(false);
-                }} 
-              />
-            </div>
-          ) : (
-            <FinalProfileCard 
-              profileData={parsedProfileData} 
-              onEditClick={() => setEditingProfile(true)}
-              refreshData={refreshProfileData}
-            />
-          )}
         </div>
       )}
     </div>

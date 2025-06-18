@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { logger, securityLogger } = require('../utils/logger');
 
 /**
  * Authentication middleware
@@ -22,10 +23,14 @@ module.exports = function(req, res, next) {
       token = bearerHeader.split(' ')[1];
     }
   }
-
   // Check if no token
   if (!token) {
-    console.log('Auth middleware: No token provided');
+    securityLogger('authentication_failure', {
+      reason: 'no_token',
+      ip: req.ip,
+      userAgent: req.get('User-Agent'),
+      url: req.originalUrl
+    });
     return res.status(401).json({ 
       success: false,
       error: 'auth_required',
@@ -36,10 +41,14 @@ module.exports = function(req, res, next) {
   // Verify token
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    // Check if token payload has required user data
+      // Check if token payload has required user data
     if (!decoded.user || !decoded.user.id) {
-      console.log('Auth middleware: Token payload missing user data');
+      securityLogger('authentication_failure', {
+        reason: 'invalid_token_payload',
+        ip: req.ip,
+        userAgent: req.get('User-Agent'),
+        url: req.originalUrl
+      });
       return res.status(401).json({ 
         success: false,
         error: 'invalid_token',
@@ -50,9 +59,13 @@ module.exports = function(req, res, next) {
     // Set user info on request object
     req.user = decoded.user;
     next();
-    
-  } catch (err) {
-    console.log('Auth middleware error:', err.name);
+      } catch (err) {
+    securityLogger('authentication_failure', {
+      reason: err.name,
+      ip: req.ip,
+      userAgent: req.get('User-Agent'),
+      url: req.originalUrl
+    });
     
     // Handle different JWT errors with appropriate responses
     if (err.name === 'TokenExpiredError') {
