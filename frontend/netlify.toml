@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "echo 'Build disabled for local development'"
   publish = "build"
 
 [build.environment]

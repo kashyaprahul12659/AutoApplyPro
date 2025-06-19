@@ -1,1 +1,1 @@
-web: node server-simple.js
+web: echo "Backend deployment disabled for local development"
