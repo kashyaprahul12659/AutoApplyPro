@@ -1,1 +1,1 @@
-web: echo "Backend deployment disabled for local development"
+web: npm start
