@@ -177,6 +177,24 @@ app.use('/api/developer-dashboard', developerDashboardRoutes);
 // Public API routes (uses API key authentication)
 app.use('/api/public', publicApiRoutes);
 
+// Client error logging endpoint
+app.post('/api/client-errors', (req, res) => {
+  try {
+    const { error, url, userAgent, timestamp } = req.body;
+    logger.error('Client-side error reported:', {
+      error,
+      url,
+      userAgent,
+      timestamp,
+      ip: req.ip
+    });
+    res.status(200).json({ status: 'logged' });
+  } catch (err) {
+    logger.error('Error logging client error:', err);
+    res.status(500).json({ error: 'Failed to log error' });
+  }
+});
+
 // Basic route with health check and version info
 app.get('/', (req, res) => {
   res.json({

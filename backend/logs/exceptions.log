@@ -34,3 +34,39 @@
 [31m    at require (node:internal/modules/helpers:179:18)[39m
 [31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\server.js:12:63)[39m
 [31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+2025-06-20 12:47:53:4753 [31merror[39m: [31muncaughtException: collection or collectionName and uri should be set[39m
+[31mError: collection or collectionName and uri should be set[39m
+[31m    at new MongoStore (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\node_modules\rate-limit-mongo\lib\mongoStore.js:28:9)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\middleware\rateLimiter.js:6:10)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+[31m    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1288:32)[39m
+[31m    at Module._load (node:internal/modules/cjs/loader:1104:12)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1311:19)[39m
+[31m    at require (node:internal/modules/helpers:179:18)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\server.js:12:63)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+2025-06-20 12:54:46:5446 [31merror[39m: [31muncaughtException: collection or collectionName and uri should be set[39m
+[31mError: collection or collectionName and uri should be set[39m
+[31m    at new MongoStore (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\node_modules\rate-limit-mongo\lib\mongoStore.js:28:9)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\middleware\rateLimiter.js:6:10)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+[31m    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1288:32)[39m
+[31m    at Module._load (node:internal/modules/cjs/loader:1104:12)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1311:19)[39m
+[31m    at require (node:internal/modules/helpers:179:18)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\server.js:12:63)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+2025-06-20 13:02:26:226 [31merror[39m: [31muncaughtException: collection or collectionName and uri should be set[39m
+[31mError: collection or collectionName and uri should be set[39m
+[31m    at new MongoStore (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\node_modules\rate-limit-mongo\lib\mongoStore.js:28:9)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\middleware\rateLimiter.js:6:10)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+[31m    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1288:32)[39m
+[31m    at Module._load (node:internal/modules/cjs/loader:1104:12)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1311:19)[39m
+[31m    at require (node:internal/modules/helpers:179:18)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\server.js:12:63)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
