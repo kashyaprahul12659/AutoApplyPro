@@ -86,9 +86,8 @@ const Dashboard = () => {
     
     const fetchDashboardStats = async () => {
       try {
-        setStatsLoading(true);
-        // Try to fetch real stats from the API
-        const res = await apiCall('/api/analytics/dashboard-stats');
+        setStatsLoading(true);        // Try to fetch real stats from the API
+        const res = await apiCall('/api/analytics/dashboard');
         if (res.data.success) {
           setDashboardStats(res.data.data);
         }
