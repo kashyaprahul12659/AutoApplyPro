@@ -1,119 +1,175 @@
 import React, { useState, useEffect } from 'react';
+import { CheckCircleIcon, ExclamationTriangleIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 
 const ExtensionDetector = () => {
-  const [extensionStatus, setExtensionStatus] = useState('checking');
-  
-  useEffect(() => {
-    // Check if the extension is installed
-    const checkExtension = () => {
-      // Set up a listener for extension response
+  const [extensionStatus, setExtensionStatus] = useState('checking'); // 'checking', 'installed', 'not-installed', 'error'
+  const [isRetrying, setIsRetrying] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const maxRetries = 3;
+
+  const checkExtension = async () => {
+    return new Promise((resolve) => {
+      // Send message to extension
+      const messageId = Date.now().toString();
+      
       const handleMessage = (event) => {
-        if (
-          event.source === window &&
-          event.data.type === 'AUTOAPPLY_EXTENSION_RESPONSE'
-        ) {
-          setExtensionStatus('installed');
+        if (event.source !== window || !event.data.type) return;
+        
+        if (event.data.type === 'AUTOAPPLY_EXTENSION_RESPONSE' && event.data.messageId === messageId) {
           window.removeEventListener('message', handleMessage);
+          resolve(true);
         }
       };
-      
+
       window.addEventListener('message', handleMessage);
       
-      // Send a message to check if the extension is installed
-      window.postMessage(
-        { type: 'AUTOAPPLY_CHECK_EXTENSION' },
-        window.location.origin
-      );
-      
-      // If no response after 1 second, assume extension is not installed
+      // Send message to extension
+      window.postMessage({
+        type: 'AUTOAPPLY_EXTENSION_CHECK',
+        messageId: messageId
+      }, '*');
+
+      // Timeout after 3 seconds
       setTimeout(() => {
-        if (extensionStatus === 'checking') {
-          setExtensionStatus('not-installed');
-          window.removeEventListener('message', handleMessage);
-        }
-      }, 1000);
-      
-      return () => {
         window.removeEventListener('message', handleMessage);
-      };
-    };
+        resolve(false);
+      }, 3000);
+    });
+  };
+
+  const detectExtension = async () => {
+    setExtensionStatus('checking');
     
-    checkExtension();
-  }, [extensionStatus]);
-  
-  if (extensionStatus === 'checking') {
-    return (
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 animate-pulse">
-        <div className="flex items-center">
-          <div className="flex-shrink-0">
-            <svg className="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
+    try {
+      const isInstalled = await checkExtension();
+      setExtensionStatus(isInstalled ? 'installed' : 'not-installed');
+    } catch (error) {
+      console.error('Extension detection error:', error);
+      setExtensionStatus('error');
+    }
+  };
+
+  const handleRetry = async () => {
+    if (retryCount >= maxRetries) return;
+    
+    setIsRetrying(true);
+    setRetryCount(prev => prev + 1);
+    
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+    await detectExtension();
+    
+    setIsRetrying(false);
+  };
+
+  const handleInstallExtension = () => {
+    // Download the extension
+    const link = document.createElement('a');
+    link.href = '/autoapply-extension.zip';
+    link.download = 'autoapply-extension.zip';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Show instructions
+    alert(`Extension downloaded! To install:
+1. Extract the ZIP file
+2. Open Chrome and go to chrome://extensions/
+3. Enable "Developer mode" (top right)
+4. Click "Load unpacked" and select the extracted folder
+5. Refresh this page to verify installation`);
+  };
+
+  useEffect(() => {
+    detectExtension();
+  }, []);
+
+  const renderStatus = () => {
+    switch (extensionStatus) {
+      case 'checking':
+        return (
+          <div className="flex items-center space-x-2 text-blue-600">
+            <ArrowPathIcon className="h-5 w-5 animate-spin" />
+            <span>Checking extension...</span>
           </div>
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-gray-700">Checking extension status...</h3>
+        );
+        
+      case 'installed':
+        return (
+          <div className="flex items-center space-x-2 text-green-600">
+            <CheckCircleIcon className="h-5 w-5" />
+            <span>Extension connected!</span>
           </div>
-        </div>
-      </div>
-    );
-  }
-  
-  if (extensionStatus === 'installed') {
-    return (
-      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-        <div className="flex items-center">
-          <div className="flex-shrink-0">
-            <svg className="h-6 w-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-green-800">AutoApply Pro Extension Installed</h3>
-            <div className="mt-1 text-sm text-green-700">
-              You're all set! You can now use the extension to autofill job applications.
+        );
+        
+      case 'not-installed':
+        return (
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2 text-amber-600">
+              <ExclamationTriangleIcon className="h-5 w-5" />
+              <span>Extension not detected</span>
             </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  
-  return (
-    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-      <div className="flex items-center">
-        <div className="flex-shrink-0">
-          <svg className="h-6 w-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-        </div>
-        <div className="ml-3">
-          <h3 className="text-sm font-medium text-yellow-800">AutoApply Pro Extension Not Detected</h3>
-          <div className="mt-1 text-sm text-yellow-700">
-            <p>The AutoApply Pro Chrome extension is not installed. Install it to autofill job applications with your profile data.</p>
-            <div className="mt-3 flex flex-col space-y-2">
-              <a 
-                href="/autoapply-extension.zip" 
-                download 
-                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            <div className="flex space-x-2">
+              <button
+                onClick={handleInstallExtension}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
               >
-                <svg className="mr-2 -ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
                 Download Extension
-              </a>
-              <button 
-                onClick={() => window.open('chrome://extensions/', '_blank')}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <svg className="mr-2 -ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Installation Instructions
               </button>
+              {retryCount < maxRetries && (
+                <button
+                  onClick={handleRetry}
+                  disabled={isRetrying}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm disabled:opacity-50"
+                >
+                  {isRetrying ? 'Retrying...' : `Retry (${retryCount}/${maxRetries})`}
+                </button>
+              )}
             </div>
           </div>
+        );
+        
+      case 'error':
+        return (
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2 text-red-600">
+              <ExclamationTriangleIcon className="h-5 w-5" />
+              <span>Extension check failed</span>
+            </div>
+            {retryCount < maxRetries && (
+              <button
+                onClick={handleRetry}
+                disabled={isRetrying}
+                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm disabled:opacity-50"
+              >
+                {isRetrying ? 'Retrying...' : `Retry (${retryCount}/${maxRetries})`}
+              </button>
+            )}
+          </div>
+        );
+        
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
+      <h3 className="text-lg font-semibold text-gray-800 mb-4">Browser Extension</h3>
+      {renderStatus()}
+      
+      {extensionStatus === 'not-installed' && (
+        <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+          <h4 className="font-medium text-blue-800 mb-2">Installation Instructions:</h4>
+          <ol className="text-sm text-blue-700 space-y-1">
+            <li>1. Download the extension using the button above</li>
+            <li>2. Extract the ZIP file to a folder</li>
+            <li>3. Open Chrome and navigate to chrome://extensions/</li>
+            <li>4. Enable "Developer mode" (toggle in top right)</li>
+            <li>5. Click "Load unpacked" and select the extracted folder</li>
+            <li>6. Refresh this page to verify installation</li>
+          </ol>
         </div>
-      </div>
+      )}
     </div>
   );
 };

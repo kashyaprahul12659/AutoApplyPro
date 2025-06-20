@@ -12,6 +12,7 @@ router.use(requireAuth());
 router.use(apiLimiter);
 
 // User Analytics Routes
+router.get('/dashboard-stats', analyticsController.getDashboardStats);
 router.get('/user/overview', analyticsController.getUserAnalytics);
 router.get('/user/usage', analyticsController.getUserUsage);
 router.get('/user/engagement', analyticsController.getUserEngagement);

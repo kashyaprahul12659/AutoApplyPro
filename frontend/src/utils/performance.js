@@ -120,11 +120,30 @@ class PerformanceMonitor {
       }
     };
   }
-
   endComponentTiming(timer) {
     if (timer && timer.end) {
       timer.end();
     }
+  }
+
+  // Generic measurement utility
+  startMeasurement(name) {
+    if (!this.isEnabled) {
+      return { end: () => {} }; // Return no-op for disabled monitoring
+    }
+    
+    const startTime = performance.now();
+    return {
+      end: () => {
+        const duration = performance.now() - startTime;
+        this.recordMetric('measurement', {
+          name,
+          duration,
+          startTime
+        });
+        return duration;
+      }
+    };
   }
 
   // Get Web Vitals

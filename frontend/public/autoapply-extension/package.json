@@ -1,0 +1,18 @@
+{
+  "name": "autoapply-pro-extension",
+  "version": "1.0.0",
+  "description": "Chrome extension for AutoApply Pro - Apply to jobs 10x faster with AI",
+  "main": "background.js",
+  "scripts": {
+    "package-extension": "node package-extension.js",
+    "generate-icons": "node generate-icons.js"
+  },
+  "author": "AutoApply Pro Team",
+  "license": "MIT",
+  "dependencies": {
+    "archiver": "^5.3.1"
+  },
+  "devDependencies": {
+    "canvas": "^2.9.0"
+  }
+}

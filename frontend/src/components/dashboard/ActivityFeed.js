@@ -11,56 +11,56 @@ import {
 /**
  * Enhanced Activity Feed Component with modern timeline design
  */
-const ActivityFeed = ({ activities = [] }) => {
-  const defaultActivities = [
-    {
-      id: 1,
-      type: 'application',
-      title: 'Applied to Software Engineer at Google',
-      description: 'Cover letter generated and application submitted',
-      time: '2 hours ago',
-      status: 'success',
-      icon: PaperAirplaneIcon
-    },
-    {
-      id: 2,
-      type: 'resume',
-      title: 'Resume updated',
-      description: 'Added new skills: React, TypeScript, Node.js',
-      time: '5 hours ago',
-      status: 'info',
-      icon: DocumentCheckIcon
-    },
-    {
-      id: 3,
-      type: 'interview',
-      title: 'Interview scheduled',
-      description: 'Microsoft - Senior Frontend Developer',
-      time: '1 day ago',
-      status: 'warning',
-      icon: CalendarDaysIcon
-    },
-    {
-      id: 4,
-      type: 'response',
-      title: 'Response received',
-      description: 'Tesla is interested in your profile',
-      time: '2 days ago',
-      status: 'success',
-      icon: ChatBubbleLeftRightIcon
-    },
-    {
-      id: 5,
-      type: 'ai',
-      title: 'AI Cover Letter Generated',
-      description: 'Personalized for Product Manager role',
-      time: '3 days ago',
-      status: 'accent',
-      icon: SparklesIcon
+const ActivityFeed = ({ activities = [], resumes = [], hasParsedData = false }) => {
+  // Generate real activity data based on user's actual data
+  const generateRealActivities = () => {
+    const realActivities = [];
+    
+    // Add resume-related activities
+    resumes.forEach((resume, index) => {
+      if (index < 3) { // Show only recent 3 resumes
+        realActivities.push({
+          id: `resume-${resume._id}`,
+          type: 'resume',
+          title: 'Resume uploaded',
+          description: `${resume.originalName} - ${resume.isPrimary ? 'Set as primary' : 'Available for use'}`,
+          time: new Date(resume.uploadedAt).toLocaleDateString(),
+          status: resume.isPrimary ? 'success' : 'info',
+          icon: DocumentCheckIcon
+        });
+      }
+    });
+    
+    // Add profile completion activity if parsed data exists
+    if (hasParsedData) {
+      realActivities.push({
+        id: 'profile-parsed',
+        type: 'ai',
+        title: 'Profile data extracted',
+        description: 'AI successfully parsed your resume data',
+        time: 'Recently',
+        status: 'accent',
+        icon: SparklesIcon
+      });
     }
-  ];
+    
+    // Add some helpful tips if no real activity
+    if (realActivities.length === 0) {
+      realActivities.push({
+        id: 'welcome-tip',
+        type: 'info',
+        title: 'Welcome to AutoApply Pro!',
+        description: 'Upload your resume to get started with automated job applications',
+        time: 'Just now',
+        status: 'info',
+        icon: DocumentCheckIcon
+      });
+    }
+    
+    return realActivities;
+  };
 
-  const activityList = activities.length > 0 ? activities : defaultActivities;
+  const activityList = activities.length > 0 ? activities : generateRealActivities();
 
   const getStatusStyles = (status) => {
     const styles = {
