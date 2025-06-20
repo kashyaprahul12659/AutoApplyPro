@@ -1,3 +1,6 @@
+# AutoApply Pro Frontend Deployment Configuration
+# Updated: Backend now deployed and working with mock endpoints
+
 [build]
   command = "echo 'Build disabled for local development'"
   publish = "build"
