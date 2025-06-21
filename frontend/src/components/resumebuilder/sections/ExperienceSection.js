@@ -31,7 +31,7 @@ const ExperienceSection = ({ data, onUpdate, targetRole }) => {
     const updatedItems = items.filter((_, i) => i !== index);
     setItems(updatedItems);
     onUpdate({ items: updatedItems });
-    
+
     if (expandedIndex === index) {
       setExpandedIndex(null);
     } else if (expandedIndex > index) {
@@ -45,12 +45,12 @@ const ExperienceSection = ({ data, onUpdate, targetRole }) => {
       ...updatedItems[index],
       [field]: value
     };
-    
+
     // If "current" is checked, clear the end date
     if (field === 'current' && value === true) {
       updatedItems[index].endDate = '';
     }
-    
+
     setItems(updatedItems);
     onUpdate({ items: updatedItems });
   };
@@ -69,12 +69,12 @@ const ExperienceSection = ({ data, onUpdate, targetRole }) => {
 
     const updatedItems = [...items];
     const newIndex = direction === 'up' ? index - 1 : index + 1;
-    
+
     [updatedItems[index], updatedItems[newIndex]] = [updatedItems[newIndex], updatedItems[index]];
-    
+
     setItems(updatedItems);
     onUpdate({ items: updatedItems });
-    
+
     if (expandedIndex === index) {
       setExpandedIndex(newIndex);
     } else if (expandedIndex === newIndex) {
@@ -84,23 +84,23 @@ const ExperienceSection = ({ data, onUpdate, targetRole }) => {
 
   const handleImproveWithAI = async (index) => {
     const item = items[index];
-    
+
     if (!item.description.trim()) {
       toast.warning('Please add a description to improve');
       return;
     }
-    
+
     try {
       setIsImproving(true);
       setImprovingIndex(index);
       toast.info('Improving job description with AI...');
-      
+
       const response = await resumeBuilderService.improveResumeBlock(
         'experience',
         item.description,
         targetRole
       );
-      
+
       if (response.success) {
         const improvedDescription = response.data.improved;
         handleUpdateItem(index, 'description', improvedDescription);
@@ -124,11 +124,11 @@ const ExperienceSection = ({ data, onUpdate, targetRole }) => {
       ) : (
         <div className="space-y-3">
           {items.map((item, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="border border-gray-200 rounded-lg overflow-hidden"
             >
-              <div 
+              <div
                 className="bg-gray-50 p-3 flex justify-between items-center cursor-pointer"
                 onClick={() => handleToggleExpand(index)}
               >
@@ -180,7 +180,7 @@ const ExperienceSection = ({ data, onUpdate, targetRole }) => {
                   )}
                 </div>
               </div>
-              
+
               {expandedIndex === index && (
                 <div className="p-3 space-y-3 bg-white">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -209,7 +209,7 @@ const ExperienceSection = ({ data, onUpdate, targetRole }) => {
                       />
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -249,7 +249,7 @@ const ExperienceSection = ({ data, onUpdate, targetRole }) => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div>
                     <div className="flex items-center">
                       <input
@@ -267,7 +267,7 @@ const ExperienceSection = ({ data, onUpdate, targetRole }) => {
                       </label>
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Description *
@@ -280,7 +280,7 @@ const ExperienceSection = ({ data, onUpdate, targetRole }) => {
                       rows="4"
                     />
                   </div>
-                  
+
                   <div className="flex justify-end">
                     <button
                       onClick={() => handleImproveWithAI(index)}
@@ -307,7 +307,7 @@ const ExperienceSection = ({ data, onUpdate, targetRole }) => {
           ))}
         </div>
       )}
-      
+
       <div className="flex justify-center">
         <button
           onClick={handleAddItem}
@@ -317,7 +317,7 @@ const ExperienceSection = ({ data, onUpdate, targetRole }) => {
           Add Experience
         </button>
       </div>
-      
+
       <div className="text-sm text-gray-500">
         <p>Tips:</p>
         <ul className="list-disc pl-5">

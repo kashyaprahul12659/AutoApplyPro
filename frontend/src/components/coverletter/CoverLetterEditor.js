@@ -18,7 +18,7 @@ const CoverLetterEditor = ({ coverLetter, onUpdate, onNew }) => {
     company: ''
   });
   const textareaRef = useRef(null);
-  
+
   // Try to extract job title and company from cover letter or job description
   useEffect(() => {
     if (coverLetter) {
@@ -30,23 +30,22 @@ const CoverLetterEditor = ({ coverLetter, onUpdate, onNew }) => {
             jobTitle: coverLetter.jobTitle
           }));
         }
-        
+
         // Try to extract company name from job description
         if (coverLetter.jobDescription) {
           const lines = coverLetter.jobDescription.split('\n');
-          
+
           // Simple heuristic to find company name
-          const companyLine = lines.find(line => 
-            line.toLowerCase().includes('company:') || 
+          const companyLine = lines.find(line =>
+            line.toLowerCase().includes('company:') ||
             line.toLowerCase().includes(' at ') ||
             line.toLowerCase().includes('with ')
           );
-          
-          if (companyLine) {
-            const companyMatch = companyLine.match(/at\s+([^,\.]+)/i) || 
-                              companyLine.match(/with\s+([^,\.]+)/i) ||
-                              companyLine.match(/company:\s*([^,\.]+)/i);
-            
+
+          if (companyLine) {            const companyMatch = companyLine.match(/at\s+([^,.]+)/i) ||
+                              companyLine.match(/with\s+([^,.]+)/i) ||
+                              companyLine.match(/company:\s*([^,.]+)/i);
+
             if (companyMatch && companyMatch[1]) {
               setJobInfo(prev => ({
                 ...prev,
@@ -56,7 +55,7 @@ const CoverLetterEditor = ({ coverLetter, onUpdate, onNew }) => {
           }
         }
       };
-      
+
       extractJobInfo();
     }
   }, [coverLetter]);
@@ -106,12 +105,11 @@ const CoverLetterEditor = ({ coverLetter, onUpdate, onNew }) => {
       toast.error('Job title and company are required');
       return;
     }
-    
+
     setIsTrackingJob(true);
-    
-    try {
-      // Create a new job application with the cover letter linked
-      const response = await axios.post(
+
+    try {      // Create a new job application with the cover letter linked
+      await axios.post(
         '/api/job-tracker/add',
         {
           jobTitle: jobInfo.jobTitle,
@@ -121,16 +119,16 @@ const CoverLetterEditor = ({ coverLetter, onUpdate, onNew }) => {
           notes: `Cover letter created on ${format(new Date(coverLetter.createdAt), 'PPP')}`
         }
       );
-      
+
       // Show success message
       toast.success('Job added to tracker successfully!');
       setShowTrackJobModal(false);
-      
+
       // Ask if user wants to go to job tracker
       if (window.confirm('Job added to tracker. Would you like to view your job tracker?')) {
         navigate('/job-tracker');
       }
-      
+
     } catch (error) {
       console.error('Error adding job to tracker:', error);
       toast.error(error.response?.data?.error || 'Failed to add job to tracker');
@@ -138,33 +136,33 @@ const CoverLetterEditor = ({ coverLetter, onUpdate, onNew }) => {
       setIsTrackingJob(false);
     }
   };
-  
+
   const handleDownloadPDF = () => {
     try {
       const doc = new jsPDF();
-      
+
       // Format title
       const title = coverLetter.jobTitle || 'Cover Letter';
       const date = format(new Date(coverLetter.createdAt), 'MMMM d, yyyy');
-      
+
       // Add title
       doc.setFontSize(18);
       doc.text(title, 20, 20);
-      
+
       // Add date
       doc.setFontSize(12);
       doc.text(date, 20, 30);
-      
+
       // Add content
       doc.setFontSize(12);
-      
+
       // Split text to handle wrapping
       const textLines = doc.splitTextToSize(letterText, 170);
       doc.text(textLines, 20, 40);
-      
+
       // Save the PDF
       doc.save(`${title.replace(/\s+/g, '_')}_${date.replace(/\s+/g, '_')}.pdf`);
-      
+
       toast.success('Cover letter downloaded as PDF');
     } catch (error) {
       console.error('Error generating PDF:', error);
@@ -261,7 +259,7 @@ const CoverLetterEditor = ({ coverLetter, onUpdate, onNew }) => {
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden">
             <div className="flex justify-between items-center border-b p-4">
               <h2 className="text-xl font-semibold">Track This Job</h2>
-              <button 
+              <button
                 onClick={() => setShowTrackJobModal(false)}
                 className="text-gray-500 hover:text-gray-700"
               >
@@ -270,12 +268,12 @@ const CoverLetterEditor = ({ coverLetter, onUpdate, onNew }) => {
                 </svg>
               </button>
             </div>
-            
+
             <div className="p-4">
               <p className="text-gray-600 mb-4">
                 Add this job to your application tracker with your cover letter attached.
               </p>
-              
+
               <div className="mb-4">
                 <label htmlFor="jobTitle" className="block text-gray-700 font-medium mb-2">
                   Job Title *
@@ -286,11 +284,11 @@ const CoverLetterEditor = ({ coverLetter, onUpdate, onNew }) => {
                   className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Software Engineer"
                   value={jobInfo.jobTitle}
-                  onChange={(e) => setJobInfo({...jobInfo, jobTitle: e.target.value})}
+                  onChange={(e) => setJobInfo({ ...jobInfo, jobTitle: e.target.value })}
                   required
                 />
               </div>
-              
+
               <div className="mb-4">
                 <label htmlFor="company" className="block text-gray-700 font-medium mb-2">
                   Company *
@@ -301,11 +299,11 @@ const CoverLetterEditor = ({ coverLetter, onUpdate, onNew }) => {
                   className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Acme Inc."
                   value={jobInfo.company}
-                  onChange={(e) => setJobInfo({...jobInfo, company: e.target.value})}
+                  onChange={(e) => setJobInfo({ ...jobInfo, company: e.target.value })}
                   required
                 />
               </div>
-              
+
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"

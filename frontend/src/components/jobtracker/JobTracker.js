@@ -7,9 +7,9 @@ import JobCard from './JobCard';
 import EmptyState from '../common/EmptyState';
 import LoadingSpinner from '../common/LoadingSpinner';
 import AlertMessage from '../common/AlertMessage';
-import { 
-  PlusIcon, 
-  FunnelIcon, 
+import {
+  PlusIcon,
+  FunnelIcon,
   ArrowPathIcon,
   EyeIcon,
   ChartBarIcon,
@@ -28,9 +28,9 @@ const JobTracker = () => {
 
   // Enhanced status columns configuration with better design
   const columns = [
-    { 
-      id: 'interested', 
-      title: 'Interested', 
+    {
+      id: 'interested',
+      title: 'Interested',
       description: 'Jobs you want to apply for',
       color: 'from-blue-500 to-indigo-600',
       bgColor: 'bg-gradient-to-br from-blue-50 to-indigo-50',
@@ -38,9 +38,9 @@ const JobTracker = () => {
       textColor: 'text-blue-700',
       icon: EyeIcon
     },
-    { 
-      id: 'applied', 
-      title: 'Applied', 
+    {
+      id: 'applied',
+      title: 'Applied',
       description: 'Applications submitted',
       color: 'from-purple-500 to-violet-600',
       bgColor: 'bg-gradient-to-br from-purple-50 to-violet-50',
@@ -48,9 +48,9 @@ const JobTracker = () => {
       textColor: 'text-purple-700',
       icon: BriefcaseIcon
     },
-    { 
-      id: 'interview', 
-      title: 'Interview', 
+    {
+      id: 'interview',
+      title: 'Interview',
       description: 'In interview process',
       color: 'from-amber-500 to-orange-600',
       bgColor: 'bg-gradient-to-br from-amber-50 to-orange-50',
@@ -58,9 +58,9 @@ const JobTracker = () => {
       textColor: 'text-amber-700',
       icon: ClockIcon
     },
-    { 
-      id: 'offer', 
-      title: 'Offer', 
+    {
+      id: 'offer',
+      title: 'Offer',
       description: 'Received job offers',
       color: 'from-green-500 to-emerald-600',
       bgColor: 'bg-gradient-to-br from-green-50 to-emerald-50',
@@ -68,9 +68,9 @@ const JobTracker = () => {
       textColor: 'text-green-700',
       icon: ChartBarIcon
     },
-    { 
-      id: 'rejected', 
-      title: 'Rejected', 
+    {
+      id: 'rejected',
+      title: 'Rejected',
       description: 'Unfortunately not selected',
       color: 'from-red-500 to-rose-600',
       bgColor: 'bg-gradient-to-br from-red-50 to-rose-50',
@@ -126,7 +126,7 @@ const JobTracker = () => {
         // Optimistically update UI
         const updatedJobs = [...jobs];
         const jobIndex = updatedJobs.findIndex(job => job._id === draggableId);
-        
+
         if (jobIndex !== -1) {
           updatedJobs[jobIndex] = {
             ...updatedJobs[jobIndex],
@@ -134,7 +134,7 @@ const JobTracker = () => {
             lastStatusUpdate: new Date().toISOString()
           };
           setJobs(updatedJobs);
-          
+
           // Update in backend
           await updateJobStatus(draggableId, destination.droppableId);
         }
@@ -158,7 +158,7 @@ const JobTracker = () => {
     const interviews = getJobsByStatus('interview').length;
     const offers = getJobsByStatus('offer').length;
     const rejected = getJobsByStatus('rejected').length;
-    
+
     return {
       total,
       applied,
@@ -212,9 +212,9 @@ const JobTracker = () => {
                 <p className="text-gray-600 text-sm">Manage your job applications with our Kanban board</p>
               </div>
             </div>
-            
+
             <div className="flex flex-wrap items-center gap-3">
-              <button 
+              <button
                 onClick={handleRefresh}
                 className="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-all duration-200 disabled:opacity-50"
                 disabled={refreshing}
@@ -222,8 +222,8 @@ const JobTracker = () => {
                 <ArrowPathIcon className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
                 Refresh
               </button>
-              
-              <button 
+
+              <button
                 onClick={() => setShowAddModal(true)}
                 className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
               >
@@ -270,7 +270,7 @@ const JobTracker = () => {
 
         {error && (
           <div className="mb-6">
-            <AlertMessage 
+            <AlertMessage
               type="error"
               title="Error"
               message={error}
@@ -293,10 +293,10 @@ const JobTracker = () => {
               {columns.map(column => {
                 const Icon = column.icon;
                 const jobsInColumn = getJobsByStatus(column.id);
-                
+
                 return (
-                  <div 
-                    key={column.id} 
+                  <div
+                    key={column.id}
                     className={`${column.bgColor} ${column.borderColor} border-2 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300`}
                   >
                     {/* Column Header */}
@@ -316,7 +316,7 @@ const JobTracker = () => {
                       </div>
                       <p className="text-xs text-gray-600">{column.description}</p>
                     </div>
-                    
+
                     {/* Droppable Area */}
                     <Droppable droppableId={column.id}>
                       {(provided, snapshot) => (
@@ -324,8 +324,8 @@ const JobTracker = () => {
                           ref={provided.innerRef}
                           {...provided.droppableProps}
                           className={`p-4 min-h-[calc(100vh-350px)] transition-all duration-200 ${
-                            snapshot.isDraggingOver 
-                              ? 'bg-white/50 ring-2 ring-blue-300 ring-opacity-50' 
+                            snapshot.isDraggingOver
+                              ? 'bg-white/50 ring-2 ring-blue-300 ring-opacity-50'
                               : ''
                           }`}
                         >
@@ -341,9 +341,9 @@ const JobTracker = () => {
                           ) : (
                             <div className="space-y-3">
                               {jobsInColumn.map((job, index) => (
-                                <Draggable 
-                                  key={job._id} 
-                                  draggableId={job._id} 
+                                <Draggable
+                                  key={job._id}
+                                  draggableId={job._id}
                                   index={index}
                                 >
                                   {(provided, snapshot) => (
@@ -352,13 +352,13 @@ const JobTracker = () => {
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
                                       className={`transform transition-all duration-200 ${
-                                        snapshot.isDragging 
-                                          ? 'rotate-3 scale-105 shadow-2xl z-50' 
+                                        snapshot.isDragging
+                                          ? 'rotate-3 scale-105 shadow-2xl z-50'
                                           : 'hover:scale-102 hover:shadow-lg'
                                       }`}
                                     >
-                                      <JobCard 
-                                        job={job} 
+                                      <JobCard
+                                        job={job}
                                         onRefresh={fetchJobs}
                                         isDragging={snapshot.isDragging}
                                       />

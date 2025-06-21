@@ -14,13 +14,13 @@ router.use(apiLimiter);
 router.get('/', notificationController.getUserNotifications);
 
 // Get unread notification count
-router.get('/unread/count', notificationController.getUnreadCount);
+router.get('/unread-count', notificationController.getUnreadCount);
 
-// Mark notifications as read
-router.patch('/mark-read', notificationController.markAsRead);
+// Mark notification as read
+router.put('/:notificationId/read', notificationController.markAsRead);
 
 // Mark all notifications as read
-router.patch('/mark-all-read', notificationController.markAllAsRead);
+router.put('/mark-all-read', notificationController.markAllAsRead);
 
 // Delete notification
 router.delete('/:notificationId', notificationController.deleteNotification);

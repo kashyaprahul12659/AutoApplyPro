@@ -13,11 +13,11 @@ const AICoverLetterCard = () => {
           </div>
           <h2 className="ml-3 text-xl font-bold text-white">AI Cover Letter Generator</h2>
         </div>
-        
+
         <p className="text-indigo-100 mb-6">
           Create customized cover letters tailored to specific job descriptions using AI. Save time and increase your chances of landing interviews.
         </p>
-        
+
         <ul className="mb-6 space-y-2">
           <li className="flex items-center text-indigo-100">
             <svg className="h-5 w-5 mr-2 text-indigo-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -38,7 +38,7 @@ const AICoverLetterCard = () => {
             Professional formatting
           </li>
         </ul>
-        
+
         <Link
           to="/coverletter"
           className="block w-full bg-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white focus:ring-offset-indigo-500 text-center"

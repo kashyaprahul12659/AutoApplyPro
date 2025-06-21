@@ -1,13 +1,16 @@
 const rateLimit = require('express-rate-limit');
 const MongoStore = require('rate-limit-mongo');
 
+// Check if MongoDB URI is available
+const mongoUri = process.env.MONGODB_URI;
+
 // General API rate limiter
 const apiLimiter = rateLimit({
-  store: new MongoStore({
-    uri: process.env.MONGODB_URI,
+  store: mongoUri ? new MongoStore({
+    uri: mongoUri,
     collectionName: 'rate_limits',
     expireTimeMs: 15 * 60 * 1000, // 15 minutes
-  }),
+  }) : undefined, // Fall back to memory store if no MongoDB
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
   message: {
@@ -26,11 +29,11 @@ const apiLimiter = rateLimit({
 
 // Strict rate limiter for authentication endpoints
 const authLimiter = rateLimit({
-  store: new MongoStore({
-    uri: process.env.MONGODB_URI,
+  store: mongoUri ? new MongoStore({
+    uri: mongoUri,
     collectionName: 'auth_rate_limits',
     expireTimeMs: 15 * 60 * 1000,
-  }),
+  }) : undefined, // Fall back to memory store if no MongoDB
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // limit each IP to 5 auth requests per windowMs
   message: {
@@ -45,11 +48,11 @@ const authLimiter = rateLimit({
 
 // Upload rate limiter
 const uploadLimiter = rateLimit({
-  store: new MongoStore({
-    uri: process.env.MONGODB_URI,
+  store: mongoUri ? new MongoStore({
+    uri: mongoUri,
     collectionName: 'upload_rate_limits',
     expireTimeMs: 60 * 60 * 1000, // 1 hour
-  }),
+  }) : undefined, // Fall back to memory store if no MongoDB
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 20, // limit uploads per hour
   message: {
@@ -64,11 +67,11 @@ const uploadLimiter = rateLimit({
 
 // AI API rate limiter
 const aiLimiter = rateLimit({
-  store: new MongoStore({
-    uri: process.env.MONGODB_URI,
+  store: mongoUri ? new MongoStore({
+    uri: mongoUri,
     collectionName: 'ai_rate_limits',
     expireTimeMs: 60 * 60 * 1000, // 1 hour
-  }),
+  }) : undefined, // Fall back to memory store if no MongoDB
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 10, // limit AI requests per hour for free users
   message: {

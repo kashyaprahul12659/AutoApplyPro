@@ -37,36 +37,36 @@ export const useApi = (apiCall, dependencies = [], options = {}) => {
     while (attempt <= retryCount) {
       try {
         const result = await apiCall(...args);
-        
+
         if (!mountedRef.current) return;
 
         setData(result.data);
         setLoading(false);
-        
+
         if (onSuccess) {
           onSuccess(result.data);
         }
-        
+
         return result.data;
       } catch (err) {
         attempt++;
-        
+
         if (!mountedRef.current) return;
 
         if (attempt > retryCount) {
           setError(err);
           setLoading(false);
-          
+
           if (onError) {
             onError(err);
           }
-          
+
           throw err;
         }
 
         // Wait before retry
         if (attempt <= retryCount) {
-          await new Promise(resolve => 
+          await new Promise(resolve =>
             setTimeout(resolve, retryDelay * Math.pow(2, attempt - 1))
           );
         }
@@ -125,7 +125,7 @@ export const useFormSubmit = (submitFunction, options = {}) => {
     try {
       const result = await submitFunction(formData);
       setSuccess(true);
-      
+
       if (onSuccess) {
         onSuccess(result);
       }
@@ -139,11 +139,11 @@ export const useFormSubmit = (submitFunction, options = {}) => {
       return result;
     } catch (err) {
       setError(err);
-      
+
       if (onError) {
         onError(err);
       }
-      
+
       throw err;
     } finally {
       setLoading(false);
@@ -177,7 +177,7 @@ export const useDebounceSearch = (searchFunction, delay = 500) => {
 
   const search = useCallback((searchQuery) => {
     setQuery(searchQuery);
-    
+
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
@@ -253,7 +253,7 @@ export const useInfiniteScroll = (fetchFunction, options = {}) => {
       });
 
       const newData = result.data || result;
-      
+
       setData(prevData => [...prevData, ...newData]);
       setHasMore(newData.length === pageSize);
       setPage(prevPage => prevPage + 1);
@@ -263,7 +263,7 @@ export const useInfiniteScroll = (fetchFunction, options = {}) => {
       }
     } catch (err) {
       setError(err);
-      
+
       if (onError) {
         onError(err);
       }
@@ -339,7 +339,7 @@ export const useOptimisticUpdate = (initialData, updateFunction) => {
 
   const update = useCallback(async (optimisticData, actualUpdateFunction) => {
     const previousData = data;
-    
+
     // Apply optimistic update
     setData(optimisticData);
     setLoading(true);
@@ -348,7 +348,7 @@ export const useOptimisticUpdate = (initialData, updateFunction) => {
     try {
       // Perform actual update
       const result = await (actualUpdateFunction || updateFunction)(optimisticData);
-      
+
       // Update with server response
       setData(result.data || result);
     } catch (err) {
@@ -412,19 +412,19 @@ export const useFileUpload = (uploadFunction, options = {}) => {
     try {
       const result = await uploadFunction(file, setProgress);
       setSuccess(true);
-      
+
       if (onSuccess) {
         onSuccess(result);
       }
-      
+
       return result;
     } catch (err) {
       setError(err);
-      
+
       if (onError) {
         onError(err);
       }
-      
+
       throw err;
     } finally {
       setLoading(false);

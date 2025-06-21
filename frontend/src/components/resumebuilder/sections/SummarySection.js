@@ -1,34 +1,34 @@
 import React, { useState } from 'react';
-import { FiEdit3, FiCheck, FiX } from 'react-icons/fi';
+import { FiEdit3 } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import * as resumeBuilderService from '../../../services/resumeBuilderService';
 
 const SummarySection = ({ data, onUpdate, targetRole }) => {
   const [text, setText] = useState(data.text || '');
   const [isImproving, setIsImproving] = useState(false);
-  
+
   const handleChange = (e) => {
     const newText = e.target.value;
     setText(newText);
     onUpdate({ text: newText });
   };
-  
+
   const handleImproveWithAI = async () => {
     if (!text.trim()) {
       toast.warning('Please add some content to improve');
       return;
     }
-    
+
     try {
       setIsImproving(true);
       toast.info('Improving summary with AI...');
-      
+
       const response = await resumeBuilderService.improveResumeBlock(
-        'summary', 
+        'summary',
         text,
         targetRole
       );
-      
+
       if (response.success) {
         const improvedText = response.data.improved;
         setText(improvedText);
@@ -42,7 +42,7 @@ const SummarySection = ({ data, onUpdate, targetRole }) => {
       setIsImproving(false);
     }
   };
-  
+
   return (
     <div className="space-y-3">
       <div className="relative">
@@ -54,7 +54,7 @@ const SummarySection = ({ data, onUpdate, targetRole }) => {
           rows="5"
         />
       </div>
-      
+
       <div className="flex justify-end">
         <button
           onClick={handleImproveWithAI}
@@ -75,7 +75,7 @@ const SummarySection = ({ data, onUpdate, targetRole }) => {
           )}
         </button>
       </div>
-      
+
       <div className="text-sm text-gray-500">
         <p>Tips:</p>
         <ul className="list-disc pl-5">

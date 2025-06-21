@@ -34,8 +34,8 @@ const FeedbackButton = () => {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             {/* Background overlay */}
-            <div 
-              className="fixed inset-0 transition-opacity" 
+            <div
+              className="fixed inset-0 transition-opacity"
               aria-hidden="true"
               onClick={closeModal}
             >
@@ -51,12 +51,12 @@ const FeedbackButton = () => {
                       We'd love your feedback
                     </h3>
                     <div className="mt-2">
-                      <iframe 
-                        src="https://docs.google.com/forms/d/e/1FAIpQLSdJQFH7YJ5eM-EUl8EwFvtZ1QZZf1AUG3QGQGY2XAJdlp0g1Q/viewform?embedded=true" 
-                        width="100%" 
-                        height="500" 
-                        frameBorder="0" 
-                        marginHeight="0" 
+                      <iframe
+                        src="https://docs.google.com/forms/d/e/1FAIpQLSdJQFH7YJ5eM-EUl8EwFvtZ1QZZf1AUG3QGQGY2XAJdlp0g1Q/viewform?embedded=true"
+                        width="100%"
+                        height="500"
+                        frameBorder="0"
+                        marginHeight="0"
                         marginWidth="0"
                         title="Feedback Form"
                       >
@@ -67,8 +67,8 @@ const FeedbackButton = () => {
                 </div>
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:ml-3 sm:w-auto sm:text-sm"
                   onClick={closeModal}
                 >

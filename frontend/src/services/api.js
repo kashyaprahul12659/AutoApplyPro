@@ -10,8 +10,8 @@ const api = axios.create({
   baseURL: getAPIBaseUrl(),
   timeout: 30000, // 30 seconds timeout
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 });
 
 // In-memory cache for GET requests
@@ -58,27 +58,27 @@ api.interceptors.response.use(
     // Handle token expiration
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      
+
       // Clear invalid tokens
       localStorage.removeItem('authToken');
       sessionStorage.removeItem('authToken');
-      
+
       // Redirect to login if not already there
       if (!window.location.pathname.includes('/login')) {
         window.location.href = '/login';
       }
-      
+
       return Promise.reject(error);
     }
 
     // Handle network errors with retry logic
     if (!error.response && originalRequest.retryCount < 3) {
       originalRequest.retryCount = (originalRequest.retryCount || 0) + 1;
-      
+
       // Exponential backoff
       const delay = Math.pow(2, originalRequest.retryCount) * 1000;
       await new Promise(resolve => setTimeout(resolve, delay));
-      
+
       return api(originalRequest);
     }
 
@@ -115,7 +115,7 @@ const apiService = {
   // GET with caching
   async get(url, config = {}) {
     const cacheKey = getCacheKey('GET', url, config.params);
-    
+
     // Check cache first
     if (isCacheable('GET', url)) {
       const cached = cache.get(cacheKey);
@@ -126,21 +126,21 @@ const apiService = {
 
     try {
       const response = await api.get(url, config);
-      
+
       // Cache successful responses
       if (isCacheable('GET', url) && response.status === 200) {
         cache.set(cacheKey, {
           data: response,
           timestamp: Date.now()
         });
-        
+
         // Clean up old cache entries
         if (cache.size > 100) {
           const oldestKey = cache.keys().next().value;
           cache.delete(oldestKey);
         }
       }
-      
+
       return response;
     } catch (error) {
       throw this.handleError(error);
@@ -152,7 +152,7 @@ const apiService = {
     try {
       // Invalidate related cache entries
       this.invalidateCache(url);
-      
+
       const response = await api.post(url, data, config);
       return response;
     } catch (error) {
@@ -165,7 +165,7 @@ const apiService = {
     try {
       // Invalidate related cache entries
       this.invalidateCache(url);
-      
+
       const response = await api.put(url, data, config);
       return response;
     } catch (error) {
@@ -178,7 +178,7 @@ const apiService = {
     try {
       // Invalidate related cache entries
       this.invalidateCache(url);
-      
+
       const response = await api.delete(url, config);
       return response;
     } catch (error) {
@@ -191,7 +191,7 @@ const apiService = {
     try {
       const response = await api.post(url, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'multipart/form-data'
         },
         onUploadProgress: (progressEvent) => {
           if (onProgress) {
@@ -200,9 +200,9 @@ const apiService = {
             );
             onProgress(progress);
           }
-        },
+        }
       });
-      
+
       return response;
     } catch (error) {
       throw this.handleError(error);
@@ -213,9 +213,9 @@ const apiService = {
   async download(url, filename) {
     try {
       const response = await api.get(url, {
-        responseType: 'blob',
+        responseType: 'blob'
       });
-      
+
       // Create download link
       const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
@@ -225,7 +225,7 @@ const apiService = {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(downloadUrl);
-      
+
       return response;
     } catch (error) {
       throw this.handleError(error);
@@ -239,7 +239,7 @@ const apiService = {
         const { method, url, data, config } = request;
         return this[method](url, data, config);
       });
-      
+
       const results = await Promise.allSettled(promises);
       return results;
     } catch (error) {
@@ -280,7 +280,7 @@ const apiService = {
     // Customize error messages based on status code
     if (error.response) {
       const { status, data } = error.response;
-      
+
       switch (status) {
         case 400:
           errorData.message = data?.message || 'Invalid request data';

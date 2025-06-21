@@ -28,10 +28,10 @@ const History = () => {
     if (window.confirm('Are you sure you want to delete this history item?')) {
       try {
         await apiCall.delete(`/api/history/${id}`);
-        
+
         // Remove from state
         setHistoryItems(historyItems.filter(item => item._id !== id));
-        
+
         toast.success('History item deleted successfully');
       } catch (err) {
         toast.error('Failed to delete history item');
@@ -55,7 +55,7 @@ const History = () => {
 
   // Get status badge styling
   const getStatusBadge = (status) => {
-    switch(status) {
+    switch (status) {
       case 'completed':
         return 'bg-green-100 text-green-800';
       case 'partial':
@@ -70,7 +70,7 @@ const History = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Application History</h1>
-      
+
       <div className="card">
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
@@ -142,7 +142,7 @@ const History = () => {
                 </tbody>
               </table>
             </div>
-            
+
             {/* Pagination */}
             {historyItems.length > itemsPerPage && (
               <div className="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
@@ -162,8 +162,8 @@ const History = () => {
                         onClick={() => paginate(currentPage - 1)}
                         disabled={currentPage === 1}
                         className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${
-                          currentPage === 1 
-                            ? 'text-gray-300 cursor-not-allowed' 
+                          currentPage === 1
+                            ? 'text-gray-300 cursor-not-allowed'
                             : 'text-gray-500 hover:bg-gray-50'
                         }`}
                       >
@@ -172,7 +172,7 @@ const History = () => {
                           <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </button>
-                      
+
                       {/* Page numbers */}
                       {[...Array(Math.ceil(historyItems.length / itemsPerPage)).keys()].map(number => (
                         <button
@@ -187,7 +187,7 @@ const History = () => {
                           {number + 1}
                         </button>
                       ))}
-                      
+
                       <button
                         onClick={() => paginate(currentPage + 1)}
                         disabled={currentPage === Math.ceil(historyItems.length / itemsPerPage)}

@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
     // Clear token and user state
     setToken(null);
     setUser(null);
-    
+
     // Notify Chrome extension about logout
     try {
       // Method 1: Direct chrome message if extension is installed and in same browser
@@ -88,12 +88,12 @@ export const AuthProvider = ({ children }) => {
           console.log('Could not directly message extension:', chromeErr);
         }
       }
-      
+
       // Method 2: Fallback to window message for content script
       window.postMessage({
         type: 'AUTOAPPLY_LOGOUT'
       }, window.location.origin);
-      
+
       console.log('Sent logout notification to extension');
     } catch (err) {
       console.error('Error notifying extension about logout:', err);
@@ -107,9 +107,9 @@ export const AuthProvider = ({ children }) => {
       setUser(res.data);
       return { success: true, data: res.data };
     } catch (err) {
-      return { 
-        success: false, 
-        error: err.response?.data?.msg || 'Failed to update profile' 
+      return {
+        success: false,
+        error: err.response?.data?.msg || 'Failed to update profile'
       };
     }
   };

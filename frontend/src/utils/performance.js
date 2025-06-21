@@ -7,9 +7,9 @@ class PerformanceMonitor {
   constructor() {
     this.metrics = new Map();
     this.observers = [];
-    this.isEnabled = process.env.NODE_ENV === 'production' || 
+    this.isEnabled = process.env.NODE_ENV === 'production' ||
                      process.env.REACT_APP_PERFORMANCE_MONITORING === 'true';
-    
+
     if (this.isEnabled) {
       this.initializeObservers();
     }
@@ -107,7 +107,7 @@ class PerformanceMonitor {
 
   startComponentTiming(componentName) {
     if (!this.isEnabled) return;
-    
+
     const startTime = performance.now();
     return {
       end: () => {
@@ -131,7 +131,7 @@ class PerformanceMonitor {
     if (!this.isEnabled) {
       return { end: () => {} }; // Return no-op for disabled monitoring
     }
-    
+
     const startTime = performance.now();
     return {
       end: () => {
@@ -342,7 +342,7 @@ const performanceMonitor = new PerformanceMonitor();
 export const usePerformanceMonitor = (componentName) => {
   const startTiming = () => performanceMonitor.startComponentTiming(componentName);
   const endTiming = (timer) => performanceMonitor.endComponentTiming(timer);
-  
+
   return { startTiming, endTiming };
 };
 
@@ -391,23 +391,23 @@ export const throttle = (func, limit) => {
 // Memoization utility
 export const memoize = (fn, getKey = (...args) => JSON.stringify(args)) => {
   const cache = new Map();
-  
+
   return (...args) => {
     const key = getKey(...args);
-    
+
     if (cache.has(key)) {
       return cache.get(key);
     }
-    
+
     const result = fn(...args);
     cache.set(key, result);
-    
+
     // Limit cache size
     if (cache.size > 100) {
       const firstKey = cache.keys().next().value;
       cache.delete(firstKey);
     }
-    
+
     return result;
   };
 };

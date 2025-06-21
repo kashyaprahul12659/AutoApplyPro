@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
+import {
   PlusCircleIcon,
   DocumentTextIcon,
   ChartBarIcon,
@@ -117,24 +117,24 @@ const QuickActions = () => {
           >
             {/* Background Gradient Effect */}
             <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500 rounded-2xl`}></div>
-            
+
             <div className="relative text-center">
               {/* Icon */}
               <div className={`inline-flex p-3 rounded-2xl bg-gradient-to-br ${action.gradient} text-white mb-3 group-hover:scale-110 transition-transform duration-300 shadow-soft`}>
                 <action.icon className="h-6 w-6" />
               </div>
-              
+
               {/* Title */}
               <h4 className="text-sm font-bold text-neutral-900 group-hover:text-primary-700 transition-colors duration-300 mb-1">
                 {action.title}
               </h4>
-              
+
               {/* Description */}
               <p className="text-xs text-muted leading-relaxed group-hover:text-neutral-600 transition-colors duration-300">
                 {action.description}
               </p>
             </div>
-            
+
             {/* Hover Effect Glow */}
             <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 -z-10 blur-xl`}></div>
           </Link>
@@ -148,7 +148,7 @@ const QuickActions = () => {
           <div>
             <h5 className="text-sm font-semibold text-primary-900 mb-1">Pro Tip</h5>
             <p className="text-sm text-primary-700 leading-relaxed">
-              Use our Chrome extension to automatically fill job applications while browsing. 
+              Use our Chrome extension to automatically fill job applications while browsing.
               <Link to="#extension" className="font-semibold hover:underline ml-1">Install now →</Link>
             </p>
           </div>

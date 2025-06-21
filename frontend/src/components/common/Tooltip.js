@@ -33,8 +33,8 @@ const Tooltip = ({
   };
 
   const bgColor = themeStyles[theme] || themeStyles.dark;
-  const arrowColor = theme === 'light' ? 'bg-white border border-gray-200' : 
-                    theme === 'indigo' ? 'bg-indigo-600' : 'bg-gray-900';
+  const arrowColor = theme === 'light' ? 'bg-white border border-gray-200' :
+    theme === 'indigo' ? 'bg-indigo-600' : 'bg-gray-900';
 
   const showTip = () => {
     clearTimeout(timeoutRef.current);
@@ -77,20 +77,20 @@ const Tooltip = ({
     };
   }, []);
 
-  const eventHandlers = showOnClick 
-    ? { onClick: toggleTip } 
+  const eventHandlers = showOnClick
+    ? { onClick: toggleTip }
     : {
-        onMouseEnter: showTip,
-        onMouseLeave: hideTip,
-        onFocus: showTip,
-        onBlur: hideTip,
-        onTouchStart: showTip
-      };
+      onMouseEnter: showTip,
+      onMouseLeave: hideTip,
+      onFocus: showTip,
+      onBlur: hideTip,
+      onTouchStart: showTip
+    };
 
   return (
-    <div 
+    <div
       ref={tooltipRef}
-      className={`relative inline-flex ${className}`} 
+      className={`relative inline-flex ${className}`}
       {...eventHandlers}
       aria-describedby={isVisible ? 'tooltip' : undefined}
     >
@@ -98,7 +98,7 @@ const Tooltip = ({
         'aria-label': text,
         className: `${children.props.className || ''} ${showOnClick ? 'cursor-pointer' : ''}`.trim()
       })}
-      
+
       {isVisible && (
         <div
           id="tooltip"
@@ -115,7 +115,7 @@ const Tooltip = ({
           aria-hidden={!isVisible}
         >
           {text}
-          <div 
+          <div
             className={`
               absolute w-2 h-2 transform rotate-45
               ${arrowColor}

@@ -49,7 +49,7 @@ export function DevAuthProvider({ children }) {
       },
       imageUrl: null
     };
-    
+
     setUser(mockUser);
     setIsSignedIn(true);
     localStorage.setItem('dev_user', JSON.stringify(mockUser));

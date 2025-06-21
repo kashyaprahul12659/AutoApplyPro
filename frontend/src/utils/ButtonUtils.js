@@ -48,7 +48,7 @@ export const withLoadingState = (ButtonComponent) => {
  */
 export const getButtonContent = (originalText, isLoading, loadingText = 'Loading...') => {
   if (!isLoading) return originalText;
-  
+
   return getLoadingContent(loadingText);
 };
 
@@ -64,5 +64,5 @@ export const LoadingStates = {
   CONNECT: 'Connecting...',
   PROCESS: 'Processing...',
   DELETE: 'Deleting...',
-  AUTOFILL: 'Autofilling...',
+  AUTOFILL: 'Autofilling...'
 };

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
+
   return (
     <footer className="bg-dark text-white py-8">
       <div className="container mx-auto px-4">
@@ -17,7 +17,7 @@ const Footer = () => {
               Simplify your job application process with automated form filling based on your resume data.
             </p>
           </div>
-          
+
           {/* Quick links */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
@@ -27,7 +27,7 @@ const Footer = () => {
               <li><Link to="/history" className="text-gray-300 hover:text-primary transition-colors">Application History</Link></li>
             </ul>
           </div>
-            {/* Contact */}
+          {/* Contact */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <p className="text-gray-300">
@@ -38,7 +38,7 @@ const Footer = () => {
             </p>
           </div>
         </div>
-        
+
         {/* Copyright and Legal */}
         <div className="border-t border-gray-700 mt-8 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">

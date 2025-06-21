@@ -8,14 +8,14 @@ const PrivacyPolicy = () => {
         <title>Privacy Policy - AutoApply Pro</title>
         <meta name="description" content="AutoApply Pro Privacy Policy - How we collect, use, and protect your data." />
       </Helmet>
-      
+
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="bg-indigo-600 px-6 py-4">
             <h1 className="text-3xl font-bold text-white">Privacy Policy</h1>
             <p className="text-indigo-100 mt-2">Last updated: {new Date().toLocaleDateString()}</p>
           </div>
-          
+
           <div className="px-6 py-8 prose prose-lg max-w-none">
             <h2>1. Information We Collect</h2>
             <h3>Personal Information</h3>
@@ -26,7 +26,7 @@ const PrivacyPolicy = () => {
               <li>Job application history and preferences</li>
               <li>Payment information (processed securely through third-party providers)</li>
             </ul>
-            
+
             <h3>Usage Data</h3>
             <p>We automatically collect certain information when you use our service:</p>
             <ul>

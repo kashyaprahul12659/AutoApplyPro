@@ -4,7 +4,7 @@ import { useApiWithAuth } from '../hooks/useApiWithAuth';
 import JDAnalyzer from '../components/analyzer/JDAnalyzer';
 import AnalyzerHistory from '../components/analyzer/AnalyzerHistory';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import { 
+import {
   DocumentMagnifyingGlassIcon,
   SparklesIcon,
   ClockIcon,
@@ -22,56 +22,56 @@ const JDAnalyzerPage = () => {
   const [aiStatus, setAiStatus] = useState({ isPro: false, aiCredits: 0 });
   const [activeTab, setActiveTab] = useState('analyzer');
   const [specificAnalysis, setSpecificAnalysis] = useState(null);
-  
+
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   // Parse query parameters to see if we need to load a specific analysis
   const queryParams = new URLSearchParams(location.search);
   const analysisId = queryParams.get('id');
-  
+
   useEffect(() => {
     const fetchUserProfile = async () => {      try {
-        // Fetch user profile
-        const profileResponse = await apiCall.get('/api/users/profile');
-        setUserProfile(profileResponse.data);
-        
-        // Fetch AI status (credits and Pro status)
-        const aiStatusResponse = await apiCall.get('/api/users/ai-status');
-        
-        setAiStatus({
-          isPro: aiStatusResponse.isPro,
-          aiCredits: aiStatusResponse.data.aiCredits
-        });
-          // If we have an analysis ID, fetch the specific analysis
-        if (analysisId) {
-          try {
-            const analysisResponse = await apiCall.get(`/api/ai/analyzer-history/${analysisId}`);
-            
-            setSpecificAnalysis(analysisResponse.data);
-            setActiveTab('analyzer'); // Show the analyzer tab with the loaded analysis
-          } catch (analysisErr) {
-            console.error('Error fetching specific analysis:', analysisErr);
-            // If we can't find the analysis, just show the regular analyzer
-          }
-        }
-        
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching user data:', err);
-        setError('Failed to load user profile. Please try again later.');
-        setLoading(false);
-        
-        if (err.response && err.response.status === 401) {
-          localStorage.removeItem('token');
-          navigate('/login');
+      // Fetch user profile
+      const profileResponse = await apiCall.get('/api/users/profile');
+      setUserProfile(profileResponse.data);
+
+      // Fetch AI status (credits and Pro status)
+      const aiStatusResponse = await apiCall.get('/api/users/ai-status');
+
+      setAiStatus({
+        isPro: aiStatusResponse.isPro,
+        aiCredits: aiStatusResponse.data.aiCredits
+      });
+      // If we have an analysis ID, fetch the specific analysis
+      if (analysisId) {
+        try {
+          const analysisResponse = await apiCall.get(`/api/ai/analyzer-history/${analysisId}`);
+
+          setSpecificAnalysis(analysisResponse.data);
+          setActiveTab('analyzer'); // Show the analyzer tab with the loaded analysis
+        } catch (analysisErr) {
+          console.error('Error fetching specific analysis:', analysisErr);
+          // If we can't find the analysis, just show the regular analyzer
         }
       }
+
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching user data:', err);
+      setError('Failed to load user profile. Please try again later.');
+      setLoading(false);
+
+      if (err.response && err.response.status === 401) {
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    }
     };
-    
+
     fetchUserProfile();
   }, [navigate, analysisId]);
-    if (loading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/20 to-indigo-50/30">
         <div className="container mx-auto px-4 py-8">
@@ -92,7 +92,7 @@ const JDAnalyzerPage = () => {
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-red-50/20 to-rose-50/30">
@@ -136,7 +136,7 @@ const JDAnalyzerPage = () => {
                 <p className="text-gray-600 mt-1">Analyze your resume against job descriptions with AI</p>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               {aiStatus.isPro ? (
                 <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-xl shadow-lg">
@@ -164,7 +164,7 @@ const JDAnalyzerPage = () => {
             </div>
             <p className="text-sm text-gray-600">Get a precise percentage match between your resume and the job requirements</p>
           </div>
-          
+
           <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-amber-200/50 p-6">
             <div className="flex items-center space-x-3 mb-3">
               <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
@@ -174,7 +174,7 @@ const JDAnalyzerPage = () => {
             </div>
             <p className="text-sm text-gray-600">Identify missing skills and areas for improvement in your profile</p>
           </div>
-          
+
           <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-green-200/50 p-6">
             <div className="flex items-center space-x-3 mb-3">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
@@ -195,13 +195,13 @@ const JDAnalyzerPage = () => {
             <div>
               <h3 className="font-semibold text-blue-900 mb-2">How it works</h3>
               <p className="text-blue-800 text-sm leading-relaxed">
-                Our AI analyzes your resume against job descriptions to determine your match score, identify skill gaps, and suggest improvements. 
+                Our AI analyzes your resume against job descriptions to determine your match score, identify skill gaps, and suggest improvements.
                 {!aiStatus.isPro && ` Each analysis costs 1 AI credit. You have ${aiStatus.aiCredits} credits remaining.`}
               </p>
             </div>
           </div>
         </div>
-        
+
         {/* Enhanced Tabs */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/50 overflow-hidden mb-8">
           <div className="border-b border-gray-200/50 bg-gray-50/50">
@@ -209,8 +209,8 @@ const JDAnalyzerPage = () => {
               <button
                 onClick={() => setActiveTab('analyzer')}
                 className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  activeTab === 'analyzer' 
-                    ? 'bg-white text-purple-600 shadow-sm border border-purple-200/50' 
+                  activeTab === 'analyzer'
+                    ? 'bg-white text-purple-600 shadow-sm border border-purple-200/50'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                 }`}
               >
@@ -220,8 +220,8 @@ const JDAnalyzerPage = () => {
               <button
                 onClick={() => setActiveTab('history')}
                 className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  activeTab === 'history' 
-                    ? 'bg-white text-purple-600 shadow-sm border border-purple-200/50' 
+                  activeTab === 'history'
+                    ? 'bg-white text-purple-600 shadow-sm border border-purple-200/50'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                 }`}
               >
@@ -230,12 +230,12 @@ const JDAnalyzerPage = () => {
               </button>
             </div>
           </div>
-          
+
           {/* Tab Content */}
           <div className="p-6">
             {activeTab === 'analyzer' ? (
-              <JDAnalyzer 
-                userProfile={userProfile} 
+              <JDAnalyzer
+                userProfile={userProfile}
                 preloadedAnalysis={specificAnalysis}
               />
             ) : (
@@ -243,7 +243,7 @@ const JDAnalyzerPage = () => {
             )}
           </div>
         </div>
-        
+
         {/* Pro Upgrade Banner */}
         {!aiStatus.isPro && (
           <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl shadow-xl p-8 text-white">

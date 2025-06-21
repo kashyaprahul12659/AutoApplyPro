@@ -10,7 +10,7 @@ import Tooltip from './Tooltip';
  */
 const ProBadge = ({ size = 'sm', showTooltip = true }) => {
   const badge = (
-    <span 
+    <span
       className={`
         inline-flex items-center justify-center rounded-full 
         bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium

@@ -8,14 +8,14 @@ const TermsOfService = () => {
         <title>Terms of Service - AutoApply Pro</title>
         <meta name="description" content="AutoApply Pro Terms of Service - Legal terms and conditions for using our service." />
       </Helmet>
-      
+
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="bg-indigo-600 px-6 py-4">
             <h1 className="text-3xl font-bold text-white">Terms of Service</h1>
             <p className="text-indigo-100 mt-2">Last updated: {new Date().toLocaleDateString()}</p>
           </div>
-          
+
           <div className="px-6 py-8 prose prose-lg max-w-none">
             <h2>1. Acceptance of Terms</h2>
             <p>By accessing and using AutoApply Pro ("Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.</p>

@@ -5,7 +5,7 @@ import CoverLetterHistory from '../components/coverletter/CoverLetterHistory';
 import CoverLetterEditor from '../components/coverletter/CoverLetterEditor';
 import { useUser } from '../hooks/useUniversalAuth';
 import { useApiWithAuth } from '../hooks/useApiWithAuth';
-import { 
+import {
   DocumentTextIcon,
   SparklesIcon,
   ClockIcon,
@@ -44,25 +44,25 @@ const CoverLetter = () => {
     try {
       setIsGenerating(true);
       const res = await apiCall.post('/api/ai/cover-letter', formData);
-      
+
       if (res.success) {
         toast.success('Cover letter generated successfully!');
-        
+
         // Add the new cover letter to the list
         setCoverLetters([res.data, ...coverLetters]);
-        
+
         // Set the active cover letter to the newly generated one
         setActiveCoverLetter(res.data);
-        
+
         // Switch to the editor tab
         setActiveTab('editor');
-        
+
         // Refresh AI credits after generation
         fetchAIStatus();
       }
     } catch (err) {
       console.error('Error generating cover letter:', err);
-      
+
       // Check if it's a credit-related error
       if (err.response?.status === 403 && err.response?.data?.requiresUpgrade) {
         // This is handled in the CoverLetterGenerator component now
@@ -73,7 +73,7 @@ const CoverLetter = () => {
       setIsGenerating(false);
     }
   };
-    const fetchAIStatus = async () => {
+  const fetchAIStatus = async () => {
     try {
       const res = await apiCall.get('/api/users/ai-status');
       if (res.success) {
@@ -88,15 +88,15 @@ const CoverLetter = () => {
     try {
       setIsLoading(true);
       const res = await apiCall.put(`/api/ai/cover-letters/${id}`, updatedData);
-      
+
       if (res.success) {
         toast.success('Cover letter updated successfully!');
-        
+
         // Update the cover letter in the list
-        setCoverLetters(coverLetters.map(letter => 
+        setCoverLetters(coverLetters.map(letter =>
           letter._id === id ? res.data : letter
         ));
-        
+
         // Update the active cover letter if it's the one being edited
         if (activeCoverLetter && activeCoverLetter._id === id) {
           setActiveCoverLetter(res.data);
@@ -113,13 +113,13 @@ const CoverLetter = () => {
     try {
       setIsLoading(true);
       const res = await apiCall.delete(`/api/ai/cover-letters/${id}`);
-      
+
       if (res.success) {
         toast.success('Cover letter deleted successfully!');
-        
+
         // Remove the cover letter from the list
         setCoverLetters(coverLetters.filter(letter => letter._id !== id));
-        
+
         // Clear the active cover letter if it's the one being deleted
         if (activeCoverLetter && activeCoverLetter._id === id) {
           setActiveCoverLetter(null);
@@ -160,7 +160,7 @@ const CoverLetter = () => {
                 <p className="text-gray-600 mt-1">Create personalized cover letters tailored to your profile and job descriptions</p>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-2 bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 px-4 py-2 rounded-xl">
                 <CpuChipIcon className="w-4 h-4" />
@@ -181,7 +181,7 @@ const CoverLetter = () => {
             </div>
             <p className="text-sm text-gray-600">Intelligent cover letters tailored to your experience and the job requirements</p>
           </div>
-          
+
           <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-teal-200/50 p-6">
             <div className="flex items-center space-x-3 mb-3">
               <div className="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
@@ -191,7 +191,7 @@ const CoverLetter = () => {
             </div>
             <p className="text-sm text-gray-600">Each letter is customized based on your profile and the specific job posting</p>
           </div>
-          
+
           <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-blue-200/50 p-6">
             <div className="flex items-center space-x-3 mb-3">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -210,8 +210,8 @@ const CoverLetter = () => {
               <button
                 onClick={() => setActiveTab('generate')}
                 className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  activeTab === 'generate' 
-                    ? 'bg-white text-emerald-600 shadow-sm border border-emerald-200/50' 
+                  activeTab === 'generate'
+                    ? 'bg-white text-emerald-600 shadow-sm border border-emerald-200/50'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                 }`}
               >
@@ -221,8 +221,8 @@ const CoverLetter = () => {
               <button
                 onClick={() => setActiveTab('history')}
                 className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  activeTab === 'history' 
-                    ? 'bg-white text-emerald-600 shadow-sm border border-emerald-200/50' 
+                  activeTab === 'history'
+                    ? 'bg-white text-emerald-600 shadow-sm border border-emerald-200/50'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                 }`}
               >
@@ -233,8 +233,8 @@ const CoverLetter = () => {
                 <button
                   onClick={() => setActiveTab('editor')}
                   className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    activeTab === 'editor' 
-                      ? 'bg-white text-emerald-600 shadow-sm border border-emerald-200/50' 
+                    activeTab === 'editor'
+                      ? 'bg-white text-emerald-600 shadow-sm border border-emerald-200/50'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                   }`}
                 >
@@ -248,14 +248,14 @@ const CoverLetter = () => {
           {/* Tab Content */}
           <div className="p-6">
             {activeTab === 'generate' && (
-              <CoverLetterGenerator 
-                onGenerate={handleGenerateCoverLetter} 
-                isGenerating={isGenerating} 
+              <CoverLetterGenerator
+                onGenerate={handleGenerateCoverLetter}
+                isGenerating={isGenerating}
               />
             )}
 
             {activeTab === 'history' && (
-              <CoverLetterHistory 
+              <CoverLetterHistory
                 coverLetters={coverLetters}
                 isLoading={isLoading}
                 onView={handleViewCoverLetter}
@@ -264,7 +264,7 @@ const CoverLetter = () => {
             )}
 
             {activeTab === 'editor' && activeCoverLetter && (
-              <CoverLetterEditor 
+              <CoverLetterEditor
                 coverLetter={activeCoverLetter}
                 onUpdate={handleUpdateCoverLetter}
                 onNew={handleNewCoverLetter}

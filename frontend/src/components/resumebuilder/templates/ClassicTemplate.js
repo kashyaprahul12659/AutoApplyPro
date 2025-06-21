@@ -12,9 +12,9 @@ const ClassicTemplate = forwardRef(({ resumeData }, ref) => {
 
     if (startDate) {
       const startDateObj = new Date(startDate);
-      formattedStart = startDateObj.toLocaleDateString('en-US', { 
-        month: 'short', 
-        year: 'numeric' 
+      formattedStart = startDateObj.toLocaleDateString('en-US', {
+        month: 'short',
+        year: 'numeric'
       });
     }
 
@@ -22,9 +22,9 @@ const ClassicTemplate = forwardRef(({ resumeData }, ref) => {
       formattedEnd = 'Present';
     } else if (endDate) {
       const endDateObj = new Date(endDate);
-      formattedEnd = endDateObj.toLocaleDateString('en-US', { 
-        month: 'short', 
-        year: 'numeric' 
+      formattedEnd = endDateObj.toLocaleDateString('en-US', {
+        month: 'short',
+        year: 'numeric'
       });
     }
 
@@ -60,8 +60,8 @@ const ClassicTemplate = forwardRef(({ resumeData }, ref) => {
         <h2 className="text-lg font-bold border-b border-gray-300 pb-1 mb-3">Skills</h2>
         <div className="flex flex-wrap">
           {skillsBlock.content.skills.map((skill, index) => (
-            <span 
-              key={index} 
+            <span
+              key={index}
               className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded mr-2 mb-2"
             >
               {skill}
@@ -149,10 +149,10 @@ const ClassicTemplate = forwardRef(({ resumeData }, ref) => {
                   <h3 className="font-semibold text-sm">
                     {project.title}
                     {project.link && (
-                      <a 
-                        href={project.link} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="ml-2 text-blue-600 hover:underline text-xs"
                       >
                         (Link)
@@ -191,10 +191,10 @@ const ClassicTemplate = forwardRef(({ resumeData }, ref) => {
                   <h3 className="font-semibold text-sm">
                     {certification.name}
                     {certification.credentialURL && (
-                      <a 
-                        href={certification.credentialURL} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                      <a
+                        href={certification.credentialURL}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="ml-2 text-blue-600 hover:underline text-xs"
                       >
                         (Verify)
@@ -207,15 +207,15 @@ const ClassicTemplate = forwardRef(({ resumeData }, ref) => {
                   )}
                 </div>
                 <div className="text-sm text-gray-600">
-                  {certification.date ? new Date(certification.date).toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    year: 'numeric' 
+                  {certification.date ? new Date(certification.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    year: 'numeric'
                   }) : ''}
-                  {certification.expirationDate && !certification.noExpiration ? 
-                    ` - Expires: ${new Date(certification.expirationDate).toLocaleDateString('en-US', { 
-                      month: 'short', 
-                      year: 'numeric' 
-                    })}` : 
+                  {certification.expirationDate && !certification.noExpiration ?
+                    ` - Expires: ${new Date(certification.expirationDate).toLocaleDateString('en-US', {
+                      month: 'short',
+                      year: 'numeric'
+                    })}` :
                     certification.noExpiration ? ' (No Expiration)' : ''}
                 </div>
               </div>

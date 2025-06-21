@@ -70,3 +70,79 @@
 [31m    at require (node:internal/modules/helpers:179:18)[39m
 [31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\server.js:12:63)[39m
 [31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+2025-06-21 21:43:16:4316 [31merror[39m: [31muncaughtException: collection or collectionName and uri should be set[39m
+[31mError: collection or collectionName and uri should be set[39m
+[31m    at new MongoStore (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\node_modules\rate-limit-mongo\lib\mongoStore.js:28:9)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\middleware\rateLimiter.js:6:10)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+[31m    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1288:32)[39m
+[31m    at Module._load (node:internal/modules/cjs/loader:1104:12)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1311:19)[39m
+[31m    at require (node:internal/modules/helpers:179:18)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\server.js:12:63)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+2025-06-21 21:45:59:4559 [31merror[39m: [31muncaughtException: collection or collectionName and uri should be set[39m
+[31mError: collection or collectionName and uri should be set[39m
+[31m    at new MongoStore (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\node_modules\rate-limit-mongo\lib\mongoStore.js:28:9)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\middleware\rateLimiter.js:6:10)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+[31m    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1288:32)[39m
+[31m    at Module._load (node:internal/modules/cjs/loader:1104:12)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1311:19)[39m
+[31m    at require (node:internal/modules/helpers:179:18)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\server.js:12:63)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+2025-06-21 21:46:43:4643 [31merror[39m: [31muncaughtException: collection or collectionName and uri should be set[39m
+[31mError: collection or collectionName and uri should be set[39m
+[31m    at new MongoStore (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\node_modules\rate-limit-mongo\lib\mongoStore.js:28:9)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\middleware\rateLimiter.js:6:10)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+[31m    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1288:32)[39m
+[31m    at Module._load (node:internal/modules/cjs/loader:1104:12)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1311:19)[39m
+[31m    at require (node:internal/modules/helpers:179:18)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\server.js:12:63)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+2025-06-21 21:50:17:5017 [31merror[39m: [31muncaughtException: collection or collectionName and uri should be set[39m
+[31mC:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\node_modules\rate-limit-mongo\lib\mongoStore.js:28[39m
+[31m		throw new Error('collection or collectionName and uri should be set');[39m
+[31m		^[39m
+
+[31mError: collection or collectionName and uri should be set[39m
+[31m    at new MongoStore (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\node_modules\rate-limit-mongo\lib\mongoStore.js:28:9)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\middleware\rateLimiter.js:6:10)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+[31m    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1288:32)[39m
+[31m    at Module._load (node:internal/modules/cjs/loader:1104:12)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1311:19)[39m
+[31m    at require (node:internal/modules/helpers:179:18)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\server.js:12:63)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+2025-06-21 22:05:04:54 [31merror[39m: [31muncaughtException: Route.post() requires a callback function but got a [object Undefined][39m
+[31mError: Route.post() requires a callback function but got a [object Undefined][39m
+[31m    at Route.<computed> [as post] (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\node_modules\express\lib\router\route.js:216:15)[39m
+[31m    at proto.<computed> [as post] (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\node_modules\express\lib\router\index.js:521:19)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\routes\auth.js:11:8)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+[31m    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1288:32)[39m
+[31m    at Module._load (node:internal/modules/cjs/loader:1104:12)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1311:19)[39m
+[31m    at require (node:internal/modules/helpers:179:18)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\server.js:22:20)[39m
+2025-06-21 22:06:45:645 [31merror[39m: [31muncaughtException: Route.post() requires a callback function but got a [object Undefined][39m
+[31mError: Route.post() requires a callback function but got a [object Undefined][39m
+[31m    at Route.<computed> [as post] (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\node_modules\express\lib\router\route.js:216:15)[39m
+[31m    at proto.<computed> [as post] (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\node_modules\express\lib\router\index.js:521:19)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\routes\auth.js:11:8)[39m
+[31m    at Module._compile (node:internal/modules/cjs/loader:1469:14)[39m
+[31m    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)[39m
+[31m    at Module.load (node:internal/modules/cjs/loader:1288:32)[39m
+[31m    at Module._load (node:internal/modules/cjs/loader:1104:12)[39m
+[31m    at Module.require (node:internal/modules/cjs/loader:1311:19)[39m
+[31m    at require (node:internal/modules/helpers:179:18)[39m
+[31m    at Object.<anonymous> (C:\Users\POOJA\OneDrive\Documents\AutoApplyPro\backend\server.js:22:20)[39m

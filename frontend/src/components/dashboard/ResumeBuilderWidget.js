@@ -13,13 +13,13 @@ const ResumeBuilderWidget = () => {
       try {
         setLoading(true);
         const response = await resumeBuilderService.getAllResumes();
-        
+
         if (response.success) {
           // Sort by updated date and take the 3 most recent
-          const sorted = [...response.data].sort((a, b) => 
+          const sorted = [...response.data].sort((a, b) =>
             new Date(b.updatedAt) - new Date(a.updatedAt)
           ).slice(0, 3);
-          
+
           setRecentResumes(sorted);
         }
       } catch (error) {
@@ -52,7 +52,7 @@ const ResumeBuilderWidget = () => {
           Resume Builder
         </h2>
       </div>
-      
+
       <div className="p-4">
         {loading ? (
           <div className="h-32 flex items-center justify-center">
@@ -62,9 +62,9 @@ const ResumeBuilderWidget = () => {
           <div className="space-y-2">
             <h3 className="text-sm font-medium text-gray-500 mb-2">Recent Resumes</h3>
             {recentResumes.map(resume => (
-              <Link 
+              <Link
                 key={resume._id}
-                to={`/resume-builder/${resume._id}`} 
+                to={`/resume-builder/${resume._id}`}
                 className="flex items-center justify-between p-2 hover:bg-gray-50 rounded group"
               >
                 <div className="flex items-center">
@@ -78,10 +78,10 @@ const ResumeBuilderWidget = () => {
                 </div>
               </Link>
             ))}
-            
+
             <div className="mt-3 pt-2 border-t border-gray-100">
-              <Link 
-                to="/resumes" 
+              <Link
+                to="/resumes"
                 className="text-sm text-primary hover:text-primary-dark transition-colors"
               >
                 View all resumes

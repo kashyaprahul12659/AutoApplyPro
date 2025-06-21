@@ -23,10 +23,10 @@ const FinalProfileCard = ({ profileData, onEditClick, refreshData }) => {
   const handleExportJson = () => {
     // Create a JSON string of the profile data
     const dataStr = JSON.stringify(profileData, null, 2);
-    
+
     // Create a blob with the data
     const blob = new Blob([dataStr], { type: 'application/json' });
-    
+
     // Create an anchor element and trigger download
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -34,11 +34,11 @@ const FinalProfileCard = ({ profileData, onEditClick, refreshData }) => {
     link.download = `autofill-profile-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(link);
     link.click();
-    
+
     // Clean up
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    
+
     toast.success('Profile data exported successfully');
   };
 
@@ -86,7 +86,7 @@ const FinalProfileCard = ({ profileData, onEditClick, refreshData }) => {
           </span>
         )}
       </div>
-      
+
       {/* Profile content */}
       <div className="p-6">
         {/* Basic Information */}
@@ -120,7 +120,7 @@ const FinalProfileCard = ({ profileData, onEditClick, refreshData }) => {
             </div>
           </div>
         </div>
-        
+
         {/* Skills */}
         {profileData.skills && profileData.skills.length > 0 && (
           <div className="mb-6">
@@ -134,18 +134,18 @@ const FinalProfileCard = ({ profileData, onEditClick, refreshData }) => {
             </div>
           </div>
         )}
-        
+
         {/* Education */}
         {profileData.education && profileData.education.length > 0 && (
           <div className="mb-6">
             <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">Education</h4>
             <div className="space-y-3">
               {/* Sort education by year in descending order */}
-              {[...profileData.education]                .sort((a, b) => {
-                  const yearA = parseInt(a.year, 10) || 0;
-                  const yearB = parseInt(b.year, 10) || 0;
-                  return yearB - yearA;
-                })
+              {[...profileData.education].sort((a, b) => {
+                const yearA = parseInt(a.year, 10) || 0;
+                const yearB = parseInt(b.year, 10) || 0;
+                return yearB - yearA;
+              })
                 .map((edu, index) => (
                   <div key={index} className="border-l-2 border-blue-200 pl-4 py-1">
                     <div className="font-medium text-gray-900">{edu.degree}</div>
@@ -156,7 +156,7 @@ const FinalProfileCard = ({ profileData, onEditClick, refreshData }) => {
             </div>
           </div>
         )}
-        
+
         {/* Experience */}
         {profileData.experience && profileData.experience.length > 0 && (
           <div className="mb-6">
@@ -173,7 +173,7 @@ const FinalProfileCard = ({ profileData, onEditClick, refreshData }) => {
             </div>
           </div>
         )}
-        
+
         {/* Action buttons */}
         <div className="mt-8 flex flex-wrap gap-3">
           <button
@@ -183,14 +183,14 @@ const FinalProfileCard = ({ profileData, onEditClick, refreshData }) => {
           >
             {profileData.isActive ? 'Active for Autofill' : 'Use for Autofill'}
           </button>
-          
+
           <button
             onClick={onEditClick}
             className="btn btn-outline"
           >
             Edit Profile
           </button>
-          
+
           <button
             onClick={handleExportJson}
             className="btn btn-outline flex items-center"

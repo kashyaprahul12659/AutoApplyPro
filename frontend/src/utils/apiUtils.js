@@ -32,8 +32,8 @@ export const createApiCall = async (method, endpoint, data = null) => {
       method,
       url: `${API_BASE_URL}${endpoint}`,
       headers: {
-        'Content-Type': 'application/json',
-      },
+        'Content-Type': 'application/json'
+      }
     };    // Add authentication header based on auth method
     if (hasValidClerkKey) {
       const token = getAuthToken();
@@ -52,7 +52,7 @@ export const createApiCall = async (method, endpoint, data = null) => {
     }
 
     console.log('Making API request:', method, endpoint, 'Auth method:', hasValidClerkKey ? 'Clerk' : 'Development');
-    
+
     const response = await axios(config);
     return response.data;
   } catch (error) {

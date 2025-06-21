@@ -1,5 +1,5 @@
 import React from 'react';
-import { 
+import {
   CheckCircleIcon,
   ClockIcon,
   ExclamationTriangleIcon,
@@ -85,9 +85,9 @@ const ProgressTracker = ({ progressData = {} }) => {
       <div className="space-y-6">
         {progressItems.map((item, index) => {
           const percentage = Math.min((item.current / item.target) * 100, 100);
-          
+
           return (
-            <div 
+            <div
               key={item.title}
               className="group"
               style={{ animationDelay: `${index * 0.1}s` }}
@@ -107,7 +107,7 @@ const ProgressTracker = ({ progressData = {} }) => {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="text-right">
                   <div className="text-lg font-black text-neutral-900">
                     {item.current}
@@ -118,11 +118,11 @@ const ProgressTracker = ({ progressData = {} }) => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Progress Bar */}
               <div className="relative">
                 <div className="w-full bg-neutral-200 rounded-full h-3 overflow-hidden">
-                  <div 
+                  <div
                     className={`h-full bg-gradient-to-r ${getProgressBarColor(percentage, item.color)} transition-all duration-1000 ease-out rounded-full relative overflow-hidden`}
                     style={{ width: `${percentage}%` }}
                   >
@@ -130,11 +130,11 @@ const ProgressTracker = ({ progressData = {} }) => {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
                   </div>
                 </div>
-                
+
                 {/* Milestone Markers */}
                 <div className="absolute inset-0 flex justify-between items-center">
                   {[25, 50, 75].map(milestone => (
-                    <div 
+                    <div
                       key={milestone}
                       className={`w-1 h-5 rounded-full ${
                         percentage >= milestone ? 'bg-white shadow-sm' : 'bg-neutral-300'
@@ -144,7 +144,7 @@ const ProgressTracker = ({ progressData = {} }) => {
                   ))}
                 </div>
               </div>
-              
+
               {/* Achievement Badge */}
               {percentage >= 100 && (
                 <div className="mt-2 inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold animate-bounce-subtle">
@@ -171,7 +171,7 @@ const ProgressTracker = ({ progressData = {} }) => {
             </div>
             <div className="text-right">
               <div className="text-2xl font-black gradient-text">
-                {Math.round(progressItems.reduce((acc, item) => 
+                {Math.round(progressItems.reduce((acc, item) =>
                   acc + Math.min((item.current / item.target) * 100, 100), 0
                 ) / progressItems.length)}%
               </div>

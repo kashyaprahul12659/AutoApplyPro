@@ -14,11 +14,11 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
     notes: job.notes || '',
     color: job.color || ''
   });
-  
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const modalRef = useRef();
-  
+
   // Color options for tagging
   const colorOptions = [
     { value: '#FF5733', label: 'Red', class: 'bg-red-500' },
@@ -50,13 +50,13 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate required fields
     if (!formData.jobTitle || !formData.company) {
       setError('Job title and company are required.');
       return;
     }
-    
+
     try {
       setLoading(true);
       setError(null);
@@ -77,7 +77,7 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
         onClose();
       }
     };
-    
+
     document.addEventListener('keydown', handleEscape);
     return () => {
       document.removeEventListener('keydown', handleEscape);
@@ -85,7 +85,7 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
   }, [onClose]);
 
   return (
-    <div 
+    <div
       ref={modalRef}
       onClick={handleBackgroundClick}
       className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4"
@@ -93,14 +93,14 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden">
         <div className="flex justify-between items-center border-b p-4">
           <h2 className="text-xl font-semibold">Edit Job</h2>
-          <button 
+          <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
           >
             <FiX size={20} />
           </button>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="p-4">
           {error && (
             <AlertMessage
@@ -110,7 +110,7 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
               className="mb-4"
             />
           )}
-          
+
           <div className="mb-4">
             <label htmlFor="jobTitle" className="block text-gray-700 font-medium mb-2">
               Job Title *
@@ -126,7 +126,7 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
               required
             />
           </div>
-          
+
           <div className="mb-4">
             <label htmlFor="company" className="block text-gray-700 font-medium mb-2">
               Company *
@@ -142,7 +142,7 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
               required
             />
           </div>
-          
+
           <div className="mb-4">
             <label htmlFor="location" className="block text-gray-700 font-medium mb-2">
               Location
@@ -157,7 +157,7 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
               placeholder="San Francisco, CA (Remote)"
             />
           </div>
-          
+
           <div className="mb-4">
             <label htmlFor="jdUrl" className="block text-gray-700 font-medium mb-2">
               Job Description URL
@@ -172,7 +172,7 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
               placeholder="https://company.com/careers/job-123"
             />
           </div>
-          
+
           <div className="mb-4">
             <label htmlFor="status" className="block text-gray-700 font-medium mb-2">
               Status
@@ -191,13 +191,13 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
               <option value="rejected">Rejected</option>
             </select>
           </div>
-          
+
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-2">
               Color Tag (Optional)
             </label>
             <div className="flex space-x-2">
-              <div 
+              <div
                 onClick={() => handleColorSelect('')}
                 className={`w-6 h-6 rounded-full border-2 flex items-center justify-center cursor-pointer ${
                   formData.color === '' ? 'border-blue-500' : 'border-gray-300'
@@ -206,9 +206,9 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
               >
                 <FiX size={14} className="text-gray-500" />
               </div>
-              
+
               {colorOptions.map(color => (
-                <div 
+                <div
                   key={color.value}
                   onClick={() => handleColorSelect(color.value)}
                   className={`w-6 h-6 rounded-full ${color.class} cursor-pointer ${
@@ -219,7 +219,7 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
               ))}
             </div>
           </div>
-          
+
           <div className="mb-4">
             <label htmlFor="notes" className="block text-gray-700 font-medium mb-2">
               Notes
@@ -234,7 +234,7 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
               rows={4}
             />
           </div>
-          
+
           <div className="flex justify-end mt-6 space-x-2">
             <button
               type="button"

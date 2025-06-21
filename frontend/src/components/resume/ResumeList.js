@@ -57,7 +57,7 @@ const ResumeList = ({ resumes, isLoading, onSetPrimary, onDelete }) => {
         <div key={resume._id} className="flex items-start p-4 border rounded-lg hover:shadow-md transition-shadow">
           {/* File icon */}
           {getFileIcon(resume.fileType)}
-          
+
           {/* Resume details */}
           <div className="ml-4 flex-1">
             <div className="flex items-start justify-between">
@@ -82,18 +82,18 @@ const ResumeList = ({ resumes, isLoading, onSetPrimary, onDelete }) => {
                   </span>
                 </div>
               </div>
-              
+
               {/* Actions */}
               <div className="flex space-x-2">
                 {!resume.isPrimary && (
-                  <button 
+                  <button
                     onClick={() => onSetPrimary(resume._id)}
                     className="text-sm text-primary hover:text-blue-700 font-medium"
                   >
                     Set as Primary
                   </button>
                 )}
-                <button 
+                <button
                   onClick={() => onDelete(resume._id)}
                   className="text-sm text-red-600 hover:text-red-800 font-medium"
                 >

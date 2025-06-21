@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 const ProUpgradeModal = ({ isOpen, onClose, onUpgrade }) => {
   const [isProcessing, setIsProcessing] = useState(false);
-  
+
   // Load Razorpay script when modal is opened
   useEffect(() => {
     if (isOpen) {
@@ -12,7 +12,7 @@ const ProUpgradeModal = ({ isOpen, onClose, onUpgrade }) => {
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
       script.async = true;
       document.body.appendChild(script);
-      
+
       return () => {
         if (document.body.contains(script)) {
           document.body.removeChild(script);
@@ -20,23 +20,23 @@ const ProUpgradeModal = ({ isOpen, onClose, onUpgrade }) => {
       };
     }
   }, [isOpen]);
-  
+
   // If the modal is not open, don't render anything
   if (!isOpen) return null;
-  
+
   const handlePayment = async () => {
     try {
       setIsProcessing(true);
-      
+
       // Step 1: Create Razorpay order
       const orderRes = await axios.post('/api/payments/order');
-      
+
       if (!orderRes.data.success) {
         throw new Error('Failed to create payment order');
       }
-      
+
       const { order_id, amount, currency, key_id } = orderRes.data.data;
-      
+
       // Step 2: Open Razorpay checkout
       const options = {
         key: key_id,
@@ -53,7 +53,7 @@ const ProUpgradeModal = ({ isOpen, onClose, onUpgrade }) => {
               order_id: response.razorpay_order_id,
               signature: response.razorpay_signature
             });
-            
+
             if (verifyRes.data.success) {
               toast.success('Upgraded to Pro successfully!');
               onUpgrade(true);
@@ -82,19 +82,19 @@ const ProUpgradeModal = ({ isOpen, onClose, onUpgrade }) => {
           }
         }
       };
-      
+
       const razorpay = new window.Razorpay(options);
       razorpay.open();
-      
+
     } catch (error) {
       console.error('Error initiating payment:', error);
       toast.error(error.response?.data?.error || 'Failed to initiate payment');
       setIsProcessing(false);
     }
   };
-  
+
   // Removed legacy upgrade function
-  
+
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -103,7 +103,7 @@ const ProUpgradeModal = ({ isOpen, onClose, onUpgrade }) => {
         </div>
 
         <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-        
+
         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-start">
@@ -120,7 +120,7 @@ const ProUpgradeModal = ({ isOpen, onClose, onUpgrade }) => {
                   <p className="text-sm text-gray-500">
                     You've used all your AI credits. Upgrade to our Pro plan to get unlimited AI-generated cover letters.
                   </p>
-                  
+
                   <div className="mt-4 bg-purple-50 rounded-lg p-4">
                     <h4 className="font-medium text-purple-800 mb-2">Pro Plan Benefits:</h4>
                     <ul className="space-y-2">

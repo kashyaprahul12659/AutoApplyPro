@@ -17,7 +17,7 @@ const ResumeUploader = ({ onUpload, isUploading, uploadProgress, hasExistingResu
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (e.type === 'dragenter' || e.type === 'dragover') {
       setDragActive(true);
     } else if (e.type === 'dragleave') {
@@ -30,7 +30,7 @@ const ResumeUploader = ({ onUpload, isUploading, uploadProgress, hasExistingResu
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
+
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFile(e.dataTransfer.files[0]);
     }
@@ -39,7 +39,7 @@ const ResumeUploader = ({ onUpload, isUploading, uploadProgress, hasExistingResu
   // Handle file input change
   const handleChange = (e) => {
     e.preventDefault();
-    
+
     if (e.target.files && e.target.files[0]) {
       handleFile(e.target.files[0]);
     }
@@ -57,25 +57,25 @@ const ResumeUploader = ({ onUpload, isUploading, uploadProgress, hasExistingResu
       toast.error('Please upload a PDF or Word document only');
       return;
     }
-    
+
     // Check file size (5MB max)
     if (file.size > 5 * 1024 * 1024) {
       toast.error('File size should be less than 5MB');
       return;
     }
-    
+
     setSelectedFile(file);
   };
 
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!selectedFile) {
       toast.error('Please select a file to upload');
       return;
     }
-    
+
     onUpload(selectedFile);
   };
 
@@ -100,7 +100,7 @@ const ResumeUploader = ({ onUpload, isUploading, uploadProgress, hasExistingResu
     <div className="w-full">
       <form onSubmit={handleSubmit} className="w-full">
         {/* Drag & Drop Area */}
-        <div 
+        <div
           className={`border-2 border-dashed rounded-lg p-6 mb-4 text-center 
             ${dragActive ? 'border-primary bg-blue-50' : 'border-gray-300'} 
             ${isUploading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50'}`}
@@ -119,17 +119,17 @@ const ResumeUploader = ({ onUpload, isUploading, uploadProgress, hasExistingResu
             accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             disabled={isUploading}
           />
-          
+
           {isUploading ? (
             <div className="flex flex-col items-center">
               <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary mb-4"></div>
               <p className="text-gray-600">Uploading your resume...</p>
-              
+
               {/* Progress bar */}
               <div className="w-full max-w-md mt-4">
                 <div className="bg-gray-200 rounded-full h-2.5">
-                  <div 
-                    className="bg-primary h-2.5 rounded-full transition-all duration-300" 
+                  <div
+                    className="bg-primary h-2.5 rounded-full transition-all duration-300"
                     style={{ width: `${uploadProgress}%` }}
                   />
                 </div>
@@ -145,7 +145,7 @@ const ResumeUploader = ({ onUpload, isUploading, uploadProgress, hasExistingResu
               <p className="text-xs text-gray-500 mt-1">
                 {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
               </p>
-              <button 
+              <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -171,11 +171,11 @@ const ResumeUploader = ({ onUpload, isUploading, uploadProgress, hasExistingResu
             </div>
           )}
         </div>
-        
+
         {/* Upload Button */}
         {selectedFile && !isUploading && (
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="btn btn-primary w-full"
           >
             {hasExistingResume ? 'Replace Resume' : 'Upload Resume'}

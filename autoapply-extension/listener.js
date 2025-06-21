@@ -10,6 +10,7 @@ function checkEnvironment() {
     // Check if we're in an extension context and have management permissions
     if (typeof chrome !== 'undefined' && 
         chrome.management && 
+        chrome.management.getSelf && 
         typeof chrome.management.getSelf === 'function') {
       
       chrome.management.getSelf((info) => {
@@ -46,8 +47,8 @@ function debugLog(...args) {
 // Get allowed origins based on environment
 const getAllowedOrigins = () => {
   return isDevMode ? 
-    ['http://localhost:3000', 'https://autoapplypro.netlify.app'] : 
-    ['https://autoapplypro.tech', 'https://www.autoapplypro.tech', 'https://autoapplypro.com', 'https://www.autoapplypro.com', 'https://autoapplypro.netlify.app'];
+    ['http://localhost:3000'] : 
+    ['https://autoapplypro.tech', 'https://www.autoapplypro.tech', 'https://autoapplypro.com', 'https://www.autoapplypro.com'];
 };
 
 // Listen for messages from the web page

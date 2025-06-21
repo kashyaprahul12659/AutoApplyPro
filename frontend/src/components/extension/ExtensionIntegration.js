@@ -14,7 +14,7 @@ const ExtensionIntegration = () => {
   const getAuthToken = useCallback(async () => {
     const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
     const hasValidClerkKey = clerkPubKey && clerkPubKey.startsWith('pk_');
-    
+
     if (hasValidClerkKey && clerkAuth.getToken) {
       try {
         return await clerkAuth.getToken();
@@ -81,12 +81,12 @@ const ExtensionIntegration = () => {
             { type: 'AUTOAPPLY_CHECK_EXTENSION' },
             window.location.origin
           );
-          
+
           // Set a timeout to assume extension is not installed if no response
           const timeout = setTimeout(() => {
             setExtensionInstalled(false);
           }, 1000);
-          
+
           // Listen for response
           const messageListener = (event) => {
             if (
@@ -99,9 +99,9 @@ const ExtensionIntegration = () => {
               window.removeEventListener('message', messageListener);
             }
           };
-          
+
           window.addEventListener('message', messageListener);
-          
+
           return () => {
             window.removeEventListener('message', messageListener);
             clearTimeout(timeout);
@@ -113,7 +113,7 @@ const ExtensionIntegration = () => {
         }
       }
     };
-    
+
     checkExtension();
   }, []);
   // Sync auth token with extension when user logs in

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 /**
  * Enhanced Loading Spinner with multiple styles and modern animations
- * 
+ *
  * @param {string} size - Size of the spinner (xs, sm, md, lg, xl, 2xl)
  * @param {string} variant - Color variant (primary, secondary, accent, white, dark)
  * @param {string} className - Additional CSS classes
@@ -12,8 +12,8 @@ import PropTypes from 'prop-types';
  * @param {boolean} overlay - Whether to show as overlay
  * @param {string} type - Spinner type (circle, dots, pulse, bars)
  */
-const LoadingSpinner = ({ 
-  size = 'md', 
+const LoadingSpinner = ({
+  size = 'md',
   variant = 'primary',
   className = '',
   text = '',
@@ -30,7 +30,7 @@ const LoadingSpinner = ({
     xl: 'w-16 h-16',
     '2xl': 'w-24 h-24'
   };
-  
+
   // Enhanced color mappings
   const variantClasses = {
     primary: 'text-primary-600',
@@ -39,10 +39,10 @@ const LoadingSpinner = ({
     white: 'text-white',
     dark: 'text-neutral-800'
   };
-  
+
   const spinnerSize = sizeClasses[size] || sizeClasses.md;
   const spinnerColor = variantClasses[variant] || variantClasses.primary;
-  
+
   // Different spinner types
   const renderSpinner = () => {
     switch (type) {
@@ -62,7 +62,7 @@ const LoadingSpinner = ({
             ))}
           </div>
         );
-      
+
       case 'pulse':
         return (
           <div className={`${spinnerSize} ${spinnerColor} relative ${className}`}>
@@ -70,7 +70,7 @@ const LoadingSpinner = ({
             <div className="absolute inset-0 rounded-full bg-current opacity-40"></div>
           </div>
         );
-      
+
       case 'bars':
         return (
           <div className={`flex space-x-1 items-end ${className}`}>
@@ -87,28 +87,28 @@ const LoadingSpinner = ({
             ))}
           </div>
         );
-      
+
       case 'circle':
       default:
         return (
-          <svg 
-            className={`animate-spin ${spinnerSize} ${spinnerColor} ${className}`} 
-            xmlns="http://www.w3.org/2000/svg" 
-            fill="none" 
+          <svg
+            className={`animate-spin ${spinnerSize} ${spinnerColor} ${className}`}
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
             viewBox="0 0 24 24"
             data-testid="loading-spinner"
           >
-            <circle 
-              className="opacity-25" 
-              cx="12" 
-              cy="12" 
-              r="10" 
-              stroke="currentColor" 
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
               strokeWidth="4"
             />
-            <path 
-              className="opacity-75" 
-              fill="currentColor" 
+            <path
+              className="opacity-75"
+              fill="currentColor"
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             />
           </svg>
@@ -119,7 +119,7 @@ const LoadingSpinner = ({
   const content = (
     <div className={`flex flex-col items-center justify-center ${fullScreen ? 'min-h-screen' : ''}`}>
       {renderSpinner()}
-      
+
       {text && (
         <p className={`mt-4 text-sm font-medium ${spinnerColor} animate-pulse-soft`}>
           {text}
@@ -146,7 +146,7 @@ LoadingSpinner.propTypes = {
   text: PropTypes.string,
   fullScreen: PropTypes.bool,
   overlay: PropTypes.bool,
-  type: PropTypes.oneOf(['circle', 'dots', 'pulse', 'bars']),
+  type: PropTypes.oneOf(['circle', 'dots', 'pulse', 'bars'])
 };
 
 export default LoadingSpinner;

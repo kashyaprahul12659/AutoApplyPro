@@ -4,11 +4,11 @@ import { FaFileDownload } from 'react-icons/fa';
 const ExportAnalysisButton = ({ analysis }) => {
   const downloadCSV = () => {
     if (!analysis) return;
-    
+
     // Format the matched skills and missing skills into comma-separated strings
     const matchedSkills = analysis.matchedSkills.join(', ');
     const missingSkills = analysis.missingSkills.join(', ');
-    
+
     // Create CSV content
     const csvContent = [
       ['Job Analysis Report'],
@@ -23,24 +23,24 @@ const ExportAnalysisButton = ({ analysis }) => {
       ['Suggestions'],
       ...analysis.suggestions.map(suggestion => [suggestion])
     ]
-    .map(row => row.map(cell => `"${cell}"`).join(','))
-    .join('\n');
-    
+      .map(row => row.map(cell => `"${cell}"`).join(','))
+      .join('\n');
+
     // Create a blob and download link
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    
+
     // Set up download attributes
     link.setAttribute('href', url);
     link.setAttribute('download', `job-analysis-${analysis.jobTitle.replace(/\s+/g, '-').toLowerCase()}.csv`);
-    
+
     // Trigger download
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
-  
+
   return (
     <button
       onClick={downloadCSV}

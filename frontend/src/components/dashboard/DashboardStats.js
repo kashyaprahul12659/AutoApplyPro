@@ -1,7 +1,7 @@
 import React from 'react';
-import { 
-  ChartBarIcon, 
-  ClockIcon, 
+import {
+  ChartBarIcon,
+  ClockIcon,
   DocumentDuplicateIcon,
   ArrowTrendingUpIcon,
   UserGroupIcon,
@@ -48,6 +48,7 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
     );
   }
 
+  // Use real stats data from the API
   const defaultStats = {
     totalApplications: 0,
     thisMonth: 0,
@@ -57,13 +58,12 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
     profileViews: 0,
     ...stats
   };
-
   const statCards = [
     {
       title: 'Total Applications',
       value: defaultStats.totalApplications,
-      change: '+12%',
-      trend: 'up',
+      change: defaultStats.totalApplications > 0 ? '+12%' : '0%',
+      trend: defaultStats.totalApplications > 0 ? 'up' : 'neutral',
       icon: DocumentDuplicateIcon,
       color: 'primary',
       gradient: 'from-primary-500 to-primary-600'
@@ -71,8 +71,8 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
     {
       title: 'This Month',
       value: defaultStats.thisMonth,
-      change: '+8%',
-      trend: 'up',
+      change: defaultStats.thisMonth > 0 ? '+8%' : '0%',
+      trend: defaultStats.thisMonth > 0 ? 'up' : 'neutral',
       icon: BoltIcon,
       color: 'secondary',
       gradient: 'from-secondary-500 to-secondary-600'
@@ -80,8 +80,8 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
     {
       title: 'Response Rate',
       value: `${defaultStats.responseRate}%`,
-      change: '+5%',
-      trend: 'up',
+      change: defaultStats.responseRate > 0 ? '+5%' : '0%',
+      trend: defaultStats.responseRate > 0 ? 'up' : 'neutral',
       icon: ArrowTrendingUpIcon,
       color: 'accent',
       gradient: 'from-accent-500 to-accent-600'
@@ -89,8 +89,8 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
     {
       title: 'Interviews',
       value: defaultStats.interviews,
-      change: '+3',
-      trend: 'up',
+      change: defaultStats.interviews > 0 ? '+3' : '0',
+      trend: defaultStats.interviews > 0 ? 'up' : 'neutral',
       icon: UserGroupIcon,
       color: 'success',
       gradient: 'from-green-500 to-green-600'
@@ -98,21 +98,20 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
     {
       title: 'Hours Saved',
       value: defaultStats.timesSaved,
-      change: '+15h',
-      trend: 'up',
+      change: defaultStats.timesSaved > 0 ? '+15h' : '0h',
+      trend: defaultStats.timesSaved > 0 ? 'up' : 'neutral',
       icon: ClockIcon,
       color: 'warning',
-      gradient: 'from-yellow-500 to-orange-500'
+      gradient: 'from-orange-500 to-orange-600'
     },
     {
       title: 'Profile Views',
       value: defaultStats.profileViews,
-      change: '+24%',
-      trend: 'up',
+      change: defaultStats.profileViews > 0 ? '+0' : '0',
+      trend: 'neutral',
       icon: EyeIcon,
       color: 'info',
-      gradient: 'from-blue-500 to-cyan-500'
-    }
+      gradient: 'from-blue-500 to-blue-600'    }
   ];
 
   return (
@@ -125,38 +124,38 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
         >
           {/* Background Gradient Effect */}
           <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
-          
+
           <div className="relative">
             {/* Header with Icon */}
             <div className="flex items-center justify-between mb-4">
               <div className={`p-3 rounded-2xl bg-gradient-to-br ${stat.gradient} text-white group-hover:scale-110 transition-transform duration-300 shadow-soft`}>
                 <stat.icon className="h-6 w-6" />
               </div>
-              
+
               {/* Trend Indicator */}
               <div className={`flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
-                stat.trend === 'up' 
-                  ? 'bg-secondary-100 text-secondary-700' 
+                stat.trend === 'up'
+                  ? 'bg-secondary-100 text-secondary-700'
                   : 'bg-red-100 text-red-700'
               }`}>
                 <ArrowTrendingUpIcon className={`h-4 w-4 mr-1 ${stat.trend === 'down' ? 'rotate-180' : ''}`} />
                 {stat.change}
               </div>
             </div>
-            
+
             {/* Value */}
             <div className="mb-2">
               <div className="text-3xl font-black text-neutral-900 group-hover:text-primary-700 transition-colors duration-300">
                 {stat.value}
               </div>
             </div>
-            
+
             {/* Title */}
             <div className="text-sm font-semibold text-muted group-hover:text-neutral-700 transition-colors duration-300">
               {stat.title}
             </div>
           </div>
-          
+
           {/* Hover Effect Bar */}
           <div className={`absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r ${stat.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`}></div>
         </div>

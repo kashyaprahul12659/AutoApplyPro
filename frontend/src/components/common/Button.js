@@ -21,7 +21,7 @@ const Button = ({
   ...rest
 }) => {
   const baseClasses = 'btn focus-ring';
-  
+
   const variantClasses = {
     primary: 'btn-primary',
     secondary: 'btn-secondary',
@@ -30,14 +30,14 @@ const Button = ({
     ghost: 'btn-ghost',
     danger: 'btn-danger'
   };
-  
+
   const sizeClasses = {
     sm: 'btn-sm',
     md: '',
     lg: 'btn-lg',
     xl: 'btn-xl'
   };
-  
+
   const buttonClasses = [
     baseClasses,
     variantClasses[variant] || variantClasses.primary,
@@ -46,13 +46,13 @@ const Button = ({
     isLoading ? 'cursor-wait' : '',
     className
   ].filter(Boolean).join(' ');
-  
+
   const handleClick = (e) => {
     if (!disabled && !isLoading && onClick) {
       onClick(e);
     }
   };
-  
+
   return (
     <button
       type={htmlType}
@@ -81,7 +81,7 @@ Button.propTypes = {
   rightIcon: PropTypes.node,
   loadingText: PropTypes.string,
   htmlType: PropTypes.oneOf(['button', 'submit', 'reset']),
-  fullWidth: PropTypes.bool,
+  fullWidth: PropTypes.bool
 };
 
 export default Button;

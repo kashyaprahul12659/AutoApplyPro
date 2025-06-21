@@ -1,28 +1,30 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUser } from '../hooks/useUniversalAuth';
-import withErrorBoundary from '../components/withErrorBoundary';
-import { 
-  DashboardSkeleton, 
-  CardSkeleton, 
-  ProfileSkeleton, 
+import {
+  CardSkeleton,
   ListSkeleton,
   Skeleton
 } from '../components/LoadingSkeletons';
 import performanceMonitor from '../utils/performance';
 import { useApi } from '../hooks/useApi';
+import useDashboardData from '../hooks/useDashboardData';
 import { toast } from 'react-toastify';
 
 // Import icons
 import {
   ChartBarIcon,
-  BellIcon,
-  MagnifyingGlassIcon,
-  CogIcon,
+  ArrowPathIcon,
   UserIcon,
-  DocumentTextIcon
+  DocumentTextIcon,
+  CogIcon
 } from '@heroicons/react/24/outline';
 
-// Import components
+// Import enhanced components
+import NotificationDropdown from '../components/notifications/NotificationDropdown';
+import SearchDropdown from '../components/search/SearchDropdown';
+import SettingsDropdown from '../components/settings/SettingsDropdown';
+
+// Import dashboard components
 import DashboardStats from '../components/dashboard/DashboardStats';
 import ExtensionDetector from '../components/extension/ExtensionDetector';
 import AICoverLetterCard from '../components/dashboard/AICoverLetterCard';
@@ -37,31 +39,26 @@ import FinalProfileCard from '../components/profile/FinalProfileCard';
 
 /**
  * Dashboard Page Component
- * Main entry point for the user dashboard
+ * Main entry point for the user dashboard with real-time data
  */
 const Dashboard = () => {
   const { user } = useUser();
   const { apiCall } = useApi();
-    // State management
+  // Use the new dashboard data hook for real-time stats
+  const { stats, loading: dashboardLoading, error: dashboardError, refreshData } = useDashboardData();
+
+  // State management
   const [activeTab, setActiveTab] = useState('profile');
   const [profileData, setProfileData] = useState({ name: '', email: '' });
   const [resumes, setResumes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [dashboardStats, setDashboardStats] = useState({
-    totalApplications: 0,
-    thisMonth: 0,
-    responseRate: 0,
-    interviews: 0,
-    timesSaved: 0,
-    profileViews: 0
-  });
-  const [statsLoading, setStatsLoading] = useState(true);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [hasParsedData, setHasParsedData] = useState(false);
   const [parsedProfileData, setParsedProfileData] = useState(null);
   const [showParseModal, setShowParseModal] = useState(false);
   const [lastUploadedResumeId, setLastUploadedResumeId] = useState(null);
   const [editingProfile, setEditingProfile] = useState(false);
+
   // Performance monitoring
   useEffect(() => {
     const measurement = performanceMonitor.startMeasurement('dashboard-page-load');
@@ -80,40 +77,10 @@ const Dashboard = () => {
     }
   }, [user]);
 
-  // Fetch dashboard stats
-  useEffect(() => {
-    if (!user) return;
-    
-    const fetchDashboardStats = async () => {
-      try {
-        setStatsLoading(true);        // Try to fetch real stats from the API
-        const res = await apiCall('/api/analytics/dashboard');
-        if (res.data.success) {
-          setDashboardStats(res.data.data);
-        }
-      } catch (err) {
-        // If API fails, calculate basic stats from available data
-        console.log('Using calculated stats from available data');
-        setDashboardStats({
-          totalApplications: 0, // Will be updated when we have job tracker data
-          thisMonth: 0,
-          responseRate: 0,
-          interviews: 0,
-          timesSaved: resumes.length * 2, // Assume 2 hours saved per resume
-          profileViews: Math.floor(Math.random() * 50) + 10 // Placeholder until we have real data
-        });
-      } finally {
-        setStatsLoading(false);
-      }
-    };
-
-    fetchDashboardStats();
-  }, [apiCall, user, resumes.length]);
-
   // Fetch user's resumes
   useEffect(() => {
     if (!user) return;
-    
+
     const fetchResumes = async () => {
       try {
         setIsLoading(true);
@@ -132,7 +99,7 @@ const Dashboard = () => {
   // Check if user has parsed resume data
   useEffect(() => {
     if (!user) return;
-    
+
     const checkParsedData = async () => {
       try {
         const res = await apiCall.get('/api/resumes/parsed-data');
@@ -146,13 +113,13 @@ const Dashboard = () => {
         setParsedProfileData(null);
       }
     };
-    
+
     checkParsedData();
   }, [apiCall, user]);
-
   // Show loading if user data is still being fetched
   if (!user) {
-    return (      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Skeleton height="h-8" width="w-48" className="mb-4" />
           <div className="mt-8">
@@ -173,9 +140,10 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    );  }
+    );
+  }
 
-  // Function to refresh profile data
+  // Handle notification click  // Function to refresh profile data
   const refreshProfileData = async () => {
     try {
       const res = await apiCall('/api/resumes/parsed-data');
@@ -216,10 +184,10 @@ const Dashboard = () => {
     try {
       setIsLoading(true);
       setUploadProgress(0);
-      
+
       const formData = new FormData();
       formData.append('resume', fileData);
-        const res = await apiCall('/api/resumes', {
+      const res = await apiCall('/api/resumes', {
         method: 'POST',
         data: formData,
         headers: {
@@ -230,10 +198,10 @@ const Dashboard = () => {
           setUploadProgress(percentCompleted);
         }
       });
-      
+
       // Add the new resume to the state
       setResumes([res.data.data, ...resumes]);
-      
+
       // Show success notification with filename
       toast.success(
         <div>
@@ -241,10 +209,10 @@ const Dashboard = () => {
           <p className="text-sm">{fileData.name}</p>
         </div>
       );
-      
+
       // Set last uploaded resume ID for parsing
       setLastUploadedResumeId(res.data.data._id);
-      
+
       // Show the parse modal
       setShowParseModal(true);
     } catch (err) {
@@ -263,13 +231,13 @@ const Dashboard = () => {
       await apiCall(`/api/resumes/${id}/primary`, {
         method: 'PUT'
       });
-      
+
       // Update local state
       setResumes(resumes.map(resume => ({
         ...resume,
         isPrimary: resume._id === id
       })));
-      
+
       toast.success('Primary resume updated');
     } catch (err) {
       toast.error('Failed to update primary resume');
@@ -283,10 +251,10 @@ const Dashboard = () => {
         await apiCall(`/api/resumes/${id}`, {
           method: 'DELETE'
         });
-        
+
         // Remove from state
         setResumes(resumes.filter(resume => resume._id !== id));
-        
+
         toast.success('Resume deleted successfully');
       } catch (err) {
         toast.error('Failed to delete resume');
@@ -311,29 +279,16 @@ const Dashboard = () => {
                   <p className="text-sm text-gray-600">Welcome back, {user?.fullName || 'User'}!</p>
                 </div>
               </div>
-            </div>
-              <div className="flex items-center space-x-3">
-              <button 
-                onClick={() => toast.info('Notifications feature coming soon!')}
-                className="relative p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
-                title="Notifications"
+            </div>              <div className="flex items-center space-x-3">
+              <NotificationDropdown />
+              <SearchDropdown />
+              <SettingsDropdown />
+              <button
+                onClick={refreshData}
+                className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 transition-colors"
               >
-                <BellIcon className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-              </button>
-              <button 
-                onClick={() => toast.info('Search feature coming soon!')}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
-                title="Search"
-              >
-                <MagnifyingGlassIcon className="w-5 h-5" />
-              </button>
-              <button 
-                onClick={() => setActiveTab('profile')}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
-                title="Settings"
-              >
-                <CogIcon className="w-5 h-5" />
+                <ArrowPathIcon className="h-4 w-4 mr-1" />
+                Refresh
               </button>
             </div>
           </div>
@@ -342,11 +297,10 @@ const Dashboard = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">        {/* Stats Section */}
         <div className="mb-8">
-          <DashboardStats 
-            stats={dashboardStats} 
-            loading={statsLoading}
-            resumes={resumes} 
-            hasParsedData={hasParsedData} 
+          <DashboardStats
+            stats={stats}
+            loading={dashboardLoading}
+            error={dashboardError}
           />
         </div>
 
@@ -358,21 +312,21 @@ const Dashboard = () => {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 hover:shadow-md transition-all duration-300">
               <ExtensionDetector />
             </div>
-            
+
             {/* AI Cover Letter Feature */}
             {hasParsedData && (
               <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 hover:shadow-md transition-all duration-300">
                 <AICoverLetterCard />
               </div>
             )}
-            
+
             {/* Resume Builder Widget */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 hover:shadow-md transition-all duration-300">
               <ResumeBuilderWidget />
             </div>
 
             {/* Progress Tracker */}
-            <ProgressTracker 
+            <ProgressTracker
               hasProfile={!!profileData.name && !!profileData.email}
               hasResume={resumes.length > 0}
               hasParsedData={hasParsedData}
@@ -382,15 +336,15 @@ const Dashboard = () => {
 
           {/* Right Column - Quick Actions & Activity */}
           <div className="space-y-6">
-            <QuickActions 
+            <QuickActions
               onProfileClick={() => setActiveTab('profile')}
               onResumeClick={() => setActiveTab('resumes')}
               onDataClick={() => setActiveTab('parsedData')}
               onAutofillClick={() => setActiveTab('finalProfile')}
               hasParsedData={hasParsedData}
             />
-              <ActivityFeed 
-              activities={[]}
+
+            <ActivityFeed
               resumes={resumes}
               hasParsedData={hasParsedData}
             />
@@ -405,8 +359,8 @@ const Dashboard = () => {
               <button
                 onClick={() => setActiveTab('profile')}
                 className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  activeTab === 'profile' 
-                    ? 'bg-white text-blue-600 shadow-sm border border-blue-200/50' 
+                  activeTab === 'profile'
+                    ? 'bg-white text-blue-600 shadow-sm border border-blue-200/50'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                 }`}
               >
@@ -416,8 +370,8 @@ const Dashboard = () => {
               <button
                 onClick={() => setActiveTab('resumes')}
                 className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  activeTab === 'resumes' 
-                    ? 'bg-white text-blue-600 shadow-sm border border-blue-200/50' 
+                  activeTab === 'resumes'
+                    ? 'bg-white text-blue-600 shadow-sm border border-blue-200/50'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                 }`}
               >
@@ -428,8 +382,8 @@ const Dashboard = () => {
                 <button
                   onClick={() => setActiveTab('parsedData')}
                   className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    activeTab === 'parsedData' 
-                      ? 'bg-white text-blue-600 shadow-sm border border-blue-200/50' 
+                    activeTab === 'parsedData'
+                      ? 'bg-white text-blue-600 shadow-sm border border-blue-200/50'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                   }`}
                 >
@@ -441,8 +395,8 @@ const Dashboard = () => {
                 <button
                   onClick={() => setActiveTab('finalProfile')}
                   className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    activeTab === 'finalProfile' 
-                      ? 'bg-white text-blue-600 shadow-sm border border-blue-200/50' 
+                    activeTab === 'finalProfile'
+                      ? 'bg-white text-blue-600 shadow-sm border border-blue-200/50'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                   }`}
                 >
@@ -475,8 +429,8 @@ const Dashboard = () => {
                                 <span className="truncate">
                                   {primaryResume.originalName} - {new Date(primaryResume.uploadedAt).toLocaleDateString()}
                                 </span>
-                                <button 
-                                  onClick={() => setActiveTab('resumes')} 
+                                <button
+                                  onClick={() => setActiveTab('resumes')}
                                   className="text-blue-600 hover:text-blue-700 text-sm font-medium ml-2 px-3 py-1 bg-white rounded-lg hover:bg-blue-50 transition-all duration-200"
                                 >
                                   Manage
@@ -489,11 +443,11 @@ const Dashboard = () => {
                     </div>
                   </div>
                 )}
-                
+
                 {/* Profile form */}
                 <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl border border-gray-200/50 p-6">
                   <h2 className="text-xl font-bold text-gray-900 mb-6">Your Profile</h2>
-                  
+
                   <form onSubmit={handleProfileSubmit} className="space-y-6">
                     <div>
                       <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
@@ -507,7 +461,7 @@ const Dashboard = () => {
                         required
                       />
                     </div>
-                    
+
                     <div>
                       <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
                       <input
@@ -520,12 +474,12 @@ const Dashboard = () => {
                         required
                       />
                     </div>
-                    
+
                     <button type="submit" className="btn btn-primary">
                       Update Profile
                     </button>
                   </form>
-                  
+
                   {!resumes.some(resume => resume.isPrimary) && (
                     <div className="mt-6 pt-6 border-t border-gray-200">
                       <div className="flex items-start p-4 bg-yellow-50 rounded-xl border border-yellow-200">
@@ -538,8 +492,8 @@ const Dashboard = () => {
                           <h3 className="text-sm font-semibold text-yellow-800">No resume uploaded</h3>
                           <div className="mt-2 text-sm text-yellow-700">
                             <p>You haven't uploaded a resume yet. Upload your resume to use the auto-fill feature.</p>
-                            <button 
-                              onClick={() => setActiveTab('resumes')} 
+                            <button
+                              onClick={() => setActiveTab('resumes')}
                               className="mt-2 inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition-all duration-200 font-medium text-sm"
                             >
                               Upload Resume
@@ -552,7 +506,7 @@ const Dashboard = () => {
                 </div>
               </div>
             )}
-            
+
             {/* Resumes Tab */}
             {activeTab === 'resumes' && (
               <div className="space-y-6">
@@ -581,22 +535,22 @@ const Dashboard = () => {
                     </div>
                   </div>
                 )}
-                
+
                 {/* Upload area */}
                 <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl border border-gray-200/50 p-6">
                   <h2 className="text-xl font-bold text-gray-900 mb-4">Upload Resume</h2>
                   <p className="text-gray-600 mb-6">
                     Upload your resume in PDF or DOCX format. Max file size: 5MB.
                   </p>
-                  
-                  <ResumeUploader 
+
+                  <ResumeUploader
                     onUpload={handleResumeUpload}
                     isUploading={isLoading}
                     uploadProgress={uploadProgress}
                     hasExistingResume={resumes.length > 0}
                   />
                 </div>
-                
+
                 {/* Resumes list */}
                 <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl border border-gray-200/50 p-6">
                   <div className="flex justify-between items-center mb-6">
@@ -605,8 +559,8 @@ const Dashboard = () => {
                       {resumes.length} {resumes.length === 1 ? 'resume' : 'resumes'}
                     </span>
                   </div>
-                  
-                  <ResumeList 
+
+                  <ResumeList
                     resumes={resumes}
                     isLoading={isLoading && resumes.length === 0}
                     onSetPrimary={handleSetPrimary}
@@ -615,7 +569,7 @@ const Dashboard = () => {
                 </div>
               </div>
             )}
-            
+
             {/* Parsed Resume Data Tab */}
             {activeTab === 'parsedData' && (
               <div className="space-y-6">
@@ -634,13 +588,13 @@ const Dashboard = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl border border-gray-200/50 p-6">
                   <ParsedResumeData onClose={refreshProfileData} />
                 </div>
               </div>
             )}
-            
+
             {/* Final Autofill Profile Tab */}
             {activeTab === 'finalProfile' && (
               <div className="space-y-6">
@@ -648,24 +602,24 @@ const Dashboard = () => {
                   <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl border border-gray-200/50 p-6">
                     <div className="flex justify-between items-center mb-6">
                       <h2 className="text-xl font-bold text-gray-900">Edit Autofill Profile</h2>
-                      <button 
+                      <button
                         onClick={() => setEditingProfile(false)}
                         className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1 hover:bg-gray-100 rounded-lg transition-all duration-200"
                       >
                         Cancel
                       </button>
                     </div>
-                    <ParsedResumeData 
+                    <ParsedResumeData
                       onClose={() => {
                         refreshProfileData();
                         setEditingProfile(false);
-                      }} 
+                      }}
                     />
                   </div>
                 ) : (
                   <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl border border-gray-200/50 p-6">
-                    <FinalProfileCard 
-                      profileData={parsedProfileData} 
+                    <FinalProfileCard
+                      profileData={parsedProfileData}
                       onEditClick={() => setEditingProfile(true)}
                       refreshData={refreshProfileData}
                     />
@@ -683,7 +637,7 @@ const Dashboard = () => {
             <div className="fixed inset-0 transition-opacity" onClick={() => setShowParseModal(false)}>
               <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm"></div>
             </div>
-            
+
             {/* Modal content */}
             <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden z-50 transform transition-all">
               <div className="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex justify-between items-center">
@@ -693,21 +647,21 @@ const Dashboard = () => {
                   </div>
                   <h3 className="text-lg font-semibold">Resume Data Extracted</h3>
                 </div>
-                <button 
+                <button
                   onClick={() => setShowParseModal(false)}
                   className="text-white/80 hover:text-white hover:bg-white/20 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
                 >
                   ✕
                 </button>
               </div>
-              
+
               <div className="max-h-[80vh] overflow-y-auto">
-                <ParsedResumeData 
-                  resumeId={lastUploadedResumeId} 
+                <ParsedResumeData
+                  resumeId={lastUploadedResumeId}
                   onClose={() => {
                     setShowParseModal(false);
                     setHasParsedData(true);
-                  }} 
+                  }}
                 />
               </div>
             </div>

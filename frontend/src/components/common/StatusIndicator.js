@@ -6,8 +6,8 @@ import { FaCheckCircle, FaSpinner, FaExclamationCircle, FaClock } from 'react-ic
  * StatusIndicator - Shows the current status of an operation with appropriate icons
  * Used for profile sync status, API operations, etc.
  */
-const StatusIndicator = ({ 
-  status, 
+const StatusIndicator = ({
+  status,
   text,
   className = '',
   showIcon = true,
@@ -48,17 +48,17 @@ const StatusIndicator = ({
         };
     }
   };
-  
+
   const { icon, textColor, bgColor, borderColor } = getStatusDisplay();
-  
+
   // Format the timestamp if provided
   const formattedTime = timestamp ? new Date(timestamp).toLocaleTimeString() : null;
-  
+
   // Component variations
-  const wrapperClasses = variant === 'compact' 
+  const wrapperClasses = variant === 'compact'
     ? `inline-flex items-center ${className}`
     : `flex items-center rounded-md p-2 ${bgColor} ${borderColor} border ${className}`;
-  
+
   return (
     <div className={wrapperClasses}>
       {showIcon && (

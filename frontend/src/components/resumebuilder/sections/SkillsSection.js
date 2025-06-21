@@ -12,7 +12,7 @@ const SkillsSection = ({ data, onUpdate, targetRole }) => {
 
   const handleAddSkill = () => {
     if (!newSkill.trim()) return;
-    
+
     const updatedSkills = [...skills, newSkill.trim()];
     setSkills(updatedSkills);
     onUpdate({ skills: updatedSkills });
@@ -82,12 +82,12 @@ const SkillsSection = ({ data, onUpdate, targetRole }) => {
           </div>
         ) : (
           skills.map((skill, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full flex items-center"
             >
               <span>{skill}</span>
-              <button 
+              <button
                 onClick={() => handleRemoveSkill(index)}
                 className="ml-2 text-blue-600 hover:text-blue-800"
               >

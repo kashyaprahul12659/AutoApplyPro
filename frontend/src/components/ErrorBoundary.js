@@ -3,14 +3,14 @@ import React from 'react';
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      hasError: false, 
+    this.state = {
+      hasError: false,
       error: null,
-      errorInfo: null 
+      errorInfo: null
     };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(_error) {
     // Update state so the next render will show the fallback UI
     return { hasError: true };
   }
@@ -51,9 +51,9 @@ class ErrorBoundary extends React.Component {
       fetch('/api/client-errors', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(errorData),
+        body: JSON.stringify(errorData)
       }).catch(err => {
         console.error('Failed to log error to service:', err);
       });
@@ -63,10 +63,10 @@ class ErrorBoundary extends React.Component {
   };
 
   handleRetry = () => {
-    this.setState({ 
-      hasError: false, 
-      error: null, 
-      errorInfo: null 
+    this.setState({
+      hasError: false,
+      error: null,
+      errorInfo: null
     });
   };
 
@@ -91,11 +91,11 @@ class ErrorBoundary extends React.Component {
                 />
               </svg>
             </div>
-            
+
             <h2 className="text-xl font-semibold text-gray-900 text-center mb-2">
               Oops! Something went wrong
             </h2>
-            
+
             <p className="text-gray-600 text-center mb-6">
               We're sorry for the inconvenience. An unexpected error occurred.
             </p>
@@ -126,7 +126,7 @@ class ErrorBoundary extends React.Component {
               >
                 Try Again
               </button>
-              
+
               <button
                 onClick={() => window.location.href = '/'}
                 className="flex-1 bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition-colors"

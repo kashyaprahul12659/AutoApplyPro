@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { format, formatDistanceToNow } from 'date-fns';
-import { 
-  PencilIcon, 
-  TrashIcon, 
-  MapPinIcon, 
-  DocumentTextIcon, 
-  TrophyIcon, 
+import {
+  PencilIcon,
+  TrashIcon,
+  MapPinIcon,
+  DocumentTextIcon,
+  TrophyIcon,
   EyeIcon,
   ClockIcon,
   BuildingOfficeIcon,
@@ -97,10 +97,10 @@ const JobCard = ({ job, onRefresh, isDragging = false }) => {
             onClose={() => setError(null)}
           />
         )}
-        
+
         {/* Status indicator bar */}
         <div className={`h-1 ${statusStyle.bg}`}></div>
-        
+
         <div className="p-4">
           {/* Header */}
           <div className="flex justify-between items-start mb-3">
@@ -113,9 +113,9 @@ const JobCard = ({ job, onRefresh, isDragging = false }) => {
                 <p className="text-gray-600 text-sm truncate">{job.company}</p>
               </div>
             </div>
-            
+
             <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button 
+              <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowEditModal(true);
@@ -125,7 +125,7 @@ const JobCard = ({ job, onRefresh, isDragging = false }) => {
               >
                 <PencilIcon className="w-4 h-4" />
               </button>
-              <button 
+              <button
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDelete();
@@ -154,11 +154,11 @@ const JobCard = ({ job, onRefresh, isDragging = false }) => {
               </div>
             )}
           </div>
-          
+
           {/* Tags and Links */}
           <div className="flex flex-wrap gap-2 mb-4">
             {job.linkedAnalyzerResultId && (
-              <div 
+              <div
                 className="flex items-center text-xs bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-lg px-2 py-1 cursor-pointer hover:from-blue-100 hover:to-indigo-100 transition-all border border-blue-200/50"
                 title={`JD Match Score: ${job.linkedAnalyzerResultId.matchScore || '?'}% - Click to view analysis`}
                 onClick={(e) => {
@@ -170,9 +170,9 @@ const JobCard = ({ job, onRefresh, isDragging = false }) => {
                 <span className="font-medium">{job.linkedAnalyzerResultId.matchScore || '?'}% Match</span>
               </div>
             )}
-            
+
             {job.linkedCoverLetterId && (
-              <div 
+              <div
                 className="flex items-center text-xs bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 rounded-lg px-2 py-1 cursor-pointer hover:from-green-100 hover:to-emerald-100 transition-all border border-green-200/50"
                 title="Click to view cover letter"
                 onClick={(e) => {
@@ -184,24 +184,24 @@ const JobCard = ({ job, onRefresh, isDragging = false }) => {
                 <span className="font-medium">Cover Letter</span>
               </div>
             )}
-            
+
             {job.color && (
-              <div 
+              <div
                 className="w-5 h-5 rounded-full border-2 border-white shadow-sm"
                 style={{ backgroundColor: job.color }}
                 title="Custom tag"
               ></div>
             )}
           </div>
-          
+
           {/* Footer */}
           <div className="flex justify-between items-center pt-3 border-t border-gray-100">
             <div className="flex items-center text-xs text-gray-500">
               <ClockIcon className="w-3 h-3 mr-1" />
               <span>Updated {formatDate(job.lastStatusUpdate || job.updatedAt)}</span>
             </div>
-            
-            <button 
+
+            <button
               onClick={(e) => {
                 e.stopPropagation();
                 setShowDetails(true);

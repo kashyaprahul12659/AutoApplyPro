@@ -8,7 +8,7 @@ import whatsNewData from '../../data/whatsNewData';
 const FEATURE_UPDATES = whatsNewData.flatMap(release => {
   // Only mark the latest release as new
   const isLatestRelease = release.id === 1;
-  
+
   return release.highlights.map(highlight => ({
     id: `${release.version}-${highlight.title.toLowerCase().replace(/\s+/g, '-')}`,
     title: highlight.title,
@@ -32,24 +32,24 @@ const WhatsNewButton = () => {
     const storedViewedFeatures = localStorage.getItem('viewedFeatures');
     const parsedViewedFeatures = storedViewedFeatures ? JSON.parse(storedViewedFeatures) : [];
     setViewedFeatures(parsedViewedFeatures);
-    
+
     // Check if there are any new features not yet viewed
     const hasUnviewedFeatures = FEATURE_UPDATES.some(
       feature => feature.isNew && !parsedViewedFeatures.includes(feature.id)
     );
-    
+
     setHasNewFeatures(hasUnviewedFeatures);
   }, []);
 
   const openModal = () => {
     setIsModalOpen(true);
-    
+
     // Mark all features as viewed
     const newViewedFeatures = [
       ...viewedFeatures,
       ...FEATURE_UPDATES.filter(feature => feature.isNew).map(feature => feature.id)
     ];
-    
+
     setViewedFeatures(newViewedFeatures);
     localStorage.setItem('viewedFeatures', JSON.stringify(newViewedFeatures));
     setHasNewFeatures(false);
@@ -99,7 +99,7 @@ const WhatsNewButton = () => {
                   <FiX className="h-6 w-6" />
                 </button>
               </div>
-              
+
               <div className="space-y-8">
                 {whatsNewData.map(release => (
                   <div key={release.id} className="border-b border-gray-200 pb-6 last:border-b-0 last:pb-0">
@@ -111,7 +111,7 @@ const WhatsNewButton = () => {
                       </div>
                     </div>
                     <p className="text-gray-600 mb-4">{release.description}</p>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {release.highlights.map((highlight, index) => (
                         <div key={index} className="bg-gray-50 p-3 rounded-lg">

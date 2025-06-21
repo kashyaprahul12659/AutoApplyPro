@@ -11,14 +11,14 @@ const Profile = () => {
         <title>Profile | AutoApply Pro</title>
         <meta name="description" content="Manage your AutoApply Pro profile and settings" />
       </Helmet>
-      
+
       <div className="profile-page container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-gray-800 mb-6">Profile & Settings</h1>
-          
+
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-4">User Information</h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -31,7 +31,7 @@ const Profile = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email
@@ -44,7 +44,7 @@ const Profile = () => {
                 />
               </div>
             </div>
-            
+
             <div className="mt-6 pt-6 border-t border-gray-200">
               <h3 className="text-lg font-medium mb-4">Account Settings</h3>
               <div className="space-y-4">
@@ -58,7 +58,7 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="mt-6 pt-6 border-t border-gray-200">
               <button className="btn-primary">
                 Save Changes

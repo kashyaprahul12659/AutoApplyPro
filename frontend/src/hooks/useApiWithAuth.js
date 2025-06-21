@@ -27,8 +27,8 @@ export const useApiWithAuth = () => {
         method,
         url: `${API_BASE_URL}${endpoint}`,
         headers: {
-          'Content-Type': 'application/json',
-        },
+          'Content-Type': 'application/json'
+        }
       };
 
       // Add authentication header based on auth method
@@ -46,7 +46,7 @@ export const useApiWithAuth = () => {
       }
 
       console.log('Making API request:', method, endpoint, 'Auth method:', hasValidClerkKey ? 'Clerk' : 'Development');
-      
+
       const response = await axios(config);
       return response.data;
     } catch (error) {
@@ -60,6 +60,6 @@ export const useApiWithAuth = () => {
     post: (endpoint, data) => makeAuthenticatedRequest('POST', endpoint, data),
     put: (endpoint, data) => makeAuthenticatedRequest('PUT', endpoint, data),
     delete: (endpoint) => makeAuthenticatedRequest('DELETE', endpoint),
-    isAuthenticated: isLoaded && isSignedIn,
+    isAuthenticated: isLoaded && isSignedIn
   };
 };

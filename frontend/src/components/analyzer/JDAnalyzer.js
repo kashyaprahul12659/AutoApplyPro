@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaSpinner, FaCheck, FaTimes, FaRegLightbulb } from 'react-icons/fa';
-import { FiPlus, FiBriefcase } from 'react-icons/fi';
+import { FiBriefcase } from 'react-icons/fi';
 import ProUpgradeModal from '../coverletter/ProUpgradeModal';
 import ExportAnalysisButton from './ExportAnalysisButton';
 import { useNavigate } from 'react-router-dom';
@@ -19,36 +19,36 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
   const [company, setCompany] = useState('');
   const [isTrackingJob, setIsTrackingJob] = useState(false);
   const [showTrackJobModal, setShowTrackJobModal] = useState(false);
-  
+
   // Load preloaded analysis if provided
   useEffect(() => {
     if (preloadedAnalysis) {
       setResult(preloadedAnalysis);
       setEditableSuggestions(preloadedAnalysis.suggestions || []);
       setJobDescription(preloadedAnalysis.descriptionSnippet || '');
-      
+
       // Try to extract job title and company from description
       if (preloadedAnalysis.descriptionSnippet) {
         const lines = preloadedAnalysis.descriptionSnippet.split('\n');
         const firstLine = lines[0] || '';
-        
+
         // Simple heuristic - first line often contains job title
         if (firstLine.length > 0 && firstLine.length < 100) {
           setJobTitle(firstLine.trim());
         }
-        
+
         // Try to find company name in first few lines
-        const companyLine = lines.slice(0, 5).find(line => 
-          line.toLowerCase().includes('company') || 
+        const companyLine = lines.slice(0, 5).find(line =>
+          line.toLowerCase().includes('company') ||
           line.toLowerCase().includes('at ') ||
           line.toLowerCase().includes('with ')
         );
-        
+
         if (companyLine) {
-          const companyMatch = companyLine.match(/at\s+([^,]+)/i) || 
+          const companyMatch = companyLine.match(/at\s+([^,]+)/i) ||
                             companyLine.match(/with\s+([^,]+)/i) ||
                             companyLine.match(/company:\s*([^,]+)/i);
-          
+
           if (companyMatch && companyMatch[1]) {
             setCompany(companyMatch[1].trim());
           }
@@ -56,21 +56,19 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
       }
     }
   }, [preloadedAnalysis]);
-  
+
   // Handle adding job to tracker
   const handleTrackJob = async () => {
     if (!jobTitle || !company) {
       toast.error('Job title and company are required');
       return;
     }
-    
+
     setIsTrackingJob(true);
-    
+
     try {
-      const token = localStorage.getItem('token');
-      
-      // Create a new job application with the analyzer result linked
-      const response = await axios.post(
+      const token = localStorage.getItem('token');      // Create a new job application with the analyzer result linked
+      await axios.post(
         '/api/job-tracker/add',
         {
           jobTitle,
@@ -87,16 +85,16 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
           }
         }
       );
-      
+
       // Show success message
       toast.success('Job added to tracker successfully!');
       setShowTrackJobModal(false);
-      
+
       // Ask if user wants to go to job tracker
       if (window.confirm('Job added to tracker. Would you like to view your job tracker?')) {
         navigate('/job-tracker');
       }
-      
+
     } catch (error) {
       console.error('Error adding job to tracker:', error);
       toast.error(error.response?.data?.error || 'Failed to add job to tracker');
@@ -107,18 +105,18 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!jobDescription || jobDescription.length < 50) {
       setError('Please provide a detailed job description (at least 50 characters).');
       return;
     }
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const token = localStorage.getItem('token');
-      
+
       const response = await axios.post(
         '/api/ai/analyze-jd',
         { jobDescription },
@@ -129,13 +127,13 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
           }
         }
       );
-      
+
       setResult(response.data.data);
       setEditableSuggestions(response.data.data.suggestions);
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
-      
+
       if (err.response && err.response.data.requiresUpgrade) {
         setShowUpgradeModal(true);
       } else {
@@ -168,7 +166,7 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
           Paste a job description to analyze how well your resume matches the requirements.
           Get insights on skill gaps and suggestions to improve your application.
         </p>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="jobDescription" className="block text-gray-700 font-medium mb-2">
@@ -184,13 +182,13 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
               required
             ></textarea>
           </div>
-          
+
           {error && (
             <div className="mb-4 text-red-500 p-2 bg-red-100 rounded-md">
               {error}
             </div>
           )}
-          
+
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 flex justify-center items-center"
@@ -213,33 +211,33 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
           {/* Analysis results summary */}
           <div className="mb-6">
             <h3 className="text-xl font-semibold mb-2">Analysis Results</h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div className="bg-blue-50 p-4 rounded-lg">
                 <div className="text-blue-700 font-bold text-3xl mb-1">{result.matchScore}%</div>
                 <div className="text-blue-600 font-medium">Resume Match</div>
               </div>
-              
+
               <div className="bg-green-50 p-4 rounded-lg">
                 <div className="text-green-700 font-bold text-3xl mb-1">{result.matchedSkills.length}</div>
                 <div className="text-green-600 font-medium">Matched Skills</div>
               </div>
-              
+
               <div className="bg-red-50 p-4 rounded-lg">
                 <div className="text-red-700 font-bold text-3xl mb-1">{result.missingSkills.length}</div>
                 <div className="text-red-600 font-medium">Missing Skills</div>
               </div>
             </div>
-            
+
             {/* For job tracking */}
             <div className="mb-4 border border-gray-200 rounded-lg p-4">
               <h4 className="font-medium text-gray-700 mb-2">Job Details</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">Job Title</label>
-                  <input 
-                    type="text" 
-                    className="w-full border border-gray-300 rounded px-3 py-2" 
+                  <input
+                    type="text"
+                    className="w-full border border-gray-300 rounded px-3 py-2"
                     value={jobTitle}
                     onChange={(e) => setJobTitle(e.target.value)}
                     placeholder="e.g. Software Engineer"
@@ -247,9 +245,9 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
                 </div>
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">Company</label>
-                  <input 
-                    type="text" 
-                    className="w-full border border-gray-300 rounded px-3 py-2" 
+                  <input
+                    type="text"
+                    className="w-full border border-gray-300 rounded px-3 py-2"
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
                     placeholder="e.g. Acme Inc."
@@ -258,11 +256,11 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
               </div>
             </div>
           </div>
-          
+
           {/* Skills comparison */}
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-3">Skills Analysis</h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h4 className="flex items-center text-green-700 font-medium mb-2">
@@ -276,7 +274,7 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
                   ))}
                 </ul>
               </div>
-              
+
               <div>
                 <h4 className="flex items-center text-red-700 font-medium mb-2">
                   <FaTimes className="mr-2" /> Missing Skills
@@ -291,13 +289,13 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
               </div>
             </div>
           </div>
-          
+
           {/* Improvement suggestions */}
           <div className="mb-6">
             <h3 className="flex items-center text-lg font-semibold mb-3">
               <FaRegLightbulb className="mr-2 text-yellow-500" /> Improvement Suggestions
             </h3>
-            
+
             {editableSuggestions && editableSuggestions.length > 0 ? (
               <ul className="space-y-3">
                 {editableSuggestions.map((suggestion, index) => (
@@ -315,7 +313,7 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
               <p className="text-gray-500 italic">No suggestions available.</p>
             )}
           </div>
-          
+
           {/* Action buttons */}
           <div className="flex flex-wrap justify-end mt-4 gap-3">
             <button
@@ -325,26 +323,26 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
               <FiBriefcase className="mr-2" />
               Track This Job
             </button>
-            
+
             <ExportAnalysisButton result={result} jobTitle={jobTitle} />
-            
-            <button 
+
+            <button
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
               onClick={() => setResult(null)}
             >
               Reset
             </button>
-            
-            <button 
+
+            <button
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
               onClick={() => {
                 if (userProfile.hasPaidPlan) {
-                  navigate('/cover-letter-generator', { 
-                    state: { 
+                  navigate('/cover-letter-generator', {
+                    state: {
                       preloadedSkills: result.matchedSkills.join(', '),
                       jobDescription,
-                      jobTitle 
-                    } 
+                      jobTitle
+                    }
                   });
                 } else {
                   setShowUpgradeModal(true);
@@ -356,14 +354,14 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
           </div>
         </div>
       )}
-      
+
       {/* Track Job Modal */}
       {showTrackJobModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden">
             <div className="flex justify-between items-center border-b p-4">
               <h2 className="text-xl font-semibold">Track This Job</h2>
-              <button 
+              <button
                 onClick={() => setShowTrackJobModal(false)}
                 className="text-gray-500 hover:text-gray-700"
               >
@@ -372,12 +370,12 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
                 </svg>
               </button>
             </div>
-            
+
             <div className="p-4">
               <p className="text-gray-600 mb-4">
                 Add this job to your application tracker. You'll be able to monitor your progress and keep track of all your applications in one place.
               </p>
-              
+
               <div className="mb-4">
                 <label htmlFor="modalJobTitle" className="block text-gray-700 font-medium mb-2">
                   Job Title *
@@ -392,7 +390,7 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
                   required
                 />
               </div>
-              
+
               <div className="mb-4">
                 <label htmlFor="modalCompany" className="block text-gray-700 font-medium mb-2">
                   Company *
@@ -407,7 +405,7 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
                   required
                 />
               </div>
-              
+
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
@@ -442,7 +440,7 @@ const JDAnalyzer = ({ userProfile, preloadedAnalysis = null }) => {
           </div>
         </div>
       )}
-      
+
       {showUpgradeModal && (
         <ProUpgradeModal
           onClose={handleModalClose}

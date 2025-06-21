@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FiSave, FiDownload, FiPlus, FiTrash2, FiCopy } from 'react-icons/fi';
+import { FiSave, FiDownload, FiTrash2 } from 'react-icons/fi';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import * as resumeBuilderService from '../../services/resumeBuilderService';
@@ -28,7 +28,7 @@ const ResumeBuilder = () => {
   const [resumeTitle, setResumeTitle] = useState('My Resume');
   const [resumeId, setResumeId] = useState(null);
   const [targetRole, setTargetRole] = useState('');
-  
+
   // Resume data structure
   const [resumeData, setResumeData] = useState({
     blocks: [
@@ -52,13 +52,13 @@ const ResumeBuilder = () => {
     try {
       setLoading(true);
       const response = await resumeBuilderService.getResumeById(resumeId);
-      
+
       if (response.success) {
         const { title, blocks, templateId } = response.data;
         setResumeTitle(title);
         setResumeId(resumeId);
         setSelectedTemplate(templateId || 'classic');
-        
+
         // Sort blocks by order
         const sortedBlocks = [...blocks].sort((a, b) => a.order - b.order);
         setResumeData({ blocks: sortedBlocks });
@@ -74,24 +74,24 @@ const ResumeBuilder = () => {
   const handleSaveResume = async () => {
     try {
       setSaving(true);
-      
+
       const saveData = {
         title: resumeTitle,
         blocks: resumeData.blocks,
         templateId: selectedTemplate
       };
-      
+
       let response;
-      
+
       if (resumeId) {
         response = await resumeBuilderService.updateResume(resumeId, saveData);
       } else {
         response = await resumeBuilderService.createResume(saveData);
       }
-      
+
       if (response.success) {
         toast.success('Resume saved successfully');
-        
+
         if (!resumeId) {
           setResumeId(response.data._id);
           // Update URL to include the new resume ID
@@ -108,11 +108,11 @@ const ResumeBuilder = () => {
 
   const handleExportPDF = async () => {
     if (!resumePreviewRef.current) return;
-    
+
     try {
       setExporting(true);
       toast.info('Generating PDF, please wait...');
-      
+
       const scale = 2; // Higher scale for better quality
       const canvas = await html2canvas(resumePreviewRef.current, {
         scale: scale,
@@ -120,29 +120,29 @@ const ResumeBuilder = () => {
         allowTaint: true,
         logging: false
       });
-      
+
       const imgData = canvas.toDataURL('image/jpeg', 1.0);
-      
+
       // Create PDF with A4 dimensions
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
       });
-      
+
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      
+
       const imgWidth = canvas.width;
       const imgHeight = canvas.height;
       const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-      
+
       const imgX = (pdfWidth - imgWidth * ratio) / 2;
       const imgY = 0;
-      
+
       pdf.addImage(imgData, 'JPEG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
       pdf.save(`${resumeTitle.replace(/\s+/g, '_')}.pdf`);
-      
+
       toast.success('PDF downloaded successfully');
     } catch (error) {
       toast.error('Failed to export PDF');
@@ -160,7 +160,7 @@ const ResumeBuilder = () => {
         }
         return block;
       });
-      
+
       return { ...prevData, blocks: updatedBlocks };
     });
   };
@@ -169,21 +169,21 @@ const ResumeBuilder = () => {
     setResumeData(prevData => {
       const blocks = [...prevData.blocks];
       const currentIndex = blocks.findIndex(block => block.type === type);
-      
+
       if (currentIndex === -1) return prevData;
-      
-      const newIndex = direction === 'up' 
-        ? Math.max(0, currentIndex - 1) 
+
+      const newIndex = direction === 'up'
+        ? Math.max(0, currentIndex - 1)
         : Math.min(blocks.length - 1, currentIndex + 1);
-      
+
       if (newIndex === currentIndex) return prevData;
-      
+
       // Swap blocks
       [blocks[currentIndex], blocks[newIndex]] = [blocks[newIndex], blocks[currentIndex]];
-      
+
       // Update order properties
-      return { 
-        ...prevData, 
+      return {
+        ...prevData,
         blocks: blocks.map((block, index) => ({ ...block, order: index }))
       };
     });
@@ -192,25 +192,25 @@ const ResumeBuilder = () => {
   const handleToggleBlockVisibility = (type) => {
     setResumeData(prevData => {
       const blockExists = prevData.blocks.some(block => block.type === type);
-      
+
       if (blockExists) {
         // Remove block
-        return { 
-          ...prevData, 
+        return {
+          ...prevData,
           blocks: prevData.blocks
             .filter(block => block.type !== type)
             .map((block, index) => ({ ...block, order: index }))
         };
       } else {
         // Add block
-        const newBlock = { 
-          type, 
-          content: getDefaultContentForType(type), 
-          order: prevData.blocks.length 
+        const newBlock = {
+          type,
+          content: getDefaultContentForType(type),
+          order: prevData.blocks.length
         };
-        
-        return { 
-          ...prevData, 
+
+        return {
+          ...prevData,
           blocks: [...prevData.blocks, newBlock]
             .sort((a, b) => a.order - b.order)
         };
@@ -241,52 +241,52 @@ const ResumeBuilder = () => {
     switch (block.type) {
       case 'summary':
         return (
-          <SummarySection 
+          <SummarySection
             key={block.type}
-            data={block.content} 
+            data={block.content}
             onUpdate={(content) => handleUpdateBlock('summary', content)}
             targetRole={targetRole}
           />
         );
       case 'skills':
         return (
-          <SkillsSection 
+          <SkillsSection
             key={block.type}
-            data={block.content} 
+            data={block.content}
             onUpdate={(content) => handleUpdateBlock('skills', content)}
             targetRole={targetRole}
           />
         );
       case 'experience':
         return (
-          <ExperienceSection 
+          <ExperienceSection
             key={block.type}
-            data={block.content} 
+            data={block.content}
             onUpdate={(content) => handleUpdateBlock('experience', content)}
             targetRole={targetRole}
           />
         );
       case 'education':
         return (
-          <EducationSection 
+          <EducationSection
             key={block.type}
-            data={block.content} 
+            data={block.content}
             onUpdate={(content) => handleUpdateBlock('education', content)}
           />
         );
       case 'project':
         return (
-          <ProjectsSection 
+          <ProjectsSection
             key={block.type}
-            data={block.content} 
+            data={block.content}
             onUpdate={(content) => handleUpdateBlock('project', content)}
           />
         );
       case 'certification':
         return (
-          <CertificationsSection 
+          <CertificationsSection
             key={block.type}
-            data={block.content} 
+            data={block.content}
             onUpdate={(content) => handleUpdateBlock('certification', content)}
           />
         );
@@ -300,8 +300,8 @@ const ResumeBuilder = () => {
       case 'classic':
       default:
         return (
-          <ClassicTemplate 
-            resumeData={resumeData} 
+          <ClassicTemplate
+            resumeData={resumeData}
             ref={resumePreviewRef}
           />
         );
@@ -347,7 +347,7 @@ const ResumeBuilder = () => {
           </button>
         </div>
       </div>
-      
+
       <div className="flex flex-col md:flex-row">
         {/* Left Panel - Resume Sections */}
         <div className="w-full md:w-1/2 p-4 bg-gray-50 rounded-lg shadow mb-4 md:mb-0 md:mr-4 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 160px)' }}>
@@ -362,7 +362,7 @@ const ResumeBuilder = () => {
             />
             <p className="text-sm text-gray-500 mt-1">Providing a target role helps AI tailor content specifically to that position</p>
           </div>
-          
+
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-4">Resume Sections</h3>
             <div className="space-y-6">
@@ -399,20 +399,20 @@ const ResumeBuilder = () => {
               ))}
             </div>
           </div>
-          
+
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-2">Add Sections</h3>
             <div className="flex flex-wrap gap-2">
               {['summary', 'skills', 'experience', 'education', 'project', 'certification'].map(type => {
                 const isAdded = resumeData.blocks.some(block => block.type === type);
-                
+
                 return (
                   <button
                     key={type}
                     onClick={() => handleToggleBlockVisibility(type)}
                     className={`px-3 py-1 rounded text-sm ${
-                      isAdded 
-                        ? 'bg-gray-200 text-gray-500' 
+                      isAdded
+                        ? 'bg-gray-200 text-gray-500'
                         : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
                     }`}
                     disabled={isAdded}
@@ -424,7 +424,7 @@ const ResumeBuilder = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Right Panel - Resume Preview */}
         <div className="w-full md:w-1/2 bg-white rounded-lg shadow p-4 overflow-hidden">
           <h3 className="text-lg font-semibold mb-4">Resume Preview</h3>

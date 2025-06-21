@@ -85,9 +85,9 @@ const Dashboard = ({ user }) => {
               {[1,2,3,4,5,6].map(i => <CardSkeleton key={i} />)}
             </div>
           }>
-            <DashboardStats 
-              stats={stats?.data} 
-              loading={statsLoading} 
+            <DashboardStats
+              stats={stats?.data}
+              loading={statsLoading}
               error={statsError}
               onRetry={refetchStats}
             />
@@ -109,7 +109,7 @@ const Dashboard = ({ user }) => {
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h2>
               <Suspense fallback={<ListSkeleton />}>
-                <ActivityFeed 
+                <ActivityFeed
                   activities={recentActivity?.data}
                   loading={activityLoading}
                   error={activityError}

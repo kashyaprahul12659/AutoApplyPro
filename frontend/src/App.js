@@ -67,140 +67,140 @@ function App() {
         <main className={`flex-grow ${!isLandingPage ? 'container mx-auto px-4 py-8' : ''}`}>
           <Suspense fallback={<PageLoading />}>
             <Routes>
-            <Route path="/" element={
-              <PageErrorBoundary pageName="Landing">
-                <Landing />
-              </PageErrorBoundary>
-            } />
-            <Route path="/home" element={
-              <PageErrorBoundary pageName="Home">
-                <Home />
-              </PageErrorBoundary>
-            } />
-            <Route path="/login/*" element={
-              <PageErrorBoundary pageName="Login">
-                <Login />
-              </PageErrorBoundary>
-            } />
-            <Route path="/register/*" element={
-              <PageErrorBoundary pageName="Register">
-                <Register />
-              </PageErrorBoundary>
-            } />
-            <Route path="/dashboard" element={
-              <PrivateRoute>
-                <PageErrorBoundary pageName="Dashboard">
-                  <Dashboard />
+              <Route path="/" element={
+                <PageErrorBoundary pageName="Landing">
+                  <Landing />
                 </PageErrorBoundary>
-              </PrivateRoute>
-            } />
-            <Route path="/history" element={
-              <PrivateRoute>
-                <PageErrorBoundary pageName="History">
-                  <History />
+              } />
+              <Route path="/home" element={
+                <PageErrorBoundary pageName="Home">
+                  <Home />
                 </PageErrorBoundary>
-              </PrivateRoute>
-            } />
-            <Route path="/coverletter" element={
-              <PrivateRoute>
-                <PageErrorBoundary pageName="CoverLetter">
-                  <CoverLetter />
+              } />
+              <Route path="/login/*" element={
+                <PageErrorBoundary pageName="Login">
+                  <Login />
                 </PageErrorBoundary>
-              </PrivateRoute>
-            } />
-            <Route path="/jd-analyzer" element={
-              <PrivateRoute>
-                <PageErrorBoundary pageName="JDAnalyzer">
-                  <JDAnalyzer />
+              } />
+              <Route path="/register/*" element={
+                <PageErrorBoundary pageName="Register">
+                  <Register />
                 </PageErrorBoundary>
-              </PrivateRoute>
-            } />
-            <Route path="/job-tracker" element={
-              <PrivateRoute>
-                <PageErrorBoundary pageName="JobTracker">
-                  <JobTracker />
+              } />
+              <Route path="/dashboard" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="Dashboard">
+                    <Dashboard />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+              <Route path="/history" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="History">
+                    <History />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+              <Route path="/coverletter" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="CoverLetter">
+                    <CoverLetter />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+              <Route path="/jd-analyzer" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="JDAnalyzer">
+                    <JDAnalyzer />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+              <Route path="/job-tracker" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="JobTracker">
+                    <JobTracker />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+              <Route path="/test-autofill" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="TestAutofill">
+                    <TestAutofill />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+              <Route path="/resumes" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="ResumeBuilderPage">
+                    <ResumeBuilderPage />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+              <Route path="/ai-resume" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="ResumeBuilderPage">
+                    <ResumeBuilderPage />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+              <Route path="/resume-builder/:id?" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="ResumeBuilder">
+                    <ResumeBuilder />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />            <Route path="/profile" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="Profile">
+                    <Profile />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+
+              {/* Legal Pages - Public Routes */}
+              <Route path="/privacy-policy" element={
+                <PageErrorBoundary pageName="PrivacyPolicy">
+                  <PrivacyPolicy />
                 </PageErrorBoundary>
-              </PrivateRoute>
-            } />
-            <Route path="/test-autofill" element={
-              <PrivateRoute>
-                <PageErrorBoundary pageName="TestAutofill">
-                  <TestAutofill />
+              } />
+              <Route path="/terms-of-service" element={
+                <PageErrorBoundary pageName="TermsOfService">
+                  <TermsOfService />
                 </PageErrorBoundary>
-              </PrivateRoute>
-            } />
-            <Route path="/resumes" element={
-              <PrivateRoute>
-                <PageErrorBoundary pageName="ResumeBuilderPage">
-                  <ResumeBuilderPage />
+              } />
+              <Route path="/refund-policy" element={
+                <PageErrorBoundary pageName="RefundPolicy">
+                  <RefundPolicy />
                 </PageErrorBoundary>
-              </PrivateRoute>
-            } />
-            <Route path="/ai-resume" element={
-              <PrivateRoute>
-                <PageErrorBoundary pageName="ResumeBuilderPage">
-                  <ResumeBuilderPage />
+              } />
+
+              <Route path="*" element={
+                <PageErrorBoundary pageName="NotFound">
+                  <NotFound />
                 </PageErrorBoundary>
-              </PrivateRoute>
-            } />
-            <Route path="/resume-builder/:id?" element={
-              <PrivateRoute>
-                <PageErrorBoundary pageName="ResumeBuilder">
-                  <ResumeBuilder />
-                </PageErrorBoundary>
-              </PrivateRoute>
-            } />            <Route path="/profile" element={
-              <PrivateRoute>
-                <PageErrorBoundary pageName="Profile">
-                  <Profile />
-                </PageErrorBoundary>
-              </PrivateRoute>
-            } />
-            
-            {/* Legal Pages - Public Routes */}
-            <Route path="/privacy-policy" element={
-              <PageErrorBoundary pageName="PrivacyPolicy">
-                <PrivacyPolicy />
-              </PageErrorBoundary>
-            } />
-            <Route path="/terms-of-service" element={
-              <PageErrorBoundary pageName="TermsOfService">
-                <TermsOfService />
-              </PageErrorBoundary>
-            } />
-            <Route path="/refund-policy" element={
-              <PageErrorBoundary pageName="RefundPolicy">
-                <RefundPolicy />
-              </PageErrorBoundary>
-            } />
-            
-            <Route path="*" element={
-              <PageErrorBoundary pageName="NotFound">
-                <NotFound />
-              </PageErrorBoundary>
-            } /></Routes>
-        </Suspense>
-      </main>
-      
-      {!isLandingPage && <Footer />}
-      {!isLandingPage && <FeedbackButton />}
-      <ExtensionIntegration />
-      <ToastContainer 
-        position={window.innerWidth < 768 ? 'bottom-center' : 'top-right'}
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        className="rounded-md shadow-lg"
-        limit={3}
-        toastClassName="rounded-lg shadow-md"
-        bodyClassName="text-sm font-medium"
-      />
+              } /></Routes>
+          </Suspense>
+        </main>
+
+        {!isLandingPage && <Footer />}
+        {!isLandingPage && <FeedbackButton />}
+        <ExtensionIntegration />
+        <ToastContainer
+          position={window.innerWidth < 768 ? 'bottom-center' : 'top-right'}
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          className="rounded-md shadow-lg"
+          limit={3}
+          toastClassName="rounded-lg shadow-md"
+          bodyClassName="text-sm font-medium"
+        />
       </div>
     </ErrorBoundary>
   );

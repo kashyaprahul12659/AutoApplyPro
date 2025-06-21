@@ -15,13 +15,13 @@ const AnalyzerHistory = () => {
     const fetchHistory = async () => {
       try {
         const token = localStorage.getItem('token');
-        
+
         const response = await axios.get('/api/ai/analyzer-history', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
-        
+
         setHistory(response.data.data);
         setLoading(false);
       } catch (err) {
@@ -30,7 +30,7 @@ const AnalyzerHistory = () => {
         setLoading(false);
       }
     };
-    
+
     fetchHistory();
   }, []);
 
@@ -38,13 +38,13 @@ const AnalyzerHistory = () => {
     if (window.confirm('Are you sure you want to delete this analysis?')) {
       try {
         const token = localStorage.getItem('token');
-        
+
         await axios.delete(`/api/ai/analyzer-history/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
-        
+
         // Remove from state
         setHistory(history.filter(item => item._id !== id));
       } catch (err) {
@@ -91,7 +91,7 @@ const AnalyzerHistory = () => {
   return (
     <div className="mb-6">
       <h3 className="text-xl font-semibold mb-4">Your Analysis History</h3>
-      
+
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
@@ -122,8 +122,8 @@ const AnalyzerHistory = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className={`text-sm font-medium 
-                      ${item.matchScore >= 70 ? 'text-green-600' : 
-                        item.matchScore >= 40 ? 'text-yellow-600' : 'text-red-600'}`
+                      ${item.matchScore >= 70 ? 'text-green-600' :
+                  item.matchScore >= 40 ? 'text-yellow-600' : 'text-red-600'}`
                     }>
                       {item.matchScore}%
                     </div>
@@ -133,14 +133,14 @@ const AnalyzerHistory = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-3">
-                      <button 
+                      <button
                         onClick={() => handleViewAnalysis(item._id)}
                         className="text-blue-600 hover:text-blue-900"
                         title="View Analysis"
                       >
                         <FaEye />
                       </button>
-                      <button 
+                      <button
                         onClick={() => handleDelete(item._id)}
                         className="text-red-600 hover:text-red-900"
                         title="Delete Analysis"

@@ -8,14 +8,14 @@ const RefundPolicy = () => {
         <title>Refund Policy - AutoApply Pro</title>
         <meta name="description" content="AutoApply Pro Refund Policy - Information about refunds and cancellations." />
       </Helmet>
-      
+
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="bg-indigo-600 px-6 py-4">
             <h1 className="text-3xl font-bold text-white">Refund Policy</h1>
             <p className="text-indigo-100 mt-2">Last updated: {new Date().toLocaleDateString()}</p>
           </div>
-          
+
           <div className="px-6 py-8 prose prose-lg max-w-none">
             <h2>1. Overview</h2>
             <p>At AutoApply Pro, we want you to be completely satisfied with our service. This Refund Policy explains when and how you can request a refund for your subscription.</p>
@@ -128,7 +128,7 @@ const RefundPolicy = () => {
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-8">
               <h3 className="text-blue-800 font-semibold mb-2">Need Help?</h3>
               <p className="text-blue-700">
-                Before requesting a refund, consider reaching out to our support team. 
+                Before requesting a refund, consider reaching out to our support team.
                 We're often able to resolve issues and help you get the most out of AutoApply Pro.
               </p>
             </div>

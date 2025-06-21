@@ -14,7 +14,7 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
     experience: []
   });
   const [newSkill, setNewSkill] = useState('');
-  
+
   // Fetch parsed data on component mount
   useEffect(() => {
     const fetchParsedData = async () => {
@@ -46,7 +46,7 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
               education: parseRes.data.data.education || [],
               experience: parseRes.data.data.experience || []
             });
-            
+
             toast.success('Resume parsed successfully! Review & confirm your details.');
           } else {
             console.error('Error fetching parsed data:', err);
@@ -60,10 +60,10 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
         setLoading(false);
       }
     };
-    
+
     fetchParsedData();
   }, [resumeId]);
-  
+
   // Handle form input changes
   const handleInputChange = (e) => {
     setFormData({
@@ -71,7 +71,7 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
       [e.target.name]: e.target.value
     });
   };
-  
+
   // Handle skill changes
   const handleAddSkill = () => {
     if (newSkill.trim() && !formData.skills.includes(newSkill.trim())) {
@@ -82,14 +82,14 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
       setNewSkill('');
     }
   };
-  
+
   const handleRemoveSkill = (skill) => {
     setFormData({
       ...formData,
       skills: formData.skills.filter(s => s !== skill)
     });
   };
-  
+
   // Handle education changes
   const handleEducationChange = (index, field, value) => {
     const updatedEducation = [...formData.education];
@@ -97,13 +97,13 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
       ...updatedEducation[index],
       [field]: value
     };
-    
+
     setFormData({
       ...formData,
       education: updatedEducation
     });
   };
-  
+
   const handleAddEducation = () => {
     setFormData({
       ...formData,
@@ -113,17 +113,17 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
       ]
     });
   };
-  
+
   const handleRemoveEducation = (index) => {
     const updatedEducation = [...formData.education];
     updatedEducation.splice(index, 1);
-    
+
     setFormData({
       ...formData,
       education: updatedEducation
     });
   };
-  
+
   // Handle experience changes
   const handleExperienceChange = (index, field, value) => {
     const updatedExperience = [...formData.experience];
@@ -131,13 +131,13 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
       ...updatedExperience[index],
       [field]: value
     };
-    
+
     setFormData({
       ...formData,
       experience: updatedExperience
     });
   };
-  
+
   const handleAddExperience = () => {
     setFormData({
       ...formData,
@@ -147,27 +147,27 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
       ]
     });
   };
-  
+
   const handleRemoveExperience = (index) => {
     const updatedExperience = [...formData.experience];
     updatedExperience.splice(index, 1);
-    
+
     setFormData({
       ...formData,
       experience: updatedExperience
     });
   };
-  
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       setSaving(true);
       const res = await axios.put('/api/resumes/parsed-data', formData);
-      
+
       toast.success('Profile data updated successfully!');
-      
+
       if (onClose) {
         onClose();
       }
@@ -178,7 +178,7 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
       setSaving(false);
     }
   };
-  
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -187,7 +187,7 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
       </div>
     );
   }
-  
+
   return (
     <div className="bg-white rounded-lg shadow">
       <div className="p-6">
@@ -195,7 +195,7 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
           <h2 className="text-xl font-semibold">Resume Data</h2>
           <p className="text-sm text-gray-500">Review and confirm extracted information</p>
         </div>
-        
+
         <form onSubmit={handleSubmit}>
           {/* Personal Information */}
           <div className="mb-6">
@@ -236,7 +236,7 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
               </div>
             </div>
           </div>
-          
+
           {/* Skills */}
           <div className="mb-6">
             <h3 className="font-medium text-gray-700 mb-3">Skills</h3>
@@ -277,7 +277,7 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
               )}
             </div>
           </div>
-          
+
           {/* Education */}
           <div className="mb-6">
             <div className="flex justify-between items-center mb-3">
@@ -337,7 +337,7 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
               </div>
             )}
           </div>
-          
+
           {/* Experience */}
           <div className="mb-6">
             <div className="flex justify-between items-center mb-3">
@@ -397,7 +397,7 @@ const ParsedResumeData = ({ resumeId, onClose }) => {
               </div>
             )}
           </div>
-          
+
           {/* Form Actions */}
           <div className="flex justify-end mt-6">
             {onClose && (

@@ -29,10 +29,12 @@ const jdAnalyzerRoutes = require('./routes/jdAnalyzer');
 const jobTrackerRoutes = require('./routes/jobTracker');
 const resumeBuilderRoutes = require('./routes/resumeBuilder');
 const resumeAIRoutes = require('./routes/resumeAI');
+const dashboardRoutes = require('./routes/dashboard');
 
 // New enhanced route imports
 const analyticsRoutes = require('./routes/analytics');
 const notificationRoutes = require('./routes/notifications');
+const searchRoutes = require('./routes/search');
 const webhookRoutes = require('./routes/webhooks');
 const apiManagementRoutes = require('./routes/api-management');
 const publicApiRoutes = require('./routes/public-api');
@@ -165,14 +167,17 @@ app.use('/api/resume-ai', aiLimiter, resumeAIRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/jd-analyzer', aiLimiter, jdAnalyzerRoutes);
 app.use('/api/job-tracker', jobTrackerRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // New enhanced feature routes
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/search', searchRoutes);
 app.use('/api/webhooks', webhookRoutes);
 app.use('/api/api-management', apiManagementRoutes);
 app.use('/api/system-monitoring', systemMonitoringRoutes);
 app.use('/api/developer-dashboard', developerDashboardRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Public API routes (uses API key authentication)
 app.use('/api/public', publicApiRoutes);

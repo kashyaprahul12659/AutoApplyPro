@@ -26,7 +26,7 @@ export function ClerkWrapper({ children }) {
     return content;
   }  // When Clerk is available, wrap DevAuthProvider with ClerkProvider
   return (
-    <ClerkProvider 
+    <ClerkProvider
       publishableKey={clerkPubKey}
       appearance={{
         baseTheme: undefined,
@@ -34,7 +34,7 @@ export function ClerkWrapper({ children }) {
           colorPrimary: '#4f46e5',
           colorBackground: '#ffffff',
           colorInputBackground: '#ffffff',
-          colorInputText: '#1f2937',
+          colorInputText: '#1f2937'
         }
       }}
     >

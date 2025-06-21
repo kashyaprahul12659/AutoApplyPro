@@ -1,10 +1,10 @@
 import React from 'react';
 import { FaExclamationTriangle, FaInfoCircle, FaCheckCircle } from 'react-icons/fa';
 
-const AlertMessage = ({ 
-  type = 'info', 
-  title, 
-  message, 
+const AlertMessage = ({
+  type = 'info',
+  title,
+  message,
   onDismiss,
   showIcon = true,
   className = ''
@@ -50,8 +50,8 @@ const AlertMessage = ({
           <p className="text-sm">{message}</p>
         </div>
         {onDismiss && (
-          <button 
-            onClick={onDismiss} 
+          <button
+            onClick={onDismiss}
             className="ml-auto -mx-1.5 -my-1.5 rounded-lg p-1.5 inline-flex h-8 w-8 hover:bg-opacity-20 hover:bg-gray-500"
             aria-label="Close"
           >

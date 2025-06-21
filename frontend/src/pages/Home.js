@@ -4,7 +4,6 @@ import { useUser } from '../hooks/useUniversalAuth';
 
 const Home = () => {
   const { user, isSignedIn, isLoaded } = useUser();
-
   // Show loading state while authentication is being determined
   if (!isLoaded) {
     return (
@@ -15,7 +14,9 @@ const Home = () => {
         </div>
       </div>
     );
-  }  return (
+  }
+
+  return (
     <div className="space-y-16 py-8">
       {/* Breadcrumb for logged-in users */}
       {isSignedIn && (
@@ -27,20 +28,20 @@ const Home = () => {
           </nav>
         </div>
       )}
-      
+
       {/* Conditional Hero Section */}
       {isSignedIn ? (
         /* Welcome Back Section for Authenticated Users */
         <section className="text-center">
-          <div className="container mx-auto px-4">
-            <div className="bg-gradient-to-r from-primary to-blue-600 text-white rounded-2xl p-8 md:p-12 shadow-xl">
+          <div className="container mx-auto px-4">            <div className="bg-gradient-to-r from-primary to-blue-600 text-white rounded-2xl p-8 md:p-12 shadow-xl">
               <div className="max-w-3xl mx-auto">
                 <h1 className="text-3xl md:text-4xl font-bold mb-4">
-                  Welcome back, {user?.fullName?.split(' ')[0] || 'there'}! 👋
+                  Welcome back, {user?.fullName ? user.fullName.split(' ')[0] : 'there'}! 👋
                 </h1>
                 <p className="text-xl mb-8 text-blue-100">
                   Ready to continue your job search journey? Access your dashboard to manage applications, build resumes, and leverage AI tools.
-                </p>                <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-2xl mx-auto">
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-2xl mx-auto">
                   <Link to="/dashboard" className="btn bg-white text-primary hover:bg-gray-100 px-6 py-3 text-base font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center">
                     📊 <span className="ml-2">Dashboard</span>
                   </Link>
@@ -53,7 +54,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-              {/* Quick Stats and Action Cards */}
+            {/* Quick Stats and Action Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
               <Link to="/dashboard" className="bg-white rounded-lg shadow-md p-6 text-center border-l-4 border-green-500 hover:shadow-lg transition-shadow duration-200 group">
                 <div className="flex items-center justify-center mb-3">

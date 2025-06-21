@@ -25,25 +25,25 @@ const Register = () => {
         <title>Register - AutoApply Pro</title>
         <meta name="description" content="Create your AutoApply Pro account to start applying to jobs faster with AI assistance." />
       </Helmet>
-      
+
       {hasValidClerkKey ? (
         <div className="flex justify-center items-center min-h-screen bg-gray-50">
-          <div className="w-full max-w-md">            <SignUp 
-              routing="hash"
-              redirectUrl="/dashboard"
-              signInUrl="/login"
-              appearance={{
-                elements: {
-                  formButtonPrimary: 'bg-indigo-600 hover:bg-indigo-700 text-sm normal-case',
-                  card: 'shadow-lg',
-                  headerTitle: 'text-2xl font-bold text-gray-900',
-                  headerSubtitle: 'text-gray-600',
-                  socialButtonsBlockButton: 'border border-gray-300 hover:bg-gray-50',
-                  formFieldInput: 'border border-gray-300 rounded-md',
-                  footerActionLink: 'text-indigo-600 hover:text-indigo-500'
-                }
-              }}
-            />
+          <div className="w-full max-w-md">            <SignUp
+            routing="hash"
+            redirectUrl="/dashboard"
+            signInUrl="/login"
+            appearance={{
+              elements: {
+                formButtonPrimary: 'bg-indigo-600 hover:bg-indigo-700 text-sm normal-case',
+                card: 'shadow-lg',
+                headerTitle: 'text-2xl font-bold text-gray-900',
+                headerSubtitle: 'text-gray-600',
+                socialButtonsBlockButton: 'border border-gray-300 hover:bg-gray-50',
+                formFieldInput: 'border border-gray-300 rounded-md',
+                footerActionLink: 'text-indigo-600 hover:text-indigo-500'
+              }
+            }}
+          />
           </div>
         </div>
       ) : (

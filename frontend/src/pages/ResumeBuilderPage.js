@@ -20,7 +20,7 @@ const ResumeBuilderPage = () => {
     try {
       setLoading(true);
       const response = await resumeBuilderService.getAllResumes();
-      
+
       if (response.success) {
         setResumes(response.data);
       }
@@ -44,7 +44,7 @@ const ResumeBuilderPage = () => {
     try {
       setDuplicating(id);
       const response = await resumeBuilderService.duplicateResume(id);
-      
+
       if (response.success) {
         toast.success('Resume duplicated successfully');
         fetchResumes();
@@ -62,7 +62,7 @@ const ResumeBuilderPage = () => {
       try {
         setDeleting(id);
         const response = await resumeBuilderService.deleteResume(id);
-        
+
         if (response.success) {
           toast.success('Resume deleted successfully');
           setResumes(resumes.filter(resume => resume._id !== id));
@@ -127,11 +127,11 @@ const ResumeBuilderPage = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {resumes.map(resume => (
-            <div 
-              key={resume._id} 
+            <div
+              key={resume._id}
               className="bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-200"
             >
-              <div 
+              <div
                 className="p-4 border-b border-gray-100 cursor-pointer"
                 onClick={() => handleEdit(resume._id)}
               >

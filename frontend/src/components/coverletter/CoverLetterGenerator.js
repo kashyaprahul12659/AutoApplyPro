@@ -36,7 +36,7 @@ const CoverLetterGenerator = ({ onGenerate, isGenerating }) => {
   useEffect(() => {
     // Check if user has profile data
     setHasProfile(user && user.profileData && user.profileData.extractedFromResume);
-      // Fetch AI credits and Pro status
+    // Fetch AI credits and Pro status
     const fetchAIStatus = async () => {
       try {
         const res = await apiCall.get('/api/users/ai-status');
@@ -45,7 +45,7 @@ const CoverLetterGenerator = ({ onGenerate, isGenerating }) => {
         }
       } catch (error) {
         console.error('Error fetching AI status:', error);
-        const errorMessage = error.response?.status === 401 
+        const errorMessage = error.response?.status === 401
           ? 'Your session has expired. Please log in again.'
           : 'Unable to verify your account status. Please try again later.';
         setError({
@@ -54,7 +54,7 @@ const CoverLetterGenerator = ({ onGenerate, isGenerating }) => {
         });
       }
     };
-    
+
     if (user) {
       fetchAIStatus();
     }
@@ -71,7 +71,7 @@ const CoverLetterGenerator = ({ onGenerate, isGenerating }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setError(null); // Clear any previous errors
-    
+
     // Validate inputs
     if (!formData.jobDescription.trim()) {
       setError({
@@ -80,7 +80,7 @@ const CoverLetterGenerator = ({ onGenerate, isGenerating }) => {
       });
       return;
     }
-    
+
     if (formData.jobRole === 'Other' && !customJobRole.trim()) {
       setError({
         type: 'warning',
@@ -88,7 +88,7 @@ const CoverLetterGenerator = ({ onGenerate, isGenerating }) => {
       });
       return;
     }
-    
+
     // Check if user has credits or is Pro
     if (!aiStatus.isPro && aiStatus.aiCredits <= 0) {
       setShowProModal(true);
@@ -104,7 +104,7 @@ const CoverLetterGenerator = ({ onGenerate, isGenerating }) => {
     // Call the onGenerate function from parent component
     onGenerate(submitData).catch(err => {
       console.error('Error generating cover letter:', err);
-      
+
       // Handle specific error types
       if (err.response?.status === 429) {
         setError({
@@ -126,7 +126,7 @@ const CoverLetterGenerator = ({ onGenerate, isGenerating }) => {
       }
     });
   };
-  
+
   const handleProUpgrade = (success) => {
     if (success) {
       setAiStatus(prev => ({ ...prev, isPro: true }));
@@ -146,7 +146,7 @@ const CoverLetterGenerator = ({ onGenerate, isGenerating }) => {
             onDismiss={() => setError(null)}
           />
         )}
-        
+
         {!hasProfile ? (
           <AlertMessage
             type="warning"
@@ -242,7 +242,7 @@ const CoverLetterGenerator = ({ onGenerate, isGenerating }) => {
                 )}
               </div>
             </div>
-            
+
             <button
               type="submit"
               className="w-full bg-primary text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
@@ -263,7 +263,7 @@ const CoverLetterGenerator = ({ onGenerate, isGenerating }) => {
           </div>
         </form>
       </div>
-      
+
       {/* Pro Upgrade Modal */}
       <ProUpgradeModal
         isOpen={showProModal}

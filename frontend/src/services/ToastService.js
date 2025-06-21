@@ -19,24 +19,24 @@ class ToastService {
       style: {
         fontSize: '14px',
         fontWeight: 500,
-        borderRadius: '8px',
+        borderRadius: '8px'
       },
       // Improved accessibility
       role: 'alert',
-      theme: 'colored',
+      theme: 'colored'
     };
-    
+
     // Listen for window resize to update position for mobile
     window.addEventListener('resize', this.updatePositionForMobile.bind(this));
   }
-  
+
   /**
    * Update toast position based on screen size
    */
   updatePositionForMobile() {
     this.defaultOptions.position = window.innerWidth < 768 ? 'bottom-center' : 'top-right';
   }
-  
+
   /**
    * Show success toast notification
    * @param {string} message - Message to display
@@ -95,7 +95,7 @@ class ToastService {
       ...options
     });
   }
-  
+
   /**
    * Show loading toast notification that can be updated later
    * @param {string} message - Message to display
@@ -110,7 +110,7 @@ class ToastService {
       ...options
     });
   }
-  
+
   /**
    * Update an existing toast (useful for loading -> success flows)
    * @param {string} toastId - ID of toast to update
@@ -120,17 +120,17 @@ class ToastService {
     if (!toastId) return;
     toast.update(toastId, {
       ...options,
-      render: options.message || options.render,
+      render: options.message || options.render
     });
   }
-  
+
   /**
    * Dismiss all toasts
    */
   dismissAll() {
     toast.dismiss();
   }
-  
+
   /**
    * Dismiss a specific toast
    * @param {string} toastId - ID of toast to dismiss
