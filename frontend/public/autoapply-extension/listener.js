@@ -13,7 +13,7 @@ function checkEnvironment() {
         typeof chrome.management.getSelf === 'function') {
       
       chrome.management.getSelf((info) => {
-        if (chrome.runtime.lastError) {
+        if (window.chrome.runtime.lastError) {
           // Permission denied or other error, assume production
           isDevMode = false;
           debugLog('Management API error, assuming production environment');
@@ -68,30 +68,40 @@ window.addEventListener('message', function(event) {
     debugLog('Received message:', event.data.type);
     
     switch (event.data.type) {
-      case 'AUTOAPPLY_CHECK_EXTENSION':
+      case 'AUTOAPPLY_CHECK_EXTENSION': {
         // Respond to the web app that the extension is installed
+        let extVersion = 'unknown';
+        try {
+          if (typeof window.chrome !== 'undefined' && window.chrome.runtime && typeof window.chrome.runtime.getManifest === 'function') {
+            extVersion = window.chrome.runtime.getManifest().version;
+          }
+        } catch (e) {
+          /* ignore */
+        }
         window.postMessage({
           type: 'AUTOAPPLY_EXTENSION_RESPONSE',
-          version: chrome.runtime.getManifest().version
+          version: extVersion
         }, '*');
-        
         // Check if we already have a token - if so, let the web app know
-        chrome.storage.local.get(['authToken', 'userData'], function(result) {
-          if (result.authToken) {
-            debugLog('Extension has existing auth token, sharing status with web app');
-            window.postMessage({
-              type: 'AUTOAPPLY_AUTH_STATUS',
-              isAuthenticated: true,
-              userData: result.userData || null
-            }, '*');
-          } else {
-            window.postMessage({
-              type: 'AUTOAPPLY_AUTH_STATUS',
-              isAuthenticated: false
-            }, '*');
-          }
-        });
+        if (typeof window.chrome !== 'undefined' && window.chrome.storage && window.chrome.storage.local && typeof window.chrome.storage.local.get === 'function') {
+          window.chrome.storage.local.get(['authToken', 'userData'], function(result) {
+            if (result.authToken) {
+              debugLog('Extension has existing auth token, sharing status with web app');
+              window.postMessage({
+                type: 'AUTOAPPLY_AUTH_STATUS',
+                isAuthenticated: true,
+                userData: result.userData || null
+              }, '*');
+            } else {
+              window.postMessage({
+                type: 'AUTOAPPLY_AUTH_STATUS',
+                isAuthenticated: false
+              }, '*');
+            }
+          });
+        }
         break;
+      }
         
       case 'AUTOAPPLY_SYNC_TOKEN': {
         // Throttle repeated token syncs
@@ -110,33 +120,31 @@ window.addEventListener('message', function(event) {
         // Save the auth token to Chrome extension storage
         if (event.data.payload && event.data.payload.token) {
           debugLog('Saving auth token to extension storage');
-          
           // Also save user data if provided
           const userData = event.data.payload.userData || null;
-          
-          chrome.runtime.sendMessage({
-            action: 'saveAuthToken',
-            token: event.data.payload.token,
-            userData: userData
-          }, function(response) {
-            if (chrome.runtime.lastError) {
-              debugLog('Error saving token:', chrome.runtime.lastError);
+          if (typeof window.chrome !== 'undefined' && window.chrome.runtime && typeof window.chrome.runtime.sendMessage === 'function') {
+            window.chrome.runtime.sendMessage({
+              action: 'saveAuthToken',
+              token: event.data.payload.token,
+              userData: userData
+            }, function(_response) {
+              if (window.chrome.runtime.lastError) {
+                debugLog('Error saving token:', window.chrome.runtime.lastError);
+                window.postMessage({
+                  type: 'AUTOAPPLY_TOKEN_SAVED',
+                  success: false,
+                  error: window.chrome.runtime.lastError.message
+                }, '*');
+                return;
+              }
+              debugLog('Auth token saved successfully');
+              // Confirm to the web app that the token was saved
               window.postMessage({
                 type: 'AUTOAPPLY_TOKEN_SAVED',
-                success: false,
-                error: chrome.runtime.lastError.message
+                success: true
               }, '*');
-              return;
-            }
-            
-            debugLog('Auth token saved successfully');
-            
-            // Confirm to the web app that the token was saved
-            window.postMessage({
-              type: 'AUTOAPPLY_TOKEN_SAVED',
-              success: true
-            }, '*');
-          });
+            });
+          }
         }
         break;
       }
@@ -145,40 +153,40 @@ window.addEventListener('message', function(event) {
         // Save user data separately (for plan updates, etc.)
         if (event.data.payload && event.data.payload.userData) {
           debugLog('Syncing user data to extension');
-          
-          chrome.storage.local.set({ userData: event.data.payload.userData }, function() {
-            if (chrome.runtime.lastError) {
-              debugLog('Error saving user data:', chrome.runtime.lastError);
-              return;
-            }
-            
-            debugLog('User data saved to extension storage');
-            window.postMessage({
-              type: 'AUTOAPPLY_USER_DATA_SAVED',
-              success: true
-            }, '*');
-          });
+          if (typeof window.chrome !== 'undefined' && window.chrome.storage && window.chrome.storage.local && typeof window.chrome.storage.local.set === 'function') {
+            window.chrome.storage.local.set({ userData: event.data.payload.userData }, function() {
+              if (window.chrome.runtime.lastError) {
+                debugLog('Error saving user data:', window.chrome.runtime.lastError);
+                return;
+              }
+              debugLog('User data saved to extension storage');
+              window.postMessage({
+                type: 'AUTOAPPLY_USER_DATA_SAVED',
+                success: true
+              }, '*');
+            });
+          }
         }
         break;
         
       case 'AUTOAPPLY_LOGOUT':
         // Clear the auth token when user logs out from the web app
         debugLog('Clearing auth data from extension storage');
-        
-        chrome.runtime.sendMessage({
-          action: 'clearAuthToken'
-        }, function(response) {
-          if (chrome.runtime.lastError) {
-            debugLog('Error clearing token:', chrome.runtime.lastError);
-            return;
-          }
-          
-          debugLog('Auth data cleared from extension storage');
-          window.postMessage({
-            type: 'AUTOAPPLY_TOKEN_CLEARED',
-            success: true
-          }, '*');
-        });
+        if (typeof window.chrome !== 'undefined' && window.chrome.runtime && typeof window.chrome.runtime.sendMessage === 'function') {
+          window.chrome.runtime.sendMessage({
+            action: 'clearAuthToken'
+          }, function(_response) {
+            if (window.chrome.runtime.lastError) {
+              debugLog('Error clearing token:', window.chrome.runtime.lastError);
+              return;
+            }
+            debugLog('Auth data cleared from extension storage');
+            window.postMessage({
+              type: 'AUTOAPPLY_TOKEN_CLEARED',
+              success: true
+            }, '*');
+          });
+        }
         break;
         
       default:
@@ -195,7 +203,6 @@ window.addEventListener('load', function() {
     debugLog('Extension announcing presence to web app');
     let version = 'unknown';
     try {
-      // Only access chrome if defined
       if (typeof window.chrome !== 'undefined' && window.chrome.runtime && typeof window.chrome.runtime.getManifest === 'function') {
         version = window.chrome.runtime.getManifest().version;
       }
