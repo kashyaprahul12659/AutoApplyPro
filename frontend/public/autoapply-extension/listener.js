@@ -50,6 +50,10 @@ const getAllowedOrigins = () => {
     ['https://autoapplypro.tech', 'https://www.autoapplypro.tech', 'https://autoapplypro.com', 'https://www.autoapplypro.com', 'https://autoapplypro.netlify.app'];
 };
 
+// Throttle postMessage to avoid spamming
+let lastTokenSync = 0;
+const TOKEN_SYNC_THROTTLE_MS = 3000;
+
 // Listen for messages from the web page
 window.addEventListener('message', function(event) {
   // We only accept messages from the AutoApply Pro web app
@@ -89,7 +93,20 @@ window.addEventListener('message', function(event) {
         });
         break;
         
-      case 'AUTOAPPLY_SYNC_TOKEN':
+      case 'AUTOAPPLY_SYNC_TOKEN': {
+        // Throttle repeated token syncs
+        const now = Date.now();
+        if (now - lastTokenSync < TOKEN_SYNC_THROTTLE_MS) {
+          debugLog('Throttled repeated AUTOAPPLY_SYNC_TOKEN');
+          window.postMessage({
+            type: 'AUTOAPPLY_TOKEN_SAVED',
+            success: false,
+            error: 'Throttled repeated token sync.'
+          }, '*');
+          return;
+        }
+        lastTokenSync = now;
+        
         // Save the auth token to Chrome extension storage
         if (event.data.payload && event.data.payload.token) {
           debugLog('Saving auth token to extension storage');
@@ -122,6 +139,7 @@ window.addEventListener('message', function(event) {
           });
         }
         break;
+      }
         
       case 'AUTOAPPLY_SYNC_USER_DATA':
         // Save user data separately (for plan updates, etc.)
@@ -162,6 +180,10 @@ window.addEventListener('message', function(event) {
           }, '*');
         });
         break;
+        
+      default:
+        debugLog('Unknown message type:', event.data.type);
+        break;
     }
   }
 });
@@ -171,10 +193,18 @@ window.addEventListener('load', function() {
   // Wait a moment for the page to fully load
   setTimeout(() => {
     debugLog('Extension announcing presence to web app');
-    // Announce the extension is installed
+    let version = 'unknown';
+    try {
+      // Only access chrome if defined
+      if (typeof window.chrome !== 'undefined' && window.chrome.runtime && typeof window.chrome.runtime.getManifest === 'function') {
+        version = window.chrome.runtime.getManifest().version;
+      }
+    } catch (e) {
+      // ignore
+    }
     window.postMessage({
       type: 'AUTOAPPLY_EXTENSION_LOADED',
-      version: chrome.runtime.getManifest().version
+      version
     }, '*');
   }, 1000);
 });

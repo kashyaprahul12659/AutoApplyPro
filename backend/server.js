@@ -30,6 +30,7 @@ const jobTrackerRoutes = require('./routes/jobTracker');
 const resumeBuilderRoutes = require('./routes/resumeBuilder');
 const resumeAIRoutes = require('./routes/resumeAI');
 const dashboardRoutes = require('./routes/dashboard');
+const clientErrorsRoutes = require('./routes/client-errors');
 
 // New enhanced route imports
 const analyticsRoutes = require('./routes/analytics');
@@ -168,6 +169,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/jd-analyzer', aiLimiter, jdAnalyzerRoutes);
 app.use('/api/job-tracker', jobTrackerRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/client-errors', clientErrorsRoutes);
 
 // New enhanced feature routes
 app.use('/api/analytics', analyticsRoutes);
