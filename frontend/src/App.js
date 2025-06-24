@@ -36,6 +36,14 @@ const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const RefundPolicy = lazy(() => import('./pages/RefundPolicy'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
+// Settings Pages
+const ProfileSettings = lazy(() => import('./pages/settings/ProfileSettings'));
+const NotificationsSettings = lazy(() => import('./pages/settings/NotificationsSettings'));
+const PrivacySettings = lazy(() => import('./pages/settings/PrivacySettings'));
+const BillingSettings = lazy(() => import('./pages/settings/BillingSettings'));
+const ThemeSettings = lazy(() => import('./pages/settings/ThemeSettings'));
+const HelpCenter = lazy(() => import('./pages/HelpCenter'));
+
 function App() {
   const { isLoaded } = useUser();
   const location = useLocation();
@@ -149,12 +157,55 @@ function App() {
                     <ResumeBuilder />
                   </PageErrorBoundary>
                 </PrivateRoute>
-              } />            <Route path="/profile" element={
+              } />
+              <Route path="/profile" element={
                 <PrivateRoute>
                   <PageErrorBoundary pageName="Profile">
                     <Profile />
                   </PageErrorBoundary>
                 </PrivateRoute>
+              } />
+
+              {/* Settings Routes */}
+              <Route path="/settings/profile" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="ProfileSettings">
+                    <ProfileSettings />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+              <Route path="/settings/notifications" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="NotificationsSettings">
+                    <NotificationsSettings />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+              <Route path="/settings/security" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="PrivacySettings">
+                    <PrivacySettings />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+              <Route path="/settings/billing" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="BillingSettings">
+                    <BillingSettings />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+              <Route path="/settings/theme" element={
+                <PrivateRoute>
+                  <PageErrorBoundary pageName="ThemeSettings">
+                    <ThemeSettings />
+                  </PageErrorBoundary>
+                </PrivateRoute>
+              } />
+              <Route path="/help" element={
+                <PageErrorBoundary pageName="HelpCenter">
+                  <HelpCenter />
+                </PageErrorBoundary>
               } />
 
               {/* Legal Pages - Public Routes */}

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import apiService from '../services/api';
 
 /**
- * Custom hook for API calls with loading, error, and caching
+ * Custom hook for API calls with loading, error, and robust error handling
  */
 export const useApi = (apiCall, dependencies = [], options = {}) => {
   const [data, setData] = useState(options.initialData || null);
@@ -11,28 +11,34 @@ export const useApi = (apiCall, dependencies = [], options = {}) => {
   const mountedRef = useRef(true);
   const abortControllerRef = useRef(null);
 
+  // Handle safely destructured options with null check
   const {
     immediate = true,
     onSuccess,
     onError,
     retryCount = 0,
     retryDelay = 1000
-  } = options;
-  const execute = useCallback(async (...args) => {
+  } = options || {};  const execute = useCallback(async (...args) => {
     if (!mountedRef.current) return;
 
-    // Check if apiCall is a function
+    // Check if apiCall is a function with detailed logging
     if (typeof apiCall !== 'function') {
-      console.warn('apiCall is not a function:', apiCall);
-      const error = new Error('API call function is not available');
+      const errorMessage = `API call is not a function: ${typeof apiCall}`;
+      console.error(errorMessage, { apiCall });
+      
+      const error = new Error(errorMessage);
       setError(error);
       setLoading(false);
       
-      if (onError) {
-        onError(error);
+      if (typeof onError === 'function') {
+        try {
+          onError(error);
+        } catch (callbackError) {
+          console.error('Error in onError callback:', callbackError);
+        }
       }
       
-      return { error: true, data: null, message: 'API call function is undefined' };
+      return { error: true, data: null, message: errorMessage };
     }
 
     // Cancel previous request
@@ -47,19 +53,32 @@ export const useApi = (apiCall, dependencies = [], options = {}) => {
     setError(null);
 
     let attempt = 0;
-    while (attempt <= retryCount) {
+    const maxAttempts = retryCount || 0;
+    
+    while (attempt <= maxAttempts) {
       try {
-        // Add safety check in case apiCall returns undefined or null
-        const result = await apiCall(...args) || { data: null };
+        // Careful invocation with try/catch
+        let result;
+        try {
+          result = await apiCall(...args);
+        } catch (invocationError) {
+          console.error(`API call invocation error (attempt ${attempt + 1}/${maxAttempts + 1}):`, invocationError);
+          throw invocationError; // Rethrow to be caught by the outer try/catch
+        }
 
         if (!mountedRef.current) return;
 
         // Handle case where result or result.data might be undefined
+        if (result === undefined || result === null) {
+          console.warn('API call returned null/undefined result');
+          result = { data: null };
+        }
+        
         const resultData = result?.data !== undefined ? result.data : null;
         setData(resultData);
         setLoading(false);
 
-        if (onSuccess && typeof onSuccess === 'function') {
+        if (typeof onSuccess === 'function') {
           try {
             onSuccess(resultData);
           } catch (successCallbackError) {
@@ -73,11 +92,11 @@ export const useApi = (apiCall, dependencies = [], options = {}) => {
 
         if (!mountedRef.current) return;
 
-        if (attempt > retryCount) {
+        if (attempt > maxAttempts) {
           setError(err);
           setLoading(false);
 
-          if (onError && typeof onError === 'function') {
+          if (typeof onError === 'function') {
             try {
               onError(err);
             } catch (errorCallbackError) {
@@ -85,14 +104,17 @@ export const useApi = (apiCall, dependencies = [], options = {}) => {
             }
           }
 
-          return { error: true, data: null, message: err.message || 'Unknown error occurred' };
-        }
-
-        // Wait before retry
-        if (attempt <= retryCount) {
-          await new Promise(resolve =>
-            setTimeout(resolve, retryDelay * Math.pow(2, attempt - 1))
-          );
+          return { 
+            error: true, 
+            data: null, 
+            message: err.message || 'Unknown error occurred',
+            originalError: err
+          };
+        }        // Wait before retry
+        if (attempt <= maxAttempts) {
+          const retryTime = retryDelay * Math.pow(2, attempt - 1);
+          console.log(`Retrying API call, attempt ${attempt} of ${maxAttempts}, waiting ${retryTime}ms`);
+          await new Promise(resolve => setTimeout(resolve, retryTime));
         }
       }
     }
@@ -100,9 +122,8 @@ export const useApi = (apiCall, dependencies = [], options = {}) => {
     // This should never execute but adding as a fallback
     return { error: true, data: null, message: 'Unknown error in API call' };
   }, [apiCall, retryCount, retryDelay, onSuccess, onError]);
-
   useEffect(() => {
-    if (immediate) {
+    if (immediate && typeof apiCall === 'function') {
       execute();
     }
 
@@ -112,6 +133,7 @@ export const useApi = (apiCall, dependencies = [], options = {}) => {
         abortControllerRef.current.abort();
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 
   useEffect(() => {
@@ -119,13 +141,32 @@ export const useApi = (apiCall, dependencies = [], options = {}) => {
       mountedRef.current = false;
     };
   }, []);
-
-  return {
+  // Provide apiCall in the return value for use in components  return {
     data,
     loading,
     error,
     execute,
-    refetch: execute
+    refetch: execute,
+    apiCall // Expose apiCall for direct use in components
+  };
+};
+
+// Export a version with no parameters for use in components that just need the API utility
+export const useApiInstance = () => {
+  return {
+    apiCall: async (endpoint, options) => {
+      try {
+        if (!endpoint) {
+          console.error('No endpoint provided to apiCall');
+          return { error: true, data: null, message: 'No endpoint provided' };
+        }
+        
+        return await apiService.request(endpoint, options);
+      } catch (error) {
+        console.error('API call failed:', error);
+        return { error: true, data: null, message: error.message || 'API call failed' };
+      }
+    }
   };
 };
 

@@ -20,11 +20,13 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
   // Validate props - defensive programming against invalid input
   const isLoading = loading === true;
   const hasError = error !== null && error !== undefined;
-  const safeStats = stats && typeof stats === 'object' ? stats : {};
+  
+  // Type safety check for stats object
+  const safeStats = (stats && typeof stats === 'object') ? stats : {};
   
   // Log warning if stats is invalid but don't crash
   if (stats !== null && stats !== undefined && typeof stats !== 'object') {
-    console.warn('DashboardStats received invalid stats data:', stats);
+    console.warn('DashboardStats received invalid stats data type:', typeof stats);
   }
   
   // Show loading skeleton if data is being fetched
@@ -38,10 +40,10 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
 
   // Show error state if there's an error
   if (hasError) {
-    // Get error message safely
+    // Get error message safely with type checking
     const errorMessage = 
       typeof error === 'string' ? error :
-      error?.message ? error.message : 
+      error && typeof error === 'object' && 'message' in error ? error.message : 
       'An unknown error occurred while loading statistics';
       
     return (
@@ -66,6 +68,11 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
     );
   }
 
+  // Extract data safely with multiple null checks
+  const safeData = (safeStats.data && typeof safeStats.data === 'object') 
+    ? safeStats.data 
+    : (typeof safeStats === 'object' ? safeStats : {});
+    
   // Handle potential nullish data from the API - use default values for safety
   const defaultStats = {
     totalApplications: 0,
@@ -75,62 +82,64 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
     timesSaved: 0,
     profileViews: 0,
     // Safely merge with stats, handling potential undefined values
-    ...(safeStats?.data && typeof safeStats.data === 'object' ? safeStats.data : safeStats)
+    ...safeData
   };
+  
   const statCards = [
     {
       title: 'Total Applications',
-      value: defaultStats.totalApplications,
-      change: defaultStats.totalApplications > 0 ? '+12%' : '0%',
-      trend: defaultStats.totalApplications > 0 ? 'up' : 'neutral',
+      value: defaultStats.totalApplications || 0,
+      change: (defaultStats.totalApplications > 0) ? '+12%' : '0%',
+      trend: (defaultStats.totalApplications > 0) ? 'up' : 'neutral',
       icon: DocumentDuplicateIcon,
       color: 'primary',
       gradient: 'from-primary-500 to-primary-600'
     },
     {
       title: 'This Month',
-      value: defaultStats.thisMonth,
-      change: defaultStats.thisMonth > 0 ? '+8%' : '0%',
-      trend: defaultStats.thisMonth > 0 ? 'up' : 'neutral',
+      value: defaultStats.thisMonth || 0,
+      change: (defaultStats.thisMonth > 0) ? '+8%' : '0%',
+      trend: (defaultStats.thisMonth > 0) ? 'up' : 'neutral',
       icon: BoltIcon,
       color: 'secondary',
       gradient: 'from-secondary-500 to-secondary-600'
     },
     {
       title: 'Response Rate',
-      value: `${defaultStats.responseRate}%`,
-      change: defaultStats.responseRate > 0 ? '+5%' : '0%',
-      trend: defaultStats.responseRate > 0 ? 'up' : 'neutral',
+      value: `${defaultStats.responseRate || 0}%`,
+      change: (defaultStats.responseRate > 0) ? '+5%' : '0%',
+      trend: (defaultStats.responseRate > 0) ? 'up' : 'neutral',
       icon: ArrowTrendingUpIcon,
       color: 'accent',
       gradient: 'from-accent-500 to-accent-600'
     },
     {
       title: 'Interviews',
-      value: defaultStats.interviews,
-      change: defaultStats.interviews > 0 ? '+3' : '0',
-      trend: defaultStats.interviews > 0 ? 'up' : 'neutral',
+      value: defaultStats.interviews || 0,
+      change: (defaultStats.interviews > 0) ? '+3' : '0',
+      trend: (defaultStats.interviews > 0) ? 'up' : 'neutral',
       icon: UserGroupIcon,
       color: 'success',
       gradient: 'from-green-500 to-green-600'
     },
     {
       title: 'Hours Saved',
-      value: defaultStats.timesSaved,
-      change: defaultStats.timesSaved > 0 ? '+15h' : '0h',
-      trend: defaultStats.timesSaved > 0 ? 'up' : 'neutral',
+      value: defaultStats.timesSaved || 0,
+      change: (defaultStats.timesSaved > 0) ? '+15h' : '0h',
+      trend: (defaultStats.timesSaved > 0) ? 'up' : 'neutral',
       icon: ClockIcon,
       color: 'warning',
       gradient: 'from-orange-500 to-orange-600'
     },
     {
       title: 'Profile Views',
-      value: defaultStats.profileViews,
-      change: defaultStats.profileViews > 0 ? '+0' : '0',
+      value: defaultStats.profileViews || 0,
+      change: (defaultStats.profileViews > 0) ? '+0' : '0',
       trend: 'neutral',
       icon: EyeIcon,
       color: 'info',
-      gradient: 'from-blue-500 to-blue-600'    }
+      gradient: 'from-blue-500 to-blue-600'
+    }
   ];
 
   return (
@@ -198,7 +207,7 @@ export default withErrorBoundary(DashboardStats, {
           </h3>
           <div className="mt-2 text-sm text-red-700">
             <p>There was an error loading the dashboard statistics component.</p>
-            {retry && (
+            {typeof retry === 'function' && (
               <button
                 onClick={retry}
                 className="mt-2 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"

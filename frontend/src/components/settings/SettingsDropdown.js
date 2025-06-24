@@ -78,12 +78,11 @@ const SettingsDropdown = () => {
   };
 
   // Settings menu items
-  const settingsItems = [
-    {
+  const settingsItems = [    {
       icon: UserIcon,
       label: 'Profile Settings',
       description: 'Manage your personal information',
-      action: () => navigate('/profile'),
+      action: () => navigate('/settings/profile'),
       color: 'text-blue-500'
     },
     {
@@ -107,16 +106,22 @@ const SettingsDropdown = () => {
       action: () => navigate('/settings/billing'),
       color: 'text-orange-500',
       badge: user?.isProUser ? 'Pro' : 'Free'
+    },
+    {
+      icon: SunIcon,
+      label: 'Theme Settings',
+      description: 'Customize the appearance',
+      action: () => navigate('/settings/theme'),
+      color: 'text-indigo-500'
     }
   ];
-
   // Support items
   const supportItems = [
     {
       icon: QuestionMarkCircleIcon,
       label: 'Help Center',
       description: 'Get help and support',
-      action: () => window.open('https://help.autoapplypro.com', '_blank'),
+      action: () => navigate('/help'),
       color: 'text-gray-500'
     }
   ];

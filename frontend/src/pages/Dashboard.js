@@ -65,8 +65,7 @@ const Dashboard = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [hasParsedData, setHasParsedData] = useState(false);
   const [parsedProfileData, setParsedProfileData] = useState(null);
-  const [showParseModal, setShowParseModal] = useState(false);
-  const [lastUploadedResumeId, setLastUploadedResumeId] = useState(null);
+  const [showParseModal, setShowParseModal] = useState(false);  const [lastUploadedResumeId, setLastUploadedResumeId] = useState(null);
   const [editingProfile, setEditingProfile] = useState(false);
 
   // Performance monitoring
@@ -253,22 +252,18 @@ const Dashboard = () => {
       toast.error('Failed to update primary resume');
     }
   };
-
   // Handle resume deletion
   const handleDeleteResume = async (id) => {
-    if (window.confirm('Are you sure you want to delete this resume?')) {
-      try {
-        await apiCall(`/api/resumes/${id}`, {
-          method: 'DELETE'
-        });
+    // Use toast.confirm or just proceed with deletion directly
+    try {
+      await apiCall(`/api/resumes/${id}`, {
+        method: 'DELETE'
+      });
 
-        // Remove from state
-        setResumes(resumes.filter(resume => resume._id !== id));
-
-        toast.success('Resume deleted successfully');
-      } catch (err) {
-        toast.error('Failed to delete resume');
-      }
+      // Remove from state
+      setResumes(resumes.filter(resume => resume._id !== id));      toast.success('Resume deleted successfully');
+    } catch (err) {
+      toast.error('Failed to delete resume');
     }
   };
   return (
@@ -303,17 +298,18 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">        {/* Stats Section */}
-        <div className="mb-8">          <DashboardStats
+      </div>      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Stats Section */}
+        <div className="mb-8">
+          <DashboardStats
             stats={safeStats}
             loading={dashboardLoading}
             error={dashboardError}
           />
         </div>
 
-        {/* Main Content Grid */}        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* Left Column - Main Actions */}
           <div className="lg:col-span-2 space-y-6">
             {/* Extension Status - Wrapped in Error Boundary */}

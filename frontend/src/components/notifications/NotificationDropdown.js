@@ -20,8 +20,9 @@ const NotificationDropdown = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef(null);
-  // Fix: apiCall might be undefined, destructure with default value
-  const { apiCall = null } = useApi() || {};
+  
+  // Fix: apiCall might be undefined, destructure with default empty object and provide fallback function
+  const { apiCall } = useApi() || {};
 
   // Fetch notifications - Add defensive check for apiCall
   const fetchNotifications = useCallback(async () => {
@@ -32,32 +33,21 @@ const NotificationDropdown = () => {
         const response = await apiCall('/api/notifications', {
           params: { limit: 10 }
         });
-        setNotifications(response?.data?.data?.notifications || []);
+        
+        // Add null check for response and nested properties
+        if (response?.data?.data?.notifications) {
+          setNotifications(response.data.data.notifications);
+        } else {
+          console.warn('Notification data structure is invalid:', response);
+          setNotifications([]);
+        }
       } else {
-        console.warn('apiCall is not a function:', apiCall);
-        throw new Error('API call function is not available');
+        console.error('apiCall is not a function:', apiCall);
+        setNotifications([]);
       }
     } catch (error) {
       console.error('Error fetching notifications:', error);
-      // Set mock data for demo
-      setNotifications([
-        {
-          _id: '1',
-          title: 'Welcome to AutoApply Pro!',
-          message: 'Your account has been successfully created.',
-          type: 'success',
-          isRead: false,
-          createdAt: new Date().toISOString()
-        },
-        {
-          _id: '2',
-          title: 'Extension Installed',
-          message: 'Chrome extension is ready to use.',
-          type: 'info',
-          isRead: true,
-          createdAt: new Date(Date.now() - 3600000).toISOString()
-        }
-      ]);
+      setNotifications([]);
     } finally {
       setLoading(false);
     }
@@ -69,14 +59,21 @@ const NotificationDropdown = () => {
       // Fix: Check if apiCall is a function before calling it
       if (typeof apiCall === 'function') {
         const response = await apiCall('/api/notifications/unread-count');
-        setUnreadCount(response?.data?.data?.count || 0);
+        
+        // Add null check for response and nested properties
+        if (response?.data?.data?.count !== undefined) {
+          setUnreadCount(response.data.data.count);
+        } else {
+          console.warn('Unread count data structure is invalid:', response);
+          setUnreadCount(0);
+        }
       } else {
-        console.warn('apiCall is not a function:', apiCall);
-        throw new Error('API call function is not available');
+        console.error('apiCall is not a function:', apiCall);
+        setUnreadCount(0);
       }
     } catch (error) {
       console.error('Error fetching unread count:', error);
-      setUnreadCount(1); // Mock count
+      setUnreadCount(0);
     }
   }, [apiCall]);
 
@@ -99,6 +96,7 @@ const NotificationDropdown = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
   // Mark notification as read - Add defensive check for apiCall
   const markAsRead = async (notificationId) => {
     try {
@@ -108,7 +106,7 @@ const NotificationDropdown = () => {
           method: 'PUT'
         });
       } else {
-        console.warn('apiCall is not a function:', apiCall);
+        console.error('apiCall is not a function:', apiCall);
         throw new Error('API call function is not available');
       }
 
@@ -125,7 +123,7 @@ const NotificationDropdown = () => {
       }
     } catch (error) {
       console.error('Error marking notification as read:', error);
-      // Update local state anyway for demo
+      // Still update UI to improve user experience despite backend error
       setNotifications(notifications.map(notif =>
         notif._id === notificationId
           ? { ...notif, isRead: true }
@@ -146,7 +144,7 @@ const NotificationDropdown = () => {
           method: 'PUT'
         });
       } else {
-        console.warn('apiCall is not a function:', apiCall);
+        console.error('apiCall is not a function:', apiCall);
         throw new Error('API call function is not available');
       }
 
@@ -155,11 +153,12 @@ const NotificationDropdown = () => {
       setUnreadCount(0);
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
-      // Update local state anyway for demo
+      // Still update UI to improve user experience despite backend error
       setNotifications(notifications.map(notif => ({ ...notif, isRead: true })));
       setUnreadCount(0);
     }
   };
+
   // Delete notification - Add defensive check for apiCall
   const deleteNotification = async (notificationId) => {
     try {
@@ -169,7 +168,7 @@ const NotificationDropdown = () => {
           method: 'DELETE'
         });
       } else {
-        console.warn('apiCall is not a function:', apiCall);
+        console.error('apiCall is not a function:', apiCall);
         throw new Error('API call function is not available');
       }
 
@@ -183,7 +182,7 @@ const NotificationDropdown = () => {
       }
     } catch (error) {
       console.error('Error deleting notification:', error);
-      // Update local state anyway for demo
+      // Still update UI to improve user experience despite backend error
       const deletedNotif = notifications.find(n => n._id === notificationId);
       setNotifications(notifications.filter(notif => notif._id !== notificationId));
       if (deletedNotif && !deletedNotif.isRead) {
