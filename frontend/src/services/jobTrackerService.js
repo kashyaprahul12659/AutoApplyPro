@@ -5,7 +5,19 @@ import { createApiCall } from '../utils/apiUtils';
  * @returns {Promise} Promise object with job applications data
  */
 export const getAllJobApplications = async () => {
-  return await createApiCall('GET', '/job-tracker/all');
+  try {
+    // Add defensive check for createApiCall
+    if (typeof createApiCall !== 'function') {
+      console.warn('createApiCall is not a function:', createApiCall);
+      return { error: true, message: 'API call function is not available', data: [] };
+    }
+    
+    const result = await createApiCall('GET', '/job-tracker/all');
+    return result || { error: false, data: [] };
+  } catch (error) {
+    console.error('Error in getAllJobApplications:', error);
+    return { error: true, message: error.message || 'Failed to fetch job applications', data: [] };
+  }
 };
 
 /**

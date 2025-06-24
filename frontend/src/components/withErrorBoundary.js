@@ -3,15 +3,50 @@ import ErrorBoundary from './ErrorBoundary';
 
 /**
  * Higher-order component that wraps components with error boundary
+ * Enhanced with component name tracking and defensive programming
  */
-const withErrorBoundary = (WrappedComponent, fallback = null) => {
-  return function WithErrorBoundaryComponent(props) {
-    return (
-      <ErrorBoundary fallback={fallback}>
-        <WrappedComponent {...props} />
-      </ErrorBoundary>
-    );
+const withErrorBoundary = (WrappedComponent, options = {}) => {
+  // Handle both legacy fallback-only usage and new options object
+  const fallback = typeof options === 'function' || React.isValidElement(options) 
+    ? options 
+    : options.fallback || null;
+    
+  // Get component display name for better error reporting
+  const componentName = 
+    WrappedComponent.displayName || 
+    WrappedComponent.name || 
+    'AnonymousComponent';
+    
+  // Create the wrapped component with error boundary
+  const WithErrorBoundaryComponent = function(props) {
+    // Add defensive check for props that might be undefined
+    const safeProps = props || {};
+    
+    // Add error handler for render errors
+    const handleRenderError = (error) => {
+      console.error(`Error rendering ${componentName}:`, error);
+      return null; // Prevent cascading failures
+    };
+    
+    try {
+      return (
+        <ErrorBoundary 
+          fallback={fallback} 
+          componentName={componentName}
+          userId={safeProps.userId || safeProps.user?.id} // Extract user ID from props if available
+        >
+          <WrappedComponent {...safeProps} />
+        </ErrorBoundary>
+      );
+    } catch (error) {
+      return handleRenderError(error);
+    }
   };
+  
+  // Set display name for better debugging
+  WithErrorBoundaryComponent.displayName = `WithErrorBoundary(${componentName})`;
+  
+  return WithErrorBoundaryComponent;
 };
 
 /**

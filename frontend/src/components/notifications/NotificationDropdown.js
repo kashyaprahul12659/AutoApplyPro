@@ -20,16 +20,23 @@ const NotificationDropdown = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef(null);
-  const { apiCall } = useApi();
+  // Fix: apiCall might be undefined, destructure with default value
+  const { apiCall = null } = useApi() || {};
 
-  // Fetch notifications
+  // Fetch notifications - Add defensive check for apiCall
   const fetchNotifications = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await apiCall('/api/notifications', {
-        params: { limit: 10 }
-      });
-      setNotifications(response.data.data.notifications || []);
+      // Fix: Check if apiCall is a function before calling it
+      if (typeof apiCall === 'function') {
+        const response = await apiCall('/api/notifications', {
+          params: { limit: 10 }
+        });
+        setNotifications(response?.data?.data?.notifications || []);
+      } else {
+        console.warn('apiCall is not a function:', apiCall);
+        throw new Error('API call function is not available');
+      }
     } catch (error) {
       console.error('Error fetching notifications:', error);
       // Set mock data for demo
@@ -56,11 +63,17 @@ const NotificationDropdown = () => {
     }
   }, [apiCall]);
 
-  // Fetch unread count
+  // Fetch unread count - Add defensive check for apiCall
   const fetchUnreadCount = useCallback(async () => {
     try {
-      const response = await apiCall('/api/notifications/unread-count');
-      setUnreadCount(response.data.data.count || 0);
+      // Fix: Check if apiCall is a function before calling it
+      if (typeof apiCall === 'function') {
+        const response = await apiCall('/api/notifications/unread-count');
+        setUnreadCount(response?.data?.data?.count || 0);
+      } else {
+        console.warn('apiCall is not a function:', apiCall);
+        throw new Error('API call function is not available');
+      }
     } catch (error) {
       console.error('Error fetching unread count:', error);
       setUnreadCount(1); // Mock count
@@ -86,13 +99,18 @@ const NotificationDropdown = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  // Mark notification as read
+  // Mark notification as read - Add defensive check for apiCall
   const markAsRead = async (notificationId) => {
     try {
-      await apiCall(`/api/notifications/${notificationId}/read`, {
-        method: 'PUT'
-      });
+      // Fix: Check if apiCall is a function before calling it
+      if (typeof apiCall === 'function') {
+        await apiCall(`/api/notifications/${notificationId}/read`, {
+          method: 'PUT'
+        });
+      } else {
+        console.warn('apiCall is not a function:', apiCall);
+        throw new Error('API call function is not available');
+      }
 
       // Update local state
       setNotifications(notifications.map(notif =>
@@ -119,12 +137,18 @@ const NotificationDropdown = () => {
     }
   };
 
-  // Mark all as read
+  // Mark all as read - Add defensive check for apiCall
   const markAllAsRead = async () => {
     try {
-      await apiCall('/api/notifications/mark-all-read', {
-        method: 'PUT'
-      });
+      // Fix: Check if apiCall is a function before calling it
+      if (typeof apiCall === 'function') {
+        await apiCall('/api/notifications/mark-all-read', {
+          method: 'PUT'
+        });
+      } else {
+        console.warn('apiCall is not a function:', apiCall);
+        throw new Error('API call function is not available');
+      }
 
       // Update local state
       setNotifications(notifications.map(notif => ({ ...notif, isRead: true })));
@@ -136,13 +160,18 @@ const NotificationDropdown = () => {
       setUnreadCount(0);
     }
   };
-
-  // Delete notification
+  // Delete notification - Add defensive check for apiCall
   const deleteNotification = async (notificationId) => {
     try {
-      await apiCall(`/api/notifications/${notificationId}`, {
-        method: 'DELETE'
-      });
+      // Fix: Check if apiCall is a function before calling it
+      if (typeof apiCall === 'function') {
+        await apiCall(`/api/notifications/${notificationId}`, {
+          method: 'DELETE'
+        });
+      } else {
+        console.warn('apiCall is not a function:', apiCall);
+        throw new Error('API call function is not available');
+      }
 
       // Update local state
       const deletedNotif = notifications.find(n => n._id === notificationId);

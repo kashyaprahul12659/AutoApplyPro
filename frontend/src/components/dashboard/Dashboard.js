@@ -24,28 +24,44 @@ const Dashboard = ({ user }) => {
       measurement.end();
     };
   }, []);
-
-  // Fetch dashboard data using our custom hook
+  // Safely get user ID
+  const userId = user?.id || 'guest';
+  
+  // Defensive programming: Check if useApi exists before using it
+  const useApiHook = typeof useApi === 'function' ? useApi : () => ({ 
+    data: null, 
+    loading: false, 
+    error: null, 
+    refetch: () => console.warn('useApi hook not available') 
+  });
+  
+  // Fetch dashboard data using our custom hook with defensive programming
   const {
     data: stats,
     loading: statsLoading,
     error: statsError,
     refetch: refetchStats
-  } = useApi('/api/users/ai-status', {
-    dependencies: [user?.id],
+  } = useApiHook('/api/users/ai-status', {
+    dependencies: [userId],
     staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheKey: `dashboard-stats-${user?.id}`
+    cacheKey: `dashboard-stats-${userId}`,
+    // Add error handler and fallback data
+    onError: (err) => console.error('Failed to fetch stats:', err),
+    fallbackData: { data: { aiCredits: 0, totalApplications: 0, thisMonth: 0 } }
   });
 
   const {
     data: recentActivity,
     loading: activityLoading,
     error: activityError
-  } = useApi('/api/dashboard/activity', {
-    dependencies: [user?.id],
+  } = useApiHook('/api/dashboard/activity', {
+    dependencies: [userId],
     params: { limit: 10 },
     staleTime: 2 * 60 * 1000, // 2 minutes
-    cacheKey: `dashboard-activity-${user?.id}`
+    cacheKey: `dashboard-activity-${userId}`,
+    // Add error handler and fallback data
+    onError: (err) => console.error('Failed to fetch activity:', err),
+    fallbackData: { data: [] }
   });
 
   return (

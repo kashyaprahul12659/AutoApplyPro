@@ -18,9 +18,22 @@ export const useApi = (apiCall, dependencies = [], options = {}) => {
     retryCount = 0,
     retryDelay = 1000
   } = options;
-
   const execute = useCallback(async (...args) => {
     if (!mountedRef.current) return;
+
+    // Check if apiCall is a function
+    if (typeof apiCall !== 'function') {
+      console.warn('apiCall is not a function:', apiCall);
+      const error = new Error('API call function is not available');
+      setError(error);
+      setLoading(false);
+      
+      if (onError) {
+        onError(error);
+      }
+      
+      return { error: true, data: null, message: 'API call function is undefined' };
+    }
 
     // Cancel previous request
     if (abortControllerRef.current) {
@@ -36,18 +49,25 @@ export const useApi = (apiCall, dependencies = [], options = {}) => {
     let attempt = 0;
     while (attempt <= retryCount) {
       try {
-        const result = await apiCall(...args);
+        // Add safety check in case apiCall returns undefined or null
+        const result = await apiCall(...args) || { data: null };
 
         if (!mountedRef.current) return;
 
-        setData(result.data);
+        // Handle case where result or result.data might be undefined
+        const resultData = result?.data !== undefined ? result.data : null;
+        setData(resultData);
         setLoading(false);
 
-        if (onSuccess) {
-          onSuccess(result.data);
+        if (onSuccess && typeof onSuccess === 'function') {
+          try {
+            onSuccess(resultData);
+          } catch (successCallbackError) {
+            console.error('Error in success callback:', successCallbackError);
+          }
         }
 
-        return result.data;
+        return resultData;
       } catch (err) {
         attempt++;
 
@@ -57,11 +77,15 @@ export const useApi = (apiCall, dependencies = [], options = {}) => {
           setError(err);
           setLoading(false);
 
-          if (onError) {
-            onError(err);
+          if (onError && typeof onError === 'function') {
+            try {
+              onError(err);
+            } catch (errorCallbackError) {
+              console.error('Error in error callback:', errorCallbackError);
+            }
           }
 
-          throw err;
+          return { error: true, data: null, message: err.message || 'Unknown error occurred' };
         }
 
         // Wait before retry
@@ -72,6 +96,9 @@ export const useApi = (apiCall, dependencies = [], options = {}) => {
         }
       }
     }
+    
+    // This should never execute but adding as a fallback
+    return { error: true, data: null, message: 'Unknown error in API call' };
   }, [apiCall, retryCount, retryDelay, onSuccess, onError]);
 
   useEffect(() => {

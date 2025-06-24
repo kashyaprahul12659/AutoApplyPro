@@ -14,11 +14,26 @@ class ErrorBoundary extends React.Component {
     // Update state so the next render will show the fallback UI
     return { hasError: true };
   }
-
   componentDidCatch(error, errorInfo) {
     // Log error to console in development
     if (process.env.NODE_ENV === 'development') {
       console.error('Error Boundary caught an error:', error, errorInfo);
+    }
+
+    // Special handling for common TypeError issues
+    if (error && error.name === 'TypeError') {
+      // Handle specific errors related to functions not being callable
+      if (
+        error.message.includes('is not a function') ||
+        error.message.includes('cannot read property') ||
+        error.message.includes('undefined is not an object')
+      ) {
+        console.warn('Function call error detected. This may be caused by an undefined or non-function value being called.', {
+          message: error.message,
+          stackTrace: error.stack,
+          componentStack: errorInfo?.componentStack
+        });
+      }
     }
 
     // Update state with error details
@@ -32,20 +47,34 @@ class ErrorBoundary extends React.Component {
       this.logErrorToService(error, errorInfo);
     }
   }
-
   logErrorToService = (error, errorInfo) => {
     // In a real app, you'd send this to your error tracking service
     // like Sentry, LogRocket, or your own logging endpoint
     try {
+      // Enhanced error data for better debugging
       const errorData = {
         message: error.message,
+        name: error.name,
         stack: error.stack,
         componentStack: errorInfo.componentStack,
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
         url: window.location.href,
-        userId: this.props.userId || 'anonymous'
-      };      // Use direct POST endpoint defined in server.js
+        pathname: window.location.pathname,
+        userId: this.props.userId || 'anonymous',
+        // Add runtime error classification
+        errorType: this.classifyError(error),
+        // Add component info if available
+        component: this.props.componentName || 'Unknown',
+        // Add client context
+        browserInfo: {
+          language: navigator.language,
+          platform: navigator.platform,
+          screenSize: `${window.screen.width}x${window.screen.height}`
+        }
+      };
+      
+      // Use direct POST endpoint defined in server.js
       fetch('/api/client-errors', {
         method: 'POST',
         headers: {
@@ -61,6 +90,38 @@ class ErrorBoundary extends React.Component {
     } catch (loggingError) {
       console.error('Error while logging error:', loggingError);
     }
+  };
+
+  // Helper method to classify common runtime errors
+  classifyError = (error) => {
+    if (!error) return 'Unknown';
+    
+    // Type errors (undefined is not a function, etc.)
+    if (error.name === 'TypeError') {
+      if (error.message.includes('is not a function')) {
+        return 'NotAFunctionError';
+      }
+      if (error.message.includes('cannot read property') || 
+          error.message.includes('undefined is not an object')) {
+        return 'UndefinedPropertyError';
+      }
+      return 'TypeError';
+    }
+    
+    // Promise rejections
+    if (error.name === 'Error' && error.message.includes('promise')) {
+      return 'PromiseRejectionError';
+    }
+    
+    // Network errors
+    if (error.name === 'Error' && 
+        (error.message.includes('network') || 
+         error.message.includes('fetch') ||
+         error.message.includes('api'))) {
+      return 'NetworkError';
+    }
+    
+    return error.name || 'UnknownError';
   };
 
   handleRetry = () => {

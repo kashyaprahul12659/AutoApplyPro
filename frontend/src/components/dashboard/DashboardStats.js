@@ -14,10 +14,21 @@ import withErrorBoundary from '../withErrorBoundary';
 
 /**
  * Enhanced Dashboard Stats Component with modern design and animations
+ * Improved with defensive programming for handling undefined data
  */
 const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
+  // Validate props - defensive programming against invalid input
+  const isLoading = loading === true;
+  const hasError = error !== null && error !== undefined;
+  const safeStats = stats && typeof stats === 'object' ? stats : {};
+  
+  // Log warning if stats is invalid but don't crash
+  if (stats !== null && stats !== undefined && typeof stats !== 'object') {
+    console.warn('DashboardStats received invalid stats data:', stats);
+  }
+  
   // Show loading skeleton if data is being fetched
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1,2,3,4,5,6].map(i => <CardSkeleton key={i} />)}
@@ -26,7 +37,13 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
   }
 
   // Show error state if there's an error
-  if (error) {
+  if (hasError) {
+    // Get error message safely
+    const errorMessage = 
+      typeof error === 'string' ? error :
+      error?.message ? error.message : 
+      'An unknown error occurred while loading statistics';
+      
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-6">
         <div className="flex items-center">
@@ -40,7 +57,8 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
               Unable to load statistics
             </h3>
             <div className="mt-2 text-sm text-red-700">
-              <p>There was an error loading your dashboard statistics. Please try refreshing the page.</p>
+              <p>{errorMessage}</p>
+              <p className="mt-1">Please try refreshing the page.</p>
             </div>
           </div>
         </div>
@@ -48,7 +66,7 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
     );
   }
 
-  // Use real stats data from the API
+  // Handle potential nullish data from the API - use default values for safety
   const defaultStats = {
     totalApplications: 0,
     thisMonth: 0,
@@ -56,7 +74,8 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
     interviews: 0,
     timesSaved: 0,
     profileViews: 0,
-    ...stats
+    // Safely merge with stats, handling potential undefined values
+    ...(safeStats?.data && typeof safeStats.data === 'object' ? safeStats.data : safeStats)
   };
   const statCards = [
     {

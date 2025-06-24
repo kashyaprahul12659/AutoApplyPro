@@ -8,14 +8,43 @@ export const createResume = async (resumeData) => {
   return await createApiCall('post', `${API_URL}/create`, resumeData);
 };
 
-// Get all resumes for the current user
+// Get all resumes for the current user with defensive programming
 export const getAllResumes = async () => {
-  return await createApiCall('get', `${API_URL}/all`);
+  try {
+    // Add defensive check for createApiCall
+    if (typeof createApiCall !== 'function') {
+      console.warn('createApiCall is not a function:', createApiCall);
+      return { error: true, message: 'API call function is not available', data: [] };
+    }
+    
+    const result = await createApiCall('get', `${API_URL}/all`);
+    return result || { error: false, data: [] };
+  } catch (error) {
+    console.error('Error in getAllResumes:', error);
+    return { error: true, message: error.message || 'Failed to fetch resumes', data: [] };
+  }
 };
 
-// Get a specific resume by ID
+// Get a specific resume by ID with defensive programming
 export const getResumeById = async (resumeId) => {
-  return await createApiCall('get', `${API_URL}/${resumeId}`);
+  try {
+    if (!resumeId) {
+      console.warn('Invalid resumeId provided:', resumeId);
+      return { error: true, message: 'Invalid resume ID', data: null };
+    }
+    
+    // Add defensive check for createApiCall
+    if (typeof createApiCall !== 'function') {
+      console.warn('createApiCall is not a function:', createApiCall);
+      return { error: true, message: 'API call function is not available', data: null };
+    }
+    
+    const result = await createApiCall('get', `${API_URL}/${resumeId}`);
+    return result || { error: false, data: null };
+  } catch (error) {
+    console.error('Error in getResumeById:', error);
+    return { error: true, message: error.message || 'Failed to fetch resume', data: null };
+  }
 };
 
 // Update an existing resume
