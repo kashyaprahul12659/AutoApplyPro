@@ -23,9 +23,10 @@ export const useDashboardData = () => {
     loading: true,
     error: null
   });
-
   const [refreshInterval, setRefreshInterval] = useState(null);
-  // Fetch dashboard stats from analytics API  const fetchDashboardStats = useCallback(async () => {
+  
+  // Fetch dashboard stats from analytics API
+  const fetchDashboardStats = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -73,7 +74,8 @@ export const useDashboardData = () => {
     }
   }, [user, apiCall]);
 
-  // Fetch user's job applications for real stats  const fetchJobApplications = useCallback(async () => {
+  // Fetch user's job applications for real stats
+  const fetchJobApplications = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -129,10 +131,11 @@ export const useDashboardData = () => {
       setRefreshInterval(interval);
 
       return () => {
-        if (interval) clearInterval(interval);
-      };
+        if (interval) clearInterval(interval);      };
     }
-  }, [user, fetchDashboardStats, fetchJobApplications]);  // Manual refresh function
+  }, [user, fetchDashboardStats, fetchJobApplications]);
+  
+  // Manual refresh function
   const refreshData = useCallback(async () => {
     setDashboardData(prev => ({ ...prev, loading: true, error: null }));
 

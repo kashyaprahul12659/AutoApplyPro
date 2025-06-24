@@ -147,7 +147,7 @@ const Navbar = () => {
               </>
             )}
           </div>          {/* Mobile menu button */}
-          <button
+          <button 
             className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl text-neutral-600 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200"
             onClick={toggleMenu}
             aria-label="Toggle menu"
@@ -164,23 +164,23 @@ const Navbar = () => {
 
         {/* Mobile Menu - Enhanced with modern design */}
         <div className={`md:hidden transition-all duration-300 ease-in-out ${
-          isMenuOpen
-            ? 'max-h-screen opacity-100 visible'
+          isMenuOpen 
+            ? 'max-h-screen opacity-100 visible' 
             : 'max-h-0 opacity-0 invisible overflow-hidden'
         }`}>
           <div className="py-4 border-t border-neutral-200 bg-white/95 backdrop-blur-md">
             {isSignedIn ? (
-              <Link
-                to="/home"
-                className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2"
+              <Link 
+                to="/home" 
+                className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2" 
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
             ) : (
-              <Link
-                to="/"
-                className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2"
+              <Link 
+                to="/" 
+                className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2" 
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
@@ -205,41 +205,41 @@ const Navbar = () => {
                   </div>
                   <PlanBadge />
                 </div>
-
-                <Link
-                  to="/dashboard"
-                  className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2"
+                
+                <Link 
+                  to="/dashboard" 
+                  className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2" 
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Dashboard
                 </Link>
-                <Link
-                  to="/history"
-                  className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2"
+                <Link 
+                  to="/history" 
+                  className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2" 
                   onClick={() => setIsMenuOpen(false)}
                 >
                   History
                 </Link>
-                <Link
-                  to="/job-tracker"
-                  className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2"
+                <Link 
+                  to="/job-tracker" 
+                  className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2" 
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Job Tracker
                 </Link>
-                <Link
-                  to="/resumes"
-                  className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2"
+                <Link 
+                  to="/resumes" 
+                  className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2" 
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Resume Builder
                 </Link>
-
+                
                 <div className="py-2 border-t border-neutral-200 mt-2">
                   <div className="px-4 py-2 text-sm font-medium text-neutral-500 uppercase tracking-wider">AI Tools</div>
-                  <Link
-                    to="/coverletter"
-                    className="block px-6 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2"
+                  <Link 
+                    to="/coverletter" 
+                    className="block px-6 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2" 
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <div className="flex items-center">
@@ -251,9 +251,9 @@ const Navbar = () => {
                       AI Cover Letter
                     </div>
                   </Link>
-                  <Link
-                    to="/jd-analyzer"
-                    className="block px-6 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2"
+                  <Link 
+                    to="/jd-analyzer" 
+                    className="block px-6 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2" 
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <div className="flex items-center">
@@ -266,7 +266,7 @@ const Navbar = () => {
                     </div>
                   </Link>
                 </div>
-
+                
                 <div className="flex items-center justify-between px-4 py-3 mx-2 border-t border-neutral-200 mt-2">
                   <div className="flex space-x-3">
                     <WhatsNewButton />
@@ -293,17 +293,17 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link
-                  to="/login"
-                  className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2"
+                <Link 
+                  to="/login" 
+                  className="block px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 font-medium rounded-xl mx-2" 
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <div className="px-2 mt-2">
-                  <Link
-                    to="/register"
-                    className="btn btn-primary w-full justify-center"
+                  <Link 
+                    to="/register" 
+                    className="btn btn-primary w-full justify-center" 
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Get Started

@@ -285,41 +285,6 @@ exports.exportAnalytics = async (req, res, next) => {
   }
 };
 
-// @desc    Get dashboard stats for user
-// @route   GET /api/analytics/dashboard-stats
-// @access  Private
-exports.getDashboardStats = async (req, res, next) => {
-  try {
-    const userId = req.user.id;
-    
-    logger.info('Dashboard stats requested', { userId });
-
-    // Get basic stats - in a real app, this would come from your database
-    const stats = {
-      totalApplications: 0,
-      thisMonth: 0,
-      responseRate: 0,
-      interviews: 0,
-      timesSaved: 0,
-      profileViews: 0
-    };
-
-    // TODO: Implement actual analytics queries when you have application data
-    // For now, return default values
-    
-    res.json({
-      success: true,
-      data: stats
-    });
-  } catch (error) {
-    logger.error('Get dashboard stats error', { 
-      error: error.message, 
-      userId: req.user?.id 
-    });
-    next(error);
-  }
-};
-
 /**
  * Helper Functions
  */
@@ -427,6 +392,5 @@ module.exports = {
   getRealTimeMetrics,
   trackActivity,
   getAnalyticsInsights,
-  exportAnalytics,
-  getDashboardStats
+  exportAnalytics
 };
