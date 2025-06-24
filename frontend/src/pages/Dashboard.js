@@ -9,6 +9,7 @@ import performanceMonitor from '../utils/performance';
 import { useApi } from '../hooks/useApi';
 import useDashboardData from '../hooks/useDashboardData';
 import { toast } from 'react-toastify';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 // Import icons
 import {
@@ -43,9 +44,18 @@ import FinalProfileCard from '../components/profile/FinalProfileCard';
  */
 const Dashboard = () => {
   const { user } = useUser();
-  const { apiCall } = useApi();
-  // Use the new dashboard data hook for real-time stats
+  const { apiCall } = useApi();  // Use the new dashboard data hook for real-time stats with proper error handling
   const { stats, loading: dashboardLoading, error: dashboardError, refreshData } = useDashboardData();
+  
+  // Ensure stats is always defined
+  const safeStats = stats || {
+    totalApplications: 0,
+    thisMonth: 0,
+    responseRate: 0,
+    interviews: 0,
+    timesSaved: 0,
+    profileViews: 0
+  };
 
   // State management
   const [activeTab, setActiveTab] = useState('profile');
@@ -296,58 +306,68 @@ const Dashboard = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">        {/* Stats Section */}
-        <div className="mb-8">
-          <DashboardStats
-            stats={stats}
+        <div className="mb-8">          <DashboardStats
+            stats={safeStats}
             loading={dashboardLoading}
             error={dashboardError}
           />
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        {/* Main Content Grid */}        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* Left Column - Main Actions */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Extension Status */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 hover:shadow-md transition-all duration-300">
-              <ExtensionDetector />
-            </div>
-
-            {/* AI Cover Letter Feature */}
-            {hasParsedData && (
+            {/* Extension Status - Wrapped in Error Boundary */}
+            <ErrorBoundary>
               <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 hover:shadow-md transition-all duration-300">
-                <AICoverLetterCard />
+                <ExtensionDetector />
               </div>
+            </ErrorBoundary>
+
+            {/* AI Cover Letter Feature - Wrapped in Error Boundary */}
+            {hasParsedData && (
+              <ErrorBoundary>
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 hover:shadow-md transition-all duration-300">
+                  <AICoverLetterCard />
+                </div>
+              </ErrorBoundary>
             )}
 
-            {/* Resume Builder Widget */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 hover:shadow-md transition-all duration-300">
-              <ResumeBuilderWidget />
-            </div>
+            {/* Resume Builder Widget - Wrapped in Error Boundary */}
+            <ErrorBoundary>
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 hover:shadow-md transition-all duration-300">
+                <ResumeBuilderWidget />
+              </div>
+            </ErrorBoundary>
 
-            {/* Progress Tracker */}
-            <ProgressTracker
-              hasProfile={!!profileData.name && !!profileData.email}
-              hasResume={resumes.length > 0}
-              hasParsedData={hasParsedData}
-              hasExtension={false} // You can add extension detection logic
-            />
+            {/* Progress Tracker - Wrapped in Error Boundary */}
+            <ErrorBoundary>
+              <ProgressTracker
+                hasProfile={!!profileData?.name && !!profileData?.email}
+                hasResume={(resumes || []).length > 0}
+                hasParsedData={!!hasParsedData}
+                hasExtension={false} // You can add extension detection logic
+              />
+            </ErrorBoundary>
           </div>
 
           {/* Right Column - Quick Actions & Activity */}
           <div className="space-y-6">
-            <QuickActions
-              onProfileClick={() => setActiveTab('profile')}
-              onResumeClick={() => setActiveTab('resumes')}
-              onDataClick={() => setActiveTab('parsedData')}
-              onAutofillClick={() => setActiveTab('finalProfile')}
-              hasParsedData={hasParsedData}
-            />
+            <ErrorBoundary>
+              <QuickActions
+                onProfileClick={() => setActiveTab('profile')}
+                onResumeClick={() => setActiveTab('resumes')}
+                onDataClick={() => setActiveTab('parsedData')}
+                onAutofillClick={() => setActiveTab('finalProfile')}
+                hasParsedData={!!hasParsedData}
+              />
+            </ErrorBoundary>
 
-            <ActivityFeed
-              resumes={resumes}
-              hasParsedData={hasParsedData}
-            />
+            <ErrorBoundary>
+              <ActivityFeed
+                resumes={resumes || []}
+                hasParsedData={!!hasParsedData}
+              />
+            </ErrorBoundary>
           </div>
         </div>
 

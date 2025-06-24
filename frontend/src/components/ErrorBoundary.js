@@ -45,16 +45,17 @@ class ErrorBoundary extends React.Component {
         userAgent: navigator.userAgent,
         url: window.location.href,
         userId: this.props.userId || 'anonymous'
-      };
-
-      // Example: Send to your logging endpoint
+      };      // Use direct POST endpoint defined in server.js
       fetch('/api/client-errors', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(errorData)
+        body: JSON.stringify(errorData),
+        // Add proper error handling
+        credentials: 'include'
       }).catch(err => {
+        // Log locally if the API call fails
         console.error('Failed to log error to service:', err);
       });
     } catch (loggingError) {

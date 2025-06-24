@@ -10,7 +10,6 @@ import { toast } from 'react-toastify';
 export const useDashboardData = () => {
   const { user } = useUser();
   const { apiCall } = useApi();
-
   const [dashboardData, setDashboardData] = useState({
     stats: {
       totalApplications: 0,
@@ -26,30 +25,43 @@ export const useDashboardData = () => {
   });
 
   const [refreshInterval, setRefreshInterval] = useState(null);
-  // Fetch dashboard stats from analytics API
-  const fetchDashboardStats = useCallback(async () => {
+  // Fetch dashboard stats from analytics API  const fetchDashboardStats = useCallback(async () => {
     if (!user) return;
 
     try {
       const response = await apiCall('/api/dashboard', { method: 'GET' });
 
       if (response.success) {
-        const { stats, recentApplications, analytics } = response.data;
+        // Ensure we have valid data or use defaults
+        const stats = response.data?.stats || {
+          totalApplications: 0,
+          thisMonth: 0,
+          responseRate: 0,
+          interviews: 0,
+          timesSaved: 0,
+          profileViews: 0
+        };
+        
+        const recentApplications = response.data?.recentApplications || [];
+        const analytics = response.data?.analytics || {};
 
         setDashboardData(prev => ({
           ...prev,
           stats,
           recentActivity: recentApplications.map(app => ({
             type: 'application',
-            title: `Applied to ${app.position} at ${app.company}`,
-            subtitle: `Status: ${app.status}`,
-            date: app.appliedDate,
+            title: `Applied to ${app.position || 'Unknown'} at ${app.company || 'Unknown'}`,
+            subtitle: `Status: ${app.status || 'Applied'}`,
+            date: app.appliedDate || new Date(),
             icon: 'briefcase'
           })),
           analytics,
           loading: false,
           error: null
         }));
+      } else {
+        // Handle unsuccessful response
+        throw new Error('Dashboard data fetch returned unsuccessful status');
       }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -61,20 +73,26 @@ export const useDashboardData = () => {
     }
   }, [user, apiCall]);
 
-  // Fetch user's job applications for real stats
-  const fetchJobApplications = useCallback(async () => {
+  // Fetch user's job applications for real stats  const fetchJobApplications = useCallback(async () => {
     if (!user) return;
 
     try {
       const response = await apiCall('/api/job-tracker/applications', { method: 'GET' });
-      if (response.success) {
-        const applications = response.data;
+      if (response.success && Array.isArray(response.data)) {
+        const applications = response.data || [];
         const thisMonth = new Date();
         thisMonth.setMonth(thisMonth.getMonth() - 1);
 
         const stats = {
           totalApplications: applications.length,
-          thisMonth: applications.filter(app => new Date(app.createdAt) >= thisMonth).length,
+          thisMonth: applications.filter(app => {
+            // Safely check dates with null/undefined handling
+            try {
+              return new Date(app.createdAt) >= thisMonth;
+            } catch (e) {
+              return false;
+            }
+          }).length,
           interviews: applications.filter(app => app.status === 'interview').length,
           responseRate: applications.length > 0
             ? Math.round((applications.filter(app => app.status !== 'applied').length / applications.length) * 100)
@@ -88,6 +106,7 @@ export const useDashboardData = () => {
       }
     } catch (error) {
       console.error('Error fetching job applications:', error);
+      // Don't update error state here to avoid overriding main stats
     }
   }, [user, apiCall]);
 
@@ -113,22 +132,32 @@ export const useDashboardData = () => {
         if (interval) clearInterval(interval);
       };
     }
-  }, [user, fetchDashboardStats, fetchJobApplications]);
-  // Manual refresh function
+  }, [user, fetchDashboardStats, fetchJobApplications]);  // Manual refresh function
   const refreshData = useCallback(async () => {
-    setDashboardData(prev => ({ ...prev, loading: true }));
+    setDashboardData(prev => ({ ...prev, loading: true, error: null }));
 
     try {
       // Call the refresh endpoint
       await apiCall('/api/dashboard/refresh', { method: 'POST' });
       // Then fetch fresh data
       await fetchDashboardStats();
+      await fetchJobApplications();
     } catch (error) {
       console.error('Error refreshing dashboard:', error);
       // Still try to fetch data even if refresh fails
-      await fetchDashboardStats();
+      try {
+        await fetchDashboardStats();
+        await fetchJobApplications();
+      } catch (innerError) {
+        console.error('Error fetching dashboard data after refresh failure:', innerError);
+        setDashboardData(prev => ({ 
+          ...prev, 
+          loading: false, 
+          error: 'Failed to load dashboard data. Please try again later.' 
+        }));
+      }
     }
-  }, [fetchDashboardStats, apiCall]);
+  }, [fetchDashboardStats, fetchJobApplications, apiCall]);
 
   return {
     ...dashboardData,
