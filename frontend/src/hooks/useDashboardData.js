@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useApi } from './useApi';
 import { useUser } from './useUniversalAuth';
-import { toast } from 'react-toastify';
 
 /**
  * Custom hook for managing dashboard data
  * Provides real-time stats and analytics
  */
-export const useDashboardData = () => {
+const useDashboardData = () => {
   const { user } = useUser();
   const { apiCall } = useApi();
+
   const [dashboardData, setDashboardData] = useState({
     stats: {
       totalApplications: 0,
@@ -23,6 +23,7 @@ export const useDashboardData = () => {
     loading: true,
     error: null
   });
+
   const [refreshInterval, setRefreshInterval] = useState(null);
   
   // Fetch dashboard stats from analytics API
@@ -131,7 +132,8 @@ export const useDashboardData = () => {
       setRefreshInterval(interval);
 
       return () => {
-        if (interval) clearInterval(interval);      };
+        if (interval) clearInterval(interval);
+      };
     }
   }, [user, fetchDashboardStats, fetchJobApplications]);
   
@@ -153,10 +155,10 @@ export const useDashboardData = () => {
         await fetchJobApplications();
       } catch (innerError) {
         console.error('Error fetching dashboard data after refresh failure:', innerError);
-        setDashboardData(prev => ({ 
-          ...prev, 
-          loading: false, 
-          error: 'Failed to load dashboard data. Please try again later.' 
+        setDashboardData(prev => ({
+          ...prev,
+          loading: false,
+          error: 'Failed to load dashboard data. Please try again later.'
         }));
       }
     }
