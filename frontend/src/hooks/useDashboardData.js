@@ -31,9 +31,9 @@ const useDashboardData = () => {
     if (!user) return;
 
     try {
-      const response = await apiCall('/api/dashboard', { method: 'GET' });
+      const response = await apiCall.get('/dashboard');
 
-      if (response.success) {
+      if (response && response.success) {
         // Ensure we have valid data or use defaults
         const stats = response.data?.stats || {
           totalApplications: 0,
@@ -80,8 +80,8 @@ const useDashboardData = () => {
     if (!user) return;
 
     try {
-      const response = await apiCall('/api/job-tracker/applications', { method: 'GET' });
-      if (response.success && Array.isArray(response.data)) {
+      const response = await apiCall.get('/job-tracker/applications');
+      if (response && response.success && Array.isArray(response.data)) {
         const applications = response.data || [];
         const thisMonth = new Date();
         thisMonth.setMonth(thisMonth.getMonth() - 1);
@@ -143,7 +143,7 @@ const useDashboardData = () => {
 
     try {
       // Call the refresh endpoint
-      await apiCall('/api/dashboard/refresh', { method: 'POST' });
+      await apiCall.post('/dashboard/refresh');
       // Then fetch fresh data
       await fetchDashboardStats();
       await fetchJobApplications();

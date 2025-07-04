@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageErrorBoundary } from '../../components/withErrorBoundary';
+import withErrorBoundary from '../../components/withErrorBoundary';
 import { ShieldCheckIcon, EyeIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 
 const PrivacySettings = () => {
@@ -169,4 +169,11 @@ const PrivacySettings = () => {
   );
 };
 
-export default PageErrorBoundary(PrivacySettings, { pageName: 'PrivacySettings' });
+export default withErrorBoundary(PrivacySettings, {
+  componentName: 'PrivacySettings',
+  fallback: (
+    <div className="p-4 text-red-700">
+      There was an error loading privacy settings. Please try refreshing the page.
+    </div>
+  )
+});

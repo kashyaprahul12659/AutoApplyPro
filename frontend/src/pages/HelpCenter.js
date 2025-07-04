@@ -1,5 +1,5 @@
-import React from 'react';
-import { PageErrorBoundary } from '../../components/withErrorBoundary';
+import React, { useEffect } from 'react';
+import withErrorBoundary from '../components/withErrorBoundary';
 import {
   QuestionMarkCircleIcon,
   BookOpenIcon,
@@ -8,8 +8,19 @@ import {
   PhoneIcon,
   EnvelopeIcon
 } from '@heroicons/react/24/outline';
+import debug from '../utils/debug';
+
+// Create a component-specific debugger
+const helpDebug = debug.ui.extend('helpCenter');
 
 const HelpCenter = () => {
+  useEffect(() => {
+    helpDebug('HelpCenter component mounted');
+    return () => helpDebug('HelpCenter component unmounted');
+  }, []);
+
+  helpDebug('Rendering HelpCenter component');
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-6">
@@ -193,4 +204,11 @@ const HelpCenter = () => {
   );
 };
 
-export default PageErrorBoundary(HelpCenter, { pageName: 'HelpCenter' });
+export default withErrorBoundary(HelpCenter, {
+  componentName: 'HelpCenter',
+  fallback: (
+    <div className="p-4 text-red-700">
+      There was an error loading the help center. Please try refreshing the page.
+    </div>
+  )
+});

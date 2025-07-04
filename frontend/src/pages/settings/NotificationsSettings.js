@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageErrorBoundary } from '../../components/withErrorBoundary';
+import withErrorBoundary from '../../components/withErrorBoundary';
 import { BellIcon, EnvelopeIcon, DevicePhoneMobileIcon } from '@heroicons/react/24/outline';
 
 const NotificationsSettings = () => {
@@ -169,4 +169,11 @@ const NotificationsSettings = () => {
   );
 };
 
-export default PageErrorBoundary(NotificationsSettings, { pageName: 'NotificationsSettings' });
+export default withErrorBoundary(NotificationsSettings, {
+  componentName: 'NotificationsSettings',
+  fallback: (
+    <div className="p-4 text-red-700">
+      There was an error loading notification settings. Please try refreshing the page.
+    </div>
+  )
+});

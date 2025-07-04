@@ -44,8 +44,13 @@ import FinalProfileCard from '../components/profile/FinalProfileCard';
  */
 const Dashboard = () => {
   const { user } = useUser();
-  const { apiCall } = useApi();  // Use the new dashboard data hook for real-time stats with proper error handling
-  const { stats, loading: dashboardLoading, error: dashboardError, refreshData } = useDashboardData();
+  const { apiCall } = useApi();
+  const { 
+    stats, 
+    loading: dashboardLoading, 
+    error: dashboardError, 
+    refreshData 
+  } = useDashboardData();
   
   // Ensure stats is always defined
   const safeStats = stats || {
@@ -57,16 +62,24 @@ const Dashboard = () => {
     profileViews: 0
   };
 
-  // State management
-  const [activeTab, setActiveTab] = useState('profile');
-  const [profileData, setProfileData] = useState({ name: '', email: '' });
-  const [resumes, setResumes] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [hasParsedData, setHasParsedData] = useState(false);
-  const [parsedProfileData, setParsedProfileData] = useState(null);
-  const [showParseModal, setShowParseModal] = useState(false);  const [lastUploadedResumeId, setLastUploadedResumeId] = useState(null);
-  const [editingProfile, setEditingProfile] = useState(false);
+  // Show toast message when dashboard fails to load
+  useEffect(() => {
+    if (dashboardError) {
+      toast.error('Unable to load dashboard data. Please check your connection and try again.');
+      console.error('Dashboard error:', dashboardError);
+    }
+  }, [dashboardError]);
+  
+  // Retry loading data if it failed
+  useEffect(() => {
+    if (dashboardError && user) {
+      const retryTimer = setTimeout(() => {
+        refreshData();
+      }, 5000); // Retry after 5 seconds
+      
+      return () => clearTimeout(retryTimer);
+    }
+  }, [dashboardError, refreshData, user]);
 
   // Performance monitoring
   useEffect(() => {

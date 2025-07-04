@@ -1,0 +1,31 @@
+# CodeRabbit AI configuration
+version: 1
+reviews:
+  request_changes_threshold: moderate
+  high_level_summary: true
+  poem: false
+  review_comment_lgtm: true
+  collapse_walkthrough: false
+  drafts: false
+  auto_review:
+    enabled: true
+    ignore_title_patterns:
+      - "^WIP:.*"
+      - "^Draft:.*"
+    drafts: false
+  auto_approve:
+    enabled: false
+  path_filters:
+    - "!*.md"
+    - "!LICENSE"
+    - "**/*.js"
+    - "**/*.jsx"
+    - "**/*.ts"
+    - "**/*.tsx"
+  path_instructions:
+    - path: "frontend/src/**"
+      instructions: "This is the frontend React code. Check for React best practices, efficient state management, and UI logic."
+    - path: "backend/**"
+      instructions: "This is the backend Node.js code. Check for API design, security practices, and performance issues."
+    - path: "autoapply-extension/**"
+      instructions: "This is a Chrome extension code. Check for browser compatibility and extension best practices."

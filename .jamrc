@@ -1,0 +1,24 @@
+# JAM Configuration for AutoApplyPro
+version: 1
+settings:
+  enabled: true
+  log_level: "debug"
+  
+# Frontend React Debugging
+frontend:
+  enabled: true
+  source_maps: true
+  react:
+    component_profiling: true
+    error_boundary: true
+    
+# Backend Node.js Debugging
+backend:
+  enabled: true
+  trace_api_calls: true
+  performance_monitoring: true
+  
+# Extension Debugging
+extension:
+  enabled: true
+  chrome_devtools_integration: true

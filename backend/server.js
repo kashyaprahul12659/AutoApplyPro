@@ -13,6 +13,12 @@ const { apiLimiter, authLimiter, uploadLimiter, aiLimiter } = require('./middlew
 const { sanitizeInput } = require('./middleware/validation');
 const { logger, httpLogger, securityLogger } = require('./utils/logger');
 
+// Debug system
+const debug = require('./utils/debug');
+const serverDebug = debug.create('server');
+const routesDebug = debug.api;
+const dbDebug = debug.db;
+
 // Services imports
 const notificationService = require('./services/notificationService');
 const analyticsService = require('./services/analyticsService');

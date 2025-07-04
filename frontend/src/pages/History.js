@@ -12,10 +12,17 @@ const History = () => {
     const fetchHistory = async () => {
       try {
         setIsLoading(true);
-        const res = await apiCall.get('/api/history');
-        setHistoryItems(res.data);
+        const res = await apiCall.get('/history');
+        
+        if (res && res.success) {
+          setHistoryItems(res.data || []);
+        } else {
+          throw new Error('Failed to fetch history data');
+        }
       } catch (err) {
+        console.error('History fetch error:', err);
         toast.error(err.response?.data?.error || 'Failed to fetch application history');
+        setHistoryItems([]);
       } finally {
         setIsLoading(false);
       }
@@ -27,13 +34,17 @@ const History = () => {
   const handleDeleteHistoryItem = async (id) => {
     if (window.confirm('Are you sure you want to delete this history item?')) {
       try {
-        await apiCall.delete(`/api/history/${id}`);
+        const response = await apiCall.delete(`/history/${id}`);
 
-        // Remove from state
-        setHistoryItems(historyItems.filter(item => item._id !== id));
-
-        toast.success('History item deleted successfully');
+        if (response && response.success) {
+          // Remove from state
+          setHistoryItems(historyItems.filter(item => item._id !== id));
+          toast.success('History item deleted successfully');
+        } else {
+          throw new Error('Failed to delete history item');
+        }
       } catch (err) {
+        console.error('Delete history error:', err);
         toast.error('Failed to delete history item');
       }
     }

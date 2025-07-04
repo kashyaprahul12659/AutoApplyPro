@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageErrorBoundary } from '../../components/withErrorBoundary';
+import withErrorBoundary from '../../components/withErrorBoundary';
 import { CreditCardIcon, ClockIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
 
 const BillingSettings = () => {
@@ -215,4 +215,11 @@ const BillingSettings = () => {
   );
 };
 
-export default PageErrorBoundary(BillingSettings, { pageName: 'BillingSettings' });
+export default withErrorBoundary(BillingSettings, {
+  componentName: 'BillingSettings',
+  fallback: (
+    <div className="p-4 text-red-700">
+      There was an error loading billing settings. Please try refreshing the page.
+    </div>
+  )
+});

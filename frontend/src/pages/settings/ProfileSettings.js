@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageErrorBoundary } from '../../components/withErrorBoundary';
+import withErrorBoundary from '../../components/withErrorBoundary';
 
 const ProfileSettings = () => {
   return (
@@ -112,4 +112,11 @@ const ProfileSettings = () => {
   );
 };
 
-export default PageErrorBoundary(ProfileSettings, { pageName: 'ProfileSettings' });
+export default withErrorBoundary(ProfileSettings, { 
+  componentName: 'ProfileSettings',
+  fallback: (
+    <div className="p-4 text-red-700">
+      There was an error loading the profile settings. Please try refreshing the page.
+    </div>
+  )
+});

@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageErrorBoundary } from '../../components/withErrorBoundary';
+import withErrorBoundary from '../../components/withErrorBoundary';
 import { useTheme } from '../../context/ThemeContext';
 import {
   SunIcon,
@@ -146,4 +146,11 @@ const ThemeSettings = () => {
   );
 };
 
-export default PageErrorBoundary(ThemeSettings, { pageName: 'ThemeSettings' });
+export default withErrorBoundary(ThemeSettings, { 
+  componentName: 'ThemeSettings',
+  fallback: (
+    <div className="p-4 text-red-700">
+      There was an error loading the theme settings. Please try refreshing the page.
+    </div>
+  )
+});

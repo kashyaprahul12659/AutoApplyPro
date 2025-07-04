@@ -13,6 +13,6 @@
     "archiver": "^5.3.1"
   },
   "devDependencies": {
-    "canvas": "^2.9.0"
+    "canvas": "^2.11.2"
   }
 }

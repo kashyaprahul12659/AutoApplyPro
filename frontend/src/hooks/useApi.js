@@ -140,8 +140,8 @@ export const useApi = (apiCall, dependencies = [], options = {}) => {
     return () => {
       mountedRef.current = false;
     };
-  }, []);
-  // Provide apiCall in the return value for use in components  return {
+  }, []);  // Provide apiCall in the return value for use in components
+  return {
     data,
     loading,
     error,

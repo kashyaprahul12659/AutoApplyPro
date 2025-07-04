@@ -1,7 +1,7 @@
 import { createApiCall } from '../utils/apiUtils';
 
-const API_URL = '/api/resume-builder';
-const AI_API_URL = '/api/resume-ai';
+const API_URL = '/resume-builder';
+const AI_API_URL = '/resume-ai';
 
 // Create a new resume
 export const createResume = async (resumeData) => {
