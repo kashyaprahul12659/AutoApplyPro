@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "A full-stack web application that helps users automate job application form filling",
   "main": "index.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd backend && npm run dev",
     "client": "cd frontend && npm start",
     "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
-    "build": "cd frontend && npm run build",
+    "build": "echo 'No build required'",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "package-extension": "node autoapply-extension/package-extension.js",
     "test": "npx playwright test",
