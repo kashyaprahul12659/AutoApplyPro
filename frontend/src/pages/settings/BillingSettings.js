@@ -3,11 +3,65 @@ import { PageErrorBoundary } from '../../components/withErrorBoundary';
 import { CreditCardIcon, ClockIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
 
 const BillingSettings = () => {
+  const usageStats = [
+    { label: 'AI Cover Letter Credits', used: 84, total: 100 },
+    { label: 'JD Analysis Credits', used: 36, total: 50 },
+    { label: 'Resume Tailoring Requests', used: 22, total: 30 }
+  ];
+
+  const annualSavings = ((19.99 * 12) - (15.99 * 12)).toFixed(2);
+
+  const getUsagePercentage = (used, total) => Math.min(100, Math.round((used / total) * 100));
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Billing & Subscription</h1>
         <p className="text-gray-600">Manage your payment methods and subscription plans</p>
+      </div>
+
+      {/* Usage & ROI */}
+      <div className="bg-white shadow rounded-lg p-6 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">Usage & Value</h2>
+            <p className="text-sm text-gray-600">Track monthly usage and estimated ROI from your plan.</p>
+          </div>
+          <div className="rounded-md bg-primary-50 border border-primary-100 px-4 py-3">
+            <p className="text-xs text-primary-700 font-medium uppercase tracking-wide">Estimated Monthly Time Saved</p>
+            <p className="text-2xl font-bold text-primary-700">11.5 hours</p>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          {usageStats.map((item) => (
+            <div key={item.label}>
+              <div className="flex justify-between items-center text-sm mb-1">
+                <span className="font-medium text-gray-800">{item.label}</span>
+                <span className="text-gray-600">{item.used}/{item.total}</span>
+              </div>
+              <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-primary-500 rounded-full"
+                  style={{ width: `${getUsagePercentage(item.used, item.total)}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 rounded-md border border-emerald-200 bg-emerald-50 p-4">
+          <h3 className="text-sm font-semibold text-emerald-800">Switch to annual and save ${annualSavings}/year</h3>
+          <p className="text-sm text-emerald-700 mt-1">
+            Get the same Pro Plus features at <span className="font-semibold">$15.99/month (billed annually)</span>.
+          </p>
+          <button
+            type="button"
+            className="mt-3 inline-flex items-center px-4 py-2 rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+          >
+            Upgrade to Annual Plan
+          </button>
+        </div>
       </div>
 
       {/* Current Plan */}
