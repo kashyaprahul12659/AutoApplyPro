@@ -147,7 +147,7 @@ const DashboardStats = ({ stats = {}, loading = false, error = null }) => {
       {statCards.map((stat, index) => (
         <div
           key={stat.title}
-          className="card card-hover p-6 bg-white border border-neutral-200 hover:border-primary-300 hover:shadow-large transition-all duration-500 group overflow-hidden"
+          className="card card-hover relative p-6 bg-white border border-neutral-200 hover:border-primary-300 hover:shadow-large transition-all duration-500 group overflow-hidden"
           style={{ animationDelay: `${index * 0.1}s` }}
         >
           {/* Background Gradient Effect */}

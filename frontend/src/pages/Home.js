@@ -112,9 +112,43 @@ const Home = () => {
                   </Link>
                 </div>
               </div>
-              <div className="md:w-1/2">
-                <div className="bg-gray-200 rounded-lg h-80 flex items-center justify-center">
-                  <p className="text-gray-500 text-lg">Application Form Image</p>
+              <div className="md:w-1/2 flex justify-center">
+                <div className="relative w-full max-w-md">
+                  <div className="bg-gradient-to-br from-primary-50 to-accent-50 rounded-2xl p-8 shadow-large border border-primary-100">
+                    {/* Browser chrome */}
+                    <div className="bg-white rounded-xl shadow-medium overflow-hidden">
+                      <div className="flex items-center space-x-2 px-4 py-3 bg-neutral-100 border-b border-neutral-200">
+                        <span className="w-3 h-3 rounded-full bg-red-400"></span>
+                        <span className="w-3 h-3 rounded-full bg-yellow-400"></span>
+                        <span className="w-3 h-3 rounded-full bg-green-400"></span>
+                        <div className="flex-1 ml-2 h-5 bg-neutral-200 rounded-full text-xs flex items-center px-3 text-neutral-500">autoapplypro.tech</div>
+                      </div>
+                      {/* Form illustration */}
+                      <div className="p-5 space-y-3">
+                        <div className="flex items-center space-x-2 mb-4">
+                          <div className="w-6 h-6 bg-gradient-to-br from-primary-500 to-accent-500 rounded-md"></div>
+                          <div className="h-3 w-32 bg-neutral-200 rounded-full"></div>
+                        </div>
+                        {[1,2,3].map(i => (
+                          <div key={i} className="space-y-1">
+                            <div className="h-2.5 w-20 bg-neutral-200 rounded-full"></div>
+                            <div className="h-8 w-full bg-neutral-100 rounded-lg border border-neutral-200 flex items-center px-3">
+                              <div className={`h-2 rounded-full bg-primary-${i === 1 ? '400' : '200'}`} style={{width: i === 1 ? '70%' : i === 2 ? '50%' : '60%'}}></div>
+                            </div>
+                          </div>
+                        ))}
+                        <div className="pt-2">
+                          <div className="h-9 w-full bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
+                            <div className="h-2.5 w-24 bg-white/70 rounded-full"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Floating badge */}
+                    <div className="absolute -top-3 -right-3 bg-secondary-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-medium">
+                      Auto-filled ✓
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

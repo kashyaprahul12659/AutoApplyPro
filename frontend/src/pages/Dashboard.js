@@ -6,7 +6,7 @@ import {
   Skeleton
 } from '../components/LoadingSkeletons';
 import performanceMonitor from '../utils/performance';
-import { useApi } from '../hooks/useApi';
+import { useApiInstance } from '../hooks/useApi';
 import useDashboardData from '../hooks/useDashboardData';
 import { toast } from 'react-toastify';
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -44,7 +44,7 @@ import FinalProfileCard from '../components/profile/FinalProfileCard';
  */
 const Dashboard = () => {
   const { user } = useUser();
-  const { apiCall } = useApi();  // Use the new dashboard data hook for real-time stats with proper error handling
+  const { apiCall } = useApiInstance();  // Use the new dashboard data hook for real-time stats with proper error handling
   const { stats, loading: dashboardLoading, error: dashboardError, refreshData } = useDashboardData();
   
   // Ensure stats is always defined
@@ -111,10 +111,10 @@ const Dashboard = () => {
 
     const checkParsedData = async () => {
       try {
-        const res = await apiCall.get('/api/resumes/parsed-data');
-        if (res.success) {
+        const res = await apiCall('/api/resumes/parsed-data');
+        if (res.data?.success) {
           setHasParsedData(true);
-          setParsedProfileData(res.data);
+          setParsedProfileData(res.data.data);
         }
       } catch (err) {
         // No parsed data yet
@@ -156,7 +156,7 @@ const Dashboard = () => {
   const refreshProfileData = async () => {
     try {
       const res = await apiCall('/api/resumes/parsed-data');
-      if (res.data.success) {
+      if (res.data?.success) {
         setParsedProfileData(res.data.data);
         setHasParsedData(true);
       }
