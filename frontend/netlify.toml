@@ -5,11 +5,21 @@
 [build.environment]
   NODE_VERSION = "18"
   REACT_APP_API_URL = "https://autoapplypro-backend-d14947a17c9b.herokuapp.com/api"
-  REACT_APP_BASE_URL = "https://autoapplypro.tech"
-  REACT_APP_CLERK_PUBLISHABLE_KEY = "pk_live_Y2xlcmsuYXV0b2FwcGx5cHJvLnRlY2gk"
+  # autoapplypro.tech expired (registrar-parked); netlify.app is the live origin until renewed
+  REACT_APP_BASE_URL = "https://autoapplypro.netlify.app"
+  # Clerk pk_live is domain-bound to the expired clerk.autoapplypro.tech, which no longer
+  # resolves; this dev-instance key works on any origin. Swap back after domain renewal.
+  REACT_APP_CLERK_PUBLISHABLE_KEY = "pk_test_d2VsY29tZS1wdW1hLTY3LmNsZXJrLmFjY291bnRzLmRldiQ"
   REACT_APP_RAZORPAY_KEY_ID = "rzp_live_SPfrt4L73jxLbf"
   NODE_ENV = "production"
   GENERATE_SOURCEMAP = "false"
+
+# Proxy API calls to the Heroku backend (must precede the SPA catch-all)
+[[redirects]]
+  from = "/api/*"
+  to = "https://autoapplypro-backend-d14947a17c9b.herokuapp.com/api/:splat"
+  status = 200
+  force = true
 
 # Handle SPA routing
 [[redirects]]
