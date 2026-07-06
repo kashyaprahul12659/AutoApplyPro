@@ -44,7 +44,7 @@ CLERK_SECRET_KEY=sk_live_your_clerk_secret_key
 
 ### 4. **AI Processing (Core Feature)**
 ```env
-OPENAI_API_KEY=sk-proj-your_openai_api_key_here
+OPENAI_API_KEY=REDACTED_OPENAI_KEY
 ```
 - **Status**: ✅ **CONFIGURED** (but format warning)
 - **Provider**: [OpenAI Platform](https://platform.openai.com/api-keys)
@@ -301,7 +301,7 @@ CLERK_PUBLISHABLE_KEY=pk_live_your_clerk_publishable_key
 CLERK_SECRET_KEY=sk_live_your_clerk_secret_key
 
 # AI Services (CRITICAL) ⭐
-OPENAI_API_KEY=sk-proj-your_openai_api_key_here
+OPENAI_API_KEY=REDACTED_OPENAI_KEY
 
 # Payment Processing (CRITICAL) ⭐
 RAZORPAY_KEY_ID=rzp_live_your_key_id
