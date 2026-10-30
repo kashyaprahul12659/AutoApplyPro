@@ -1,8 +1,56 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { PageErrorBoundary } from '../../components/withErrorBoundary';
 import { CreditCardIcon, ClockIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
 
+const planOptions = [
+  {
+    name: 'Basic',
+    description: 'Limited applications',
+    price: '$9.99',
+    period: '/mo',
+    isCurrent: false
+  },
+  {
+    name: 'Pro Plus',
+    description: 'Unlimited applications',
+    price: '$19.99',
+    period: '/mo',
+    isCurrent: true
+  },
+  {
+    name: 'Enterprise',
+    description: 'Team features & API access',
+    price: '$49.99',
+    period: '/mo',
+    isCurrent: false
+  }
+];
+
+const billingHistory = [
+  { id: 'inv_2025_05', date: '2025-05-24', amount: '$19.99', status: 'Paid' },
+  { id: 'inv_2025_04', date: '2025-04-24', amount: '$19.99', status: 'Paid' },
+  { id: 'inv_2025_03', date: '2025-03-24', amount: '$19.99', status: 'Paid' }
+];
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
+const getNextRenewalDate = (latestInvoiceDate) => {
+  const renewalDate = new Date(latestInvoiceDate);
+  renewalDate.setMonth(renewalDate.getMonth() + 1);
+  return formatDate(renewalDate.toISOString());
+};
+
 const BillingSettings = () => {
+  const nextRenewalDate = getNextRenewalDate(billingHistory[0].date);
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-6">
@@ -38,9 +86,7 @@ const BillingSettings = () => {
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                 Active
               </span>
-              <p className="mt-1 text-xs text-gray-600">
-                Renews on June 24, 2025
-              </p>
+              <p className="mt-1 text-xs text-gray-600">Renews on {nextRenewalDate}</p>
             </div>
           </div>
 
@@ -63,22 +109,28 @@ const BillingSettings = () => {
         <div className="mt-4">
           <h3 className="text-md font-medium text-gray-900 mb-2">Available Plans</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="border border-gray-200 rounded-md p-4 hover:border-primary-300 hover:shadow-sm cursor-pointer transition">
-              <h4 className="font-medium text-gray-900">Basic</h4>
-              <p className="text-sm text-gray-600 mt-1">Limited applications</p>
-              <p className="mt-2 text-lg font-semibold text-primary-600">$9.99<span className="text-sm text-gray-500">/mo</span></p>
-            </div>
-            <div className="border-2 border-primary-500 rounded-md p-4 relative shadow-sm">
-              <div className="absolute -top-3 left-4 bg-primary-500 text-white text-xs font-bold px-2 py-0.5 rounded">Current</div>
-              <h4 className="font-medium text-gray-900">Pro Plus</h4>
-              <p className="text-sm text-gray-600 mt-1">Unlimited applications</p>
-              <p className="mt-2 text-lg font-semibold text-primary-600">$19.99<span className="text-sm text-gray-500">/mo</span></p>
-            </div>
-            <div className="border border-gray-200 rounded-md p-4 hover:border-primary-300 hover:shadow-sm cursor-pointer transition">
-              <h4 className="font-medium text-gray-900">Enterprise</h4>
-              <p className="text-sm text-gray-600 mt-1">Team features & API access</p>
-              <p className="mt-2 text-lg font-semibold text-primary-600">$49.99<span className="text-sm text-gray-500">/mo</span></p>
-            </div>
+            {planOptions.map((plan) => (
+              <div
+                key={plan.name}
+                className={`rounded-md p-4 transition ${
+                  plan.isCurrent
+                    ? 'border-2 border-primary-500 relative shadow-sm'
+                    : 'border border-gray-200 hover:border-primary-300 hover:shadow-sm cursor-pointer'
+                }`}
+              >
+                {plan.isCurrent && (
+                  <div className="absolute -top-3 left-4 bg-primary-500 text-white text-xs font-bold px-2 py-0.5 rounded">
+                    Current
+                  </div>
+                )}
+                <h4 className="font-medium text-gray-900">{plan.name}</h4>
+                <p className="text-sm text-gray-600 mt-1">{plan.description}</p>
+                <p className="mt-2 text-lg font-semibold text-primary-600">
+                  {plan.price}
+                  <span className="text-sm text-gray-500">{plan.period}</span>
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -155,61 +207,34 @@ const BillingSettings = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  May 24, 2025
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  $19.99
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Paid
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-600 hover:text-primary-700">
-                  <a href="#" className="underline">View Invoice</a>
-                </td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  April 24, 2025
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  $19.99
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Paid
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-600 hover:text-primary-700">
-                  <a href="#" className="underline">View Invoice</a>
-                </td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  March 24, 2025
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  $19.99
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Paid
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-600 hover:text-primary-700">
-                  <a href="#" className="underline">View Invoice</a>
-                </td>
-              </tr>
+              {billingHistory.map((invoice) => (
+                <tr key={invoice.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{formatDate(invoice.date)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{invoice.amount}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      {invoice.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-600 hover:text-primary-700">
+                    <button type="button" className="underline" aria-label={`View invoice ${invoice.id}`}>
+                      View Invoice
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       </div>
 
       <div className="mt-4 text-sm text-gray-600">
-        <p>Having issues with your billing? <a href="#" className="text-primary-600 hover:text-primary-700 underline">Contact support</a></p>
+        <p>
+          Having issues with your billing?{' '}
+          <Link to="/help" className="text-primary-600 hover:text-primary-700 underline">
+            Contact support
+          </Link>
+        </p>
       </div>
     </div>
   );
