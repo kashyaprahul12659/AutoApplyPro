@@ -39,3 +39,8 @@ yarn-error.log*
 
 # Local Netlify folder
 .netlify
+
+# never track real env files
+backend/.env.vercel
+*.env.production
+*.env.local

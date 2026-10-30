@@ -67,5 +67,5 @@ https://clerk.autoapplypro.tech/npm/@clerk/clerk-js@5.69.0/dist/clerk.browser.js
 ## Key Information
 - **Live Key (with custom domain)**: `pk_live_Y2xlcmsuYXV0b2FwcGx5cHJvLnRlY2gk`
 - **Dev Key (default domain)**: `pk_test_d2VsY29tZS1wdW1hLTY3LmNsZXJrLmFjY291bnRzLmRldiQ`
-- **Live Secret**: `sk_live_JjbPxh6rYcUhDpXJ8Wb8e7XCgbnkNJ1Zg3VieNZbGb`
+- **Live Secret**: `REDACTED_CLERK_SECRET`
 - **JWKS URL**: `https://clerk.autoapplypro.tech/.well-known/jwks.json` (needs DNS)

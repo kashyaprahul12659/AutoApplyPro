@@ -2,11 +2,15 @@ const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const User = require('../models/User');
 
-// Initialize Razorpay with API keys from environment variables or use placeholder values for development
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_development_mode',
-  key_secret: process.env.RAZORPAY_SECRET || 'development_mode_secret'
-});
+// Razorpay is only usable when real credentials are configured; a silent test-key
+// fallback here would let production take orders no one can pay for.
+const razorpayConfigured = Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_SECRET);
+const razorpay = razorpayConfigured
+  ? new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_SECRET
+    })
+  : null;
 
 /**
  * Create a new Razorpay order
@@ -14,6 +18,12 @@ const razorpay = new Razorpay({
  * @access  Private
  */
 exports.createOrder = async (req, res) => {
+  if (!razorpayConfigured) {
+    return res.status(503).json({
+      success: false,
+      error: 'Payments are not configured on this server'
+    });
+  }
   try {
     // Create order options
     const options = {
@@ -53,6 +63,12 @@ exports.createOrder = async (req, res) => {
  * @access  Private
  */
 exports.verifyPayment = async (req, res) => {
+  if (!razorpayConfigured) {
+    return res.status(503).json({
+      success: false,
+      error: 'Payments are not configured on this server'
+    });
+  }
   try {
     const { payment_id, order_id, signature } = req.body;
 

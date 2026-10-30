@@ -21,7 +21,7 @@ RAZORPAY_KEY_ID=your_razorpay_key_id_here
 RAZORPAY_SECRET=your_razorpay_secret_here
 
 # OpenAI API Key (already set)
-OPENAI_API_KEY=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
+OPENAI_API_KEY=REDACTED_OPENAI_KEY
 ```
 
 Replace `your_razorpay_key_id_here` and `your_razorpay_secret_here` with your actual Razorpay API keys.

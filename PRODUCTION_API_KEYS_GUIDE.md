@@ -48,7 +48,7 @@ CLERK_SECRET_KEY=sk_live_your_clerk_secret_key
 
 #### **OpenAI API** ⭐ **REQUIRED** (Core Feature)
 ```env
-OPENAI_API_KEY=sk-proj-your_openai_api_key_here
+OPENAI_API_KEY=REDACTED_OPENAI_KEY
 ```
 - **Where to get**: [OpenAI Platform](https://platform.openai.com/api-keys)
 - **Cost**: Pay-per-use, typically $0.002/1K tokens for GPT-3.5-turbo
@@ -140,7 +140,7 @@ CLERK_PUBLISHABLE_KEY=pk_live_your_clerk_publishable_key
 CLERK_SECRET_KEY=sk_live_your_clerk_secret_key
 
 # AI Services ⭐ REQUIRED
-OPENAI_API_KEY=sk-proj-your_openai_api_key_here
+OPENAI_API_KEY=REDACTED_OPENAI_KEY
 
 # Payment Processing ⭐ REQUIRED
 RAZORPAY_KEY_ID=rzp_live_your_key_id
